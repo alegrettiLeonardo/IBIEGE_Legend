@@ -1,0 +1,113 @@
+[Root]
+Most Recent Package=IBiege Setup
+
+
+[Package|IBiege Setup|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=X:\APPS\_NONSTD\IBIEGE\Package
+
+[Package|IBiege Setup|Configure DAO ISAMs]
+Applicable=No
+
+[Package|IBiege Setup|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|IBiege Setup|Files Found]
+
+[Package|IBiege Setup|Files Released]
+
+[Package|IBiege Setup|Missing Dependency Information]
+X:\APPS\_NONSTD\IBIEGE\IBIEGE.exe=
+
+[Package|IBiege Setup|Out-of-Date Dependency Information]
+
+[Package|IBiege Setup|Files Added]
+x:\apps\_nonstd\ibiege\ibiege.exe=
+x:\apps\_nonstd\ibiege\ibiege.mdb=
+x:\apps\_nonstd\ibiege\ibiege.ini=
+x:\apps\_nonstd\ibiege\wrappervb.ini=
+
+[Package|IBiege Setup|Files Removed]
+x:\apps\_nonstd\ibiege\ibiege.exe=
+x:\apps\_nonstd\ibiege\wrappervb.ini=
+
+[Package|IBiege Setup|Files In Project]
+X:\APPS\_NONSTD\IBIEGE\RunB.exe=Yes
+C:\WINNT\system32\MSVBVM60.DLL=Yes
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=Yes
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=Yes
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=Yes
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=Yes
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\WINNT\system32\MSFLXGRD.OCX=Yes
+C:\WINNT\system32\RICHTX32.OCX=Yes
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\RICHED32.DLL=Yes
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\WINNT\system32\VB6STKIT.DLL=Yes
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+X:\APPS\_NONSTD\IBIEGE\IBIEGE.exe=No
+X:\APPS\_NONSTD\IBIEGE\IBIEGE.MDB=Yes
+X:\APPS\_NONSTD\IBIEGE\iBiege.ini=Yes
+X:\APPS\_NONSTD\IBIEGE\WrapperVB.ini=No
+
+[Package|IBiege Setup|Configure Registry Files]
+Applicable=No
+
+[Package|IBiege Setup|Configure Remote Servers]
+Applicable=No
+
+[Package|IBiege Setup|Install Locations]
+X:\APPS\_NONSTD\IBIEGE\RunB.exe=$(AppPath)
+C:\WINNT\system32\MSVBVM60.DLL=$(WinSysPathSysFile)
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=$(WinSysPathSysFile)
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=$(WinSysPathSysFile)
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=$(WinSysPathSysFile)
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=$(WinSysPathSysFile)
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\WINNT\system32\MSFLXGRD.OCX=$(WinSysPath)
+C:\WINNT\system32\RICHTX32.OCX=$(WinSysPath)
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\RICHED32.DLL=$(WinSysPathSysFile)
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\WINNT\system32\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Arquivos de programas\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+X:\APPS\_NONSTD\IBIEGE\IBIEGE.exe=$(AppPath)
+X:\APPS\_NONSTD\IBIEGE\IBIEGE.MDB=$(AppPath)
+X:\APPS\_NONSTD\IBIEGE\iBiege.ini=$(AppPath)
+X:\APPS\_NONSTD\IBIEGE\WrapperVB.ini=$(AppPath)
+
+[Package|IBiege Setup|Configure Shared Files]
+Applicable=Yes
+X:\APPS\_NONSTD\IBIEGE\RunB.exe=No
+X:\APPS\_NONSTD\IBIEGE\IBIEGE.exe=No
+X:\APPS\_NONSTD\IBIEGE\IBIEGE.MDB=No
+X:\APPS\_NONSTD\IBIEGE\iBiege.ini=No
+X:\APPS\_NONSTD\IBIEGE\WrapperVB.ini=No
+
+[Package|IBiege Setup|Distribution]
+Type=single
+Size=
+Title=Interface_BG
+
+[Package|IBiege Setup|Package]
+PackageFolder=X:\APPS\_NONSTD\IBIEGE\Package
+ProjectFolder=X:\APPS\_NONSTD\IBIEGE
+ServerSideCab=
+File1=X:\APPS\_NONSTD\IBIEGE\Package\setup.exe
+File2=X:\APPS\_NONSTD\IBIEGE\Package\Setup.Lst
+File3=X:\APPS\_NONSTD\IBIEGE\Package\RunB.CAB
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz
+
+[Package|IBiege Setup|IconGroups]
+Group0=Interface_BG
+PrivateGroup0=-1
+Parent0=$(Programs)
+
+[Package|IBiege Setup|Interface_BG]
+Icon1=RunB.exe
+Title1=Interface_BG
+StartIn1=$(AppPath)
+Key1=Icon1

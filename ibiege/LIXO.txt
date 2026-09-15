@@ -1,0 +1,17 @@
+Private Function GetSgmnt(ByVal inicio As Double) As Integer
+    Dim dTmp As Double
+    Dim i As Integer
+    Dim lAcu As Integer
+    
+    dTmp = 0
+    lAcu = 0
+    'percorre grid de dimensoes para achar o segmento e o diametro de um determinado ponto
+    For i = 1 To grdDimensoes.Rows - 1
+        lAcu = lAcu + grdDimensoes.TextMatrix(i, 0)
+        If inicio < lAcu Then
+            dTmp = i
+            Exit For
+        End If
+    Next
+    GetSgmnt = dTmp
+End Function
