@@ -5,6 +5,7 @@ export interface ProcessRunRequest {
   args: string[];
   cwd: string;
   timeoutMs: number;
+  stdinText?: string;
   /**
    * Solver execution remains gated until a solver-specific Golden Master is
    * frozen. Callers must provide the qualification identifier explicitly.
@@ -44,12 +45,17 @@ export async function runQualifiedProcess(request: ProcessRunRequest): Promise<P
       cwd: request.cwd,
       shell: false,
       windowsHide: true,
-      stdio: ['ignore', 'pipe', 'pipe'],
+      stdio: [request.stdinText == null ? 'ignore' : 'pipe', 'pipe', 'pipe'],
     });
 
     let stdout = '';
     let stderr = '';
     let timedOut = false;
+
+    if (request.stdinText != null && child.stdin) {
+      child.stdin.setDefaultEncoding('utf8');
+      child.stdin.end(request.stdinText);
+    }
 
     child.stdout.setEncoding('utf8');
     child.stderr.setEncoding('utf8');
