@@ -9,6 +9,10 @@ export const IPC_CHANNELS = {
   runExecuteQualified: 'run:execute-qualified',
   runListQualified: 'run:list-qualified',
   runLoadQualified: 'run:load-qualified',
+  runInspect: 'run:inspect',
+  runReadArtifact: 'run:read-artifact',
+  runRevealArtifact: 'run:reveal-artifact',
+  runOpenWorkspace: 'run:open-workspace',
 } as const;
 
 export interface ProjectSaveRequest {
@@ -69,9 +73,44 @@ export interface QualifiedRunSummary {
   status: RunManifest['status'];
   analyses: AnalysisKind[];
   artifactCount: number;
+  hasResults: boolean;
+  solverHash?: string;
+  inputHash?: string;
+  elapsedMs?: number;
 }
 
 export interface LoadQualifiedRunRequest {
+  runId: string;
+}
+
+export interface InspectRunRequest {
+  runId: string;
+}
+
+export interface InspectRunResponse {
+  workspaceAbsolutePath: string;
+  manifest: RunManifest;
+}
+
+export interface ReadRunArtifactRequest {
+  runId: string;
+  relativePath: string;
+  maxBytes?: number;
+}
+
+export interface ReadRunArtifactResponse {
+  relativePath: string;
+  text: string;
+  bytes: number;
+  truncated: boolean;
+}
+
+export interface RevealRunArtifactRequest {
+  runId: string;
+  relativePath: string;
+}
+
+export interface OpenRunWorkspaceRequest {
   runId: string;
 }
 
@@ -82,4 +121,8 @@ export interface RotorDinDesktopApi {
   executeQualifiedRun(request: ExecuteQualifiedRunRequest): Promise<ExecuteQualifiedRunResponse>;
   listQualifiedRuns(): Promise<QualifiedRunSummary[]>;
   loadQualifiedRun(request: LoadQualifiedRunRequest): Promise<ExecuteQualifiedRunResponse>;
+  inspectRun(request: InspectRunRequest): Promise<InspectRunResponse>;
+  readRunArtifact(request: ReadRunArtifactRequest): Promise<ReadRunArtifactResponse>;
+  revealRunArtifact(request: RevealRunArtifactRequest): Promise<void>;
+  openRunWorkspace(request: OpenRunWorkspaceRequest): Promise<void>;
 }
