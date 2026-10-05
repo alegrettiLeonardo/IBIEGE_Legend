@@ -10,6 +10,18 @@ export interface RunArtifact {
   modifiedAt?: string;
 }
 
+export interface RunJobRecord {
+  analysis: string;
+  qualificationId: string;
+  flags: string[];
+  inputSha256: string;
+  stdoutSha256?: string;
+  stderrSha256?: string;
+  exitCode?: number | null;
+  status: RunStatus;
+  sections: string[];
+}
+
 export interface RunManifest {
   schemaVersion: 1;
   runId: string;
@@ -29,6 +41,8 @@ export interface RunManifest {
   status: RunStatus;
   warnings: string[];
   artifacts: RunArtifact[];
+  qualifications?: Record<string, string>;
+  jobs?: RunJobRecord[];
 }
 
 export interface RunWorkspacePlan {
