@@ -1,5 +1,8 @@
 name: RotorDin Studio UI
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
@@ -76,3 +79,29 @@ jobs:
           path: rotordin-studio/artifacts/est-st41-modes
           if-no-files-found: error
           retention-days: 30
+
+      - name: Freeze first EST-ST41 golden in repository
+        if: github.ref == 'refs/heads/feature/react-typescript-rotordin-studio-ui'
+        shell: bash
+        run: |
+          set -euo pipefail
+          GOLDEN="golden/est-st41/modes-v1"
+          if [ -f "$GOLDEN/qualification.json" ]; then
+            echo "Golden already exists; leaving it immutable."
+            exit 0
+          fi
+          mkdir -p "$GOLDEN/sections" "$GOLDEN/bearing-assets" "$GOLDEN/job"
+          cp artifacts/est-st41-modes/qualification.json "$GOLDEN/"
+          cp artifacts/est-st41-modes/input.txt "$GOLDEN/"
+          cp artifacts/est-st41-modes/project.json "$GOLDEN/"
+          cp artifacts/est-st41-modes/run.json "$GOLDEN/"
+          cp artifacts/est-st41-modes/sections/output.out "$GOLDEN/sections/"
+          cp artifacts/est-st41-modes/sections/modeshp.out "$GOLDEN/sections/"
+          cp artifacts/est-st41-modes/sections/rdaudit.out "$GOLDEN/sections/"
+          cp artifacts/est-st41-modes/bearing-assets/* "$GOLDEN/bearing-assets/"
+          cp artifacts/est-st41-modes/job/stderr.log "$GOLDEN/job/"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$GOLDEN"
+          git commit -m "a10: freeze EST-ST41 Modes real solver golden [skip ci]"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
