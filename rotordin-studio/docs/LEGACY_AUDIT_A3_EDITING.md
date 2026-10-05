@@ -34,3 +34,14 @@ The next editing increments should apply the same transaction pattern to:
 - load/mass insertion and overlap validation;
 - rotor-stack selection;
 - support linkage.
+
+
+## A9 update
+
+The user-supplied current irDin production case shows geometry that is simultaneously ribbed and hollow. Therefore the old IBIEGE hollow-vs-ribbed prohibition is no longer a global RotorDin Studio domain rule.
+
+Current rule:
+- native/current RotorDin domain: combined ribbed + hollow geometry is allowed when physically valid;
+- IBIEGE/BIEGE14 compatibility profile: the old prohibition remains enforced because BIEGE14 selects ST or HL globally and cannot preserve both.
+
+See `LEGACY_AUDIT_A9_IRDIN_IMPORT.md`.
