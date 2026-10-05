@@ -29,10 +29,11 @@ export function updateSegmentAtomic(project: RotorProject, id: string, patch: Se
     };
   }
 
+  const { ribbed: ribbedPatch, ...basePatch } = patch;
   const updated: ShaftSegment = {
     ...current,
-    ...patch,
-    ...(patch.ribbed
+    ...basePatch,
+    ...(ribbedPatch
       ? {
           ribbed: {
             ...(current.ribbed ?? {
@@ -42,7 +43,7 @@ export function updateSegmentAtomic(project: RotorProject, id: string, patch: Se
               hammerWidthMm: 0,
               ribCount: 1,
             }),
-            ...patch.ribbed,
+            ...ribbedPatch,
           },
         }
       : {}),
