@@ -1,4 +1,4 @@
-import type { RotorProject, ShaftSegment, ValidationIssue } from './model';
+import type { Bearing, LegacyMassLoad, RotorProject, ShaftSegment, ValidationIssue } from './model';
 import { validateProject } from './validation';
 
 export interface EditResult {
@@ -89,4 +89,95 @@ export function moveSegmentAtomic(project: RotorProject, id: string, direction: 
   const [item] = segments.splice(from, 1);
   segments.splice(to, 0, item);
   return evaluate(project, { ...project, segments });
+}
+
+
+export type BearingPatch = Partial<Omit<Bearing, 'id' | 'coefficients'>> & {
+  coefficients?:
+    | Bearing['coefficients']
+    | {
+        kind: 'legacy-scalar';
+        stiffnessNPerM?: number;
+        infinite?: boolean;
+      };
+};
+
+export function updateBearingAtomic(project: RotorProject, id: string, patch: BearingPatch): EditResult {
+  const current = project.bearings.find((bearing) => bearing.id === id);
+  if (!current) {
+    return {
+      accepted: false,
+      project,
+      issues: [{ code: 'EDIT-BEARING-404', severity: 'error', entityId: id, message: 'Bearing not found.' }],
+    };
+  }
+
+  let coefficients = current.coefficients;
+  if (patch.coefficients) {
+    if (patch.coefficients.kind === 'legacy-scalar') {
+      const existing = current.coefficients.kind === 'legacy-scalar'
+        ? current.coefficients
+        : { kind: 'legacy-scalar' as const, stiffnessNPerM: 0, infinite: false };
+      coefficients = {
+        ...existing,
+        ...patch.coefficients,
+        kind: 'legacy-scalar',
+      };
+    } else {
+      coefficients = patch.coefficients;
+    }
+  }
+
+  const updated: Bearing = {
+    ...current,
+    ...patch,
+    coefficients,
+  };
+
+  const candidate = {
+    ...project,
+    bearings: project.bearings.map((bearing) => bearing.id === id ? updated : bearing),
+  };
+
+  return evaluate(project, candidate);
+}
+
+export type LegacyLoadPatch = Partial<Omit<LegacyMassLoad, 'id'>>;
+
+export function updateLegacyLoadAtomic(project: RotorProject, id: string, patch: LegacyLoadPatch): EditResult {
+  const current = project.legacyLoads.find((load) => load.id === id);
+  if (!current) {
+    return {
+      accepted: false,
+      project,
+      issues: [{ code: 'EDIT-LOAD-404', severity: 'error', entityId: id, message: 'Load/mass row not found.' }],
+    };
+  }
+
+  const candidate = {
+    ...project,
+    legacyLoads: project.legacyLoads.map((load) => load.id === id ? { ...load, ...patch } : load),
+  };
+
+  return evaluate(project, candidate);
+}
+
+export function setRotorStackAtomic(project: RotorProject, id: string): EditResult {
+  if (!project.legacyLoads.some((load) => load.id === id)) {
+    return {
+      accepted: false,
+      project,
+      issues: [{ code: 'EDIT-ROTOR-404', severity: 'error', entityId: id, message: 'Rotor stack load/mass row not found.' }],
+    };
+  }
+
+  const candidate = {
+    ...project,
+    legacyLoads: project.legacyLoads.map((load) => ({
+      ...load,
+      isRotorStack: load.id === id,
+    })),
+  };
+
+  return evaluate(project, candidate);
 }
