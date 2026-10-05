@@ -163,15 +163,60 @@ The runner:
 - writes per-run artifacts and hashes to `run_manifest.json`;
 - never consumes a pre-existing solver output file.
 
-## Windows parity gate
+## Windows parity gate — CLOSED
 
 The initial Windows run identified a checkout-byte issue: Git converted one audited Fortran source file at checkout, causing `SOURCE_MANIFEST.sha256` verification to fail before compilation.
 
-The repository now carries the source authority's byte-preservation rule:
+The repository carries the source authority's byte-preservation rule:
 
 ```gitattributes
 rotordin-studio/solver/src/source/** -text
 rotordin-studio/solver/SOURCE_MANIFEST.sha256 text eol=lf
 ```
 
-A11 remains pending until the new Windows UCRT64 build and cross-platform candidate comparison pass. The qualification registry must not be promoted before that gate succeeds.
+After that correction, the Windows UCRT64 build passed source-manifest verification, rebuilt the audited solver, executed Campbell, response, elastic line, map and orbit, and passed the cross-platform engineering-result comparison against the Linux candidates.
+
+Qualification workflow evidence:
+- run 37317869479: SUCCESS
+- build-and-test: PASS
+- analysis-contract-linux: PASS
+- solver-contract-freeze: PASS
+- analysis-contract-windows: PASS
+- persist-analysis-goldens: PASS
+
+The registry is therefore promoted to `qualified` for Modes, Campbell/Stability, Unbalance Response, Elastic Line, Critical Speed Map and Orbit.
+
+
+## Final A11 execution matrix
+
+| React analysis | Native job | Qualified flags | Golden | Linux | Windows | Desktop launch |
+|---|---|---|---|:---:|:---:|:---:|
+| Modes | modes | `-std -m -b` | `modes-v1` | PASS | PASS | ENABLED |
+| Campbell | campbell | `-std -c -b` | `campbell-v1` | PASS | PASS | ENABLED |
+| Stability / Log Decrement | campbell | `-std -c -b` | `campbell-v1` | PASS | PASS | ENABLED |
+| Unbalance Response | response | `-std -f -b` | `response-v1` | PASS | PASS | ENABLED |
+| Elastic Line | line | `-std -s -b` | `line-v1` | PASS | PASS | ENABLED |
+| Critical Speed Map | map | `-std -k -b` | `map-v1` | PASS | PASS | ENABLED |
+| Orbit | orbit | `-std -t -b` | `orbit-v1` | PASS | PASS | ENABLED |
+
+Campbell and Stability intentionally deduplicate to one native `-c` process when both are selected.
+
+## Desktop runner release rule
+
+The renderer still has no generic `child_process` or shell capability.
+
+The only production execution path is:
+
+```text
+React Analysis Plan
+  → ProjectContext.executeQualifiedRun()
+  → typed preload IPC
+  → Electron executeQualifiedRotorDinRun()
+  → nativeJobsForQualifiedAnalyses()
+  → runQualifiedProcess()
+  → vendored RotorDin executable
+```
+
+`nativeJobsForQualifiedAnalyses()` is the mandatory gate. Any future analysis added with status `pending` is rejected before process creation with `RUN-QUAL-002`.
+
+A11 status: **CLOSED / QUALIFIED / DESKTOP RUNNER ENABLED FOR QUALIFIED ANALYSES ONLY**.
