@@ -8,6 +8,7 @@ import type {
   QualifiedRunJobResponse,
 } from '../contracts';
 import { parseCampbellCriticalSpeeds, parseRotorDinMarkedSections } from '../../src/adapters/rotordinResults';
+import { parseRotorDinResultData } from '../../src/adapters/rotordinResultData';
 import { serializeRotorDinNative } from '../../src/adapters/rotordinNative';
 import {
   nativeJobsForQualifiedAnalyses,
@@ -202,12 +203,23 @@ export async function executeQualifiedRotorDinRun(
       job.status = 'success';
 
       const criticalSpeeds = parseCampbellCriticalSpeeds(sections['campbell.out'] ?? '');
+      const results = parseRotorDinResultData(sections, criticalSpeeds);
+      const parsedResultPath = path.join(resultDir, 'parsed_results.json');
+      const parsedResultText = JSON.stringify(results, null, 2) + '\n';
+      await writeFile(parsedResultPath, parsedResultText, 'utf8');
+      const parsedArtifact = await appendArtifact(manifest, root, parsedResultPath, 'output');
+
+      job.parsedResultPath = toPosix(path.relative(root, parsedResultPath));
+      job.parsedResultSha256 = parsedArtifact.sha256;
+
       responses.push({
         analysis: record.analysis,
         qualificationId: record.qualificationId,
         flags: [...record.flags],
         sectionNames: job.sections,
         criticalSpeeds,
+        parsedResultPath: job.parsedResultPath,
+        results,
       });
       await persistManifest(root, manifest);
     }
