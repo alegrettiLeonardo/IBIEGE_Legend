@@ -183,7 +183,12 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       return;
     }
     try {
-      setRunHistory(await window.rotorDinDesktop.listQualifiedRuns());
+      const rows = await window.rotorDinDesktop.listQualifiedRuns();
+      setRunHistory(rows);
+      if (!selectedRun && rows[0]) {
+        const latest = await window.rotorDinDesktop.loadQualifiedRun({ runId: rows[0].runId });
+        setSelectedRun(latest);
+      }
     } catch (error) {
       desktopIssue('RUN-HISTORY-LIST-001', error);
     }
