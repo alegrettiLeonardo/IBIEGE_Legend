@@ -16,6 +16,7 @@ export interface AnalysisQualification {
   flags: string[];
   goldenPath: string;
   notes?: string;
+  platforms?: Array<'linux' | 'windows'>;
 }
 
 export const ANALYSIS_QUALIFICATIONS: Record<QualifiedAnalysis, AnalysisQualification> = {
@@ -26,14 +27,16 @@ export const ANALYSIS_QUALIFICATIONS: Record<QualifiedAnalysis, AnalysisQualific
     status: 'qualified',
     flags: ['-std', '-m', '-b'],
     goldenPath: 'golden/est-st41/modes-v1',
+    platforms: ['linux', 'windows'],
   },
   campbell: {
     analysis: 'campbell',
     nativeJob: 'campbell',
     qualificationId: 'A11-EST-ST41-CAMPBELL-V1',
-    status: 'pending',
+    status: 'qualified',
     flags: ['-std', '-c', '-b'],
     goldenPath: 'golden/est-st41/campbell-v1',
+    platforms: ['linux', 'windows'],
     notes: 'Qualified range decision is 500–3000 rpm; no TABLE extrapolation below 500 rpm.',
   },
   stability: {
@@ -43,39 +46,44 @@ export const ANALYSIS_QUALIFICATIONS: Record<QualifiedAnalysis, AnalysisQualific
     status: 'pending',
     flags: ['-std', '-c', '-b'],
     goldenPath: 'golden/est-st41/campbell-v1',
+    platforms: ['linux', 'windows'],
     notes: 'Log decrement/stability is emitted by the same native Campbell computation.',
   },
   'unbalance-response': {
     analysis: 'unbalance-response',
     nativeJob: 'response',
     qualificationId: 'A11-EST-ST41-RESPONSE-V1',
-    status: 'pending',
+    status: 'qualified',
     flags: ['-std', '-f', '-b'],
     goldenPath: 'golden/est-st41/response-v1',
+    platforms: ['linux', 'windows'],
   },
   'elastic-line': {
     analysis: 'elastic-line',
     nativeJob: 'line',
     qualificationId: 'A11-EST-ST41-LINE-V1',
-    status: 'pending',
+    status: 'qualified',
     flags: ['-std', '-s', '-b'],
     goldenPath: 'golden/est-st41/line-v1',
+    platforms: ['linux', 'windows'],
   },
   'critical-speed-map': {
     analysis: 'critical-speed-map',
     nativeJob: 'map',
     qualificationId: 'A11-EST-ST41-MAP-V1',
-    status: 'pending',
+    status: 'qualified',
     flags: ['-std', '-k', '-b'],
     goldenPath: 'golden/est-st41/map-v1',
+    platforms: ['linux', 'windows'],
   },
   orbit: {
     analysis: 'orbit',
     nativeJob: 'orbit',
     qualificationId: 'A11-EST-ST41-ORBIT-V1',
-    status: 'pending',
+    status: 'qualified',
     flags: ['-std', '-t', '-b'],
     goldenPath: 'golden/est-st41/orbit-v1',
+    platforms: ['linux', 'windows'],
   },
 };
 
