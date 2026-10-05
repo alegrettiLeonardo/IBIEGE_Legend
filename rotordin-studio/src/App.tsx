@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { matrixViewForBearing, toLegacyShaftGrid, type AnalysisKind } from './domain';
 import { qualificationFor } from './runs/qualification';
 import { useProject } from './state/ProjectContext';
+import ResultsWorkspace from './features/results/ResultsWorkspace';
 import {
   Activity,
   BarChart3,
@@ -510,16 +511,7 @@ function AnalysisCard({ item, enabled, qualification, onToggle }: { item: typeof
 }
 
 function ResultsPage() {
-  return (
-    <div className="results-layout">
-      <div className="run-context"><div><span>Run ID</span><strong>#007</strong></div><div><span>Analysis Type</span><strong>Critical Speed + Response</strong></div><div><span>Solver</span><strong>Direct (FE)</strong></div><div><span>Date</span><strong>03/09/2026 13:15</strong></div><div><span>Status</span><Badge tone="success">Completed</Badge></div></div>
-      <div className="results-toolbar"><div><h1><BarChart3/> Results Workspace</h1><p>Review analysis results, identify critical speeds and dynamic response.</p></div><div><Button icon={Upload}>Export</Button><Button icon={BarChart3}>Compare Runs</Button><Button icon={Wrench}>Annotate</Button><Button icon={FolderOpen}>Open Files</Button><Button icon={Settings}/></div></div>
-      <Card title="Campbell Diagram" icon={BarChart3} className="campbell-card" actions={<><label className="mini-check"><input type="checkbox" defaultChecked/> Rotor Modes</label><label className="mini-check red"><input type="checkbox" defaultChecked/> Synchronous Orders</label><label className="mini-check"><input type="checkbox" defaultChecked/> Grid</label><Button icon={ZoomIn}/><Button icon={Maximize2}/></>}><CampbellChart /></Card>
-      <Card title="Critical Speed Results" icon={Target} className="critical-card"><DataTable headers={['Mode','Critical Speed [rpm]','Frequency [Hz]','Whirl','Log Dec.','Status']} rows={[["1","6,420","107.0","Forward","0.032","OK"],["2","12,480","208.0","Forward","0.028","OK"],["3","21,360","356.0","Backward","0.015","Check"],["4","28,940","482.3","Forward","0.021","OK"],["5","34,800","580.0","Backward","0.012","Check"],["6","37,920","632.0","Forward","0.018","OK"]]} /></Card>
-      <Card title="Unbalance Response at Probe 1" icon={Activity} className="response-card"><ResponseChart /></Card>
-      <Card title="Mode Details & Orbit" icon={Orbit} className="orbit-card"><div className="orbit-content"><OrbitChart/><KeyValue rows={[["Mode Number","2"],["Critical Speed","12,480 rpm"],["Frequency","208.0 Hz"],["Whirl Direction","Forward"],["Log Decrement","0.028"],["Damping Ratio (ζ)","0.0045"],["Dominant Motion","Lateral (X–Y)"]]} /></div></Card>
-    </div>
-  );
+  return <ResultsWorkspace />;
 }
 
 function RunsPage({ selected, onSelect }: { selected: number; onSelect: (index: number) => void }) {
