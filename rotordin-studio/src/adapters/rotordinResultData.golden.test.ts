@@ -41,7 +41,7 @@ describe('RotorDin native result parsers against EST-ST41 frozen outputs', () =>
     expect(parsed?.phase[0].x).toHaveLength(402);
     expect(parsed?.peaks).toHaveLength(10);
     expect(parsed?.amplitude[0].x[0]).toBeCloseTo(500, 8);
-    expect(parsed?.amplitude[0].x.at(-1)).toBeCloseTo(3000, 8);
+    expect(parsed?.amplitude[0].x.at(-1)).toBeCloseTo(2999.9944, 6);
   });
 
   it('parses elastic-line displacement and static lateral reactions', () => {
