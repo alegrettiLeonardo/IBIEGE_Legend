@@ -2,6 +2,7 @@ import { dialog } from 'electron';
 import { rename, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { RotorProject } from '../../src/domain';
+import { decodeIrDinBytes, importIrDinText } from '../../src/adapters/irdinText';
 import type {
   ProjectOpenResponse,
   ProjectSaveRequest,
@@ -62,6 +63,10 @@ export async function saveProjectFile(request: ProjectSaveRequest): Promise<Proj
     project: request.project,
   };
 
+  if (path.extname(target).toLowerCase() === '.txt') {
+    throw new Error('PROJECT-SAVE-IRDIN-001: Imported irDin text files are read-only compatibility sources. Save the React project as .rdin.json instead.');
+  }
+
   const tmp = path.join(
     path.dirname(target),
     `.${path.basename(target)}.${process.pid}.tmp`,
@@ -75,22 +80,38 @@ export async function saveProjectFile(request: ProjectSaveRequest): Promise<Proj
 
 export async function openProjectFile(): Promise<ProjectOpenResponse> {
   const result = await dialog.showOpenDialog({
-    title: 'Open RotorDin Studio Project',
+    title: 'Open RotorDin Studio / irDin Project',
     properties: ['openFile'],
     filters: [
+      { name: 'RotorDin Studio / irDin', extensions: ['json', 'txt'] },
       { name: 'RotorDin Studio Project', extensions: ['json'] },
+      { name: 'Legacy irDin Text', extensions: ['txt'] },
     ],
   });
 
   if (result.canceled || result.filePaths.length === 0) return { cancelled: true };
 
   const filePath = result.filePaths[0];
-  const text = await readFile(filePath, 'utf8');
-  const project = decodeProjectFile(text);
+  const bytes = await readFile(filePath);
+  const extension = path.extname(filePath).toLowerCase();
 
+  if (extension === '.txt') {
+    const imported = importIrDinText(decodeIrDinBytes(bytes));
+    return {
+      cancelled: false,
+      filePath,
+      sourceFormat: 'irdin-text',
+      project: imported.project,
+      issues: imported.issues,
+    };
+  }
+
+  const project = decodeProjectFile(bytes.toString('utf8'));
   return {
     cancelled: false,
     filePath,
+    sourceFormat: 'native-json',
     project,
+    issues: [],
   };
 }
