@@ -268,7 +268,7 @@ function importBearings(raw: Record<string, string> | undefined, issues: Validat
         sourceFile,
         stiffness: representative?.stiffness ?? constantStiffness,
         damping: representative?.damping ?? constantDamping,
-        ...(table.length > 0 ? { table } : {}),
+        ...(table.length > 0 ? { table, rawTableContent: col(row, 11) } : {}),
       },
     };
   });
@@ -284,7 +284,7 @@ function importSupports(
     return {
       id: `irdin-support-${rowNumber}`,
       name: `SUP ${rowNumber}`,
-      type: col(row, 10) || 'Support',
+      type: col(row, 10) || '',
       locationMm: linkedBearing?.positionMm ?? 0,
       stiffness: {
         xx: numberValue(col(row, 1)),
