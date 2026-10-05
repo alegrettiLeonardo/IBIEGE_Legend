@@ -1,5 +1,4 @@
 import { useMemo, useState, type ReactNode } from 'react';
-import { demoProject } from './data/demoProject';
 import { matrixViewForBearing, toLegacyShaftGrid } from './domain';
 import { useProject } from './state/ProjectContext';
 import {
@@ -85,16 +84,6 @@ const navItems: Array<{ page: Page; icon: LucideIcon }> = [
 ];
 
 
-const project = {
-  ref: demoProject.reference,
-  component: demoProject.component ?? demoProject.description,
-  line: demoProject.line ?? '—',
-  frame: demoProject.frame ?? '—',
-  poles: String(demoProject.poles ?? '—'),
-  frequency: demoProject.frequencyHz != null ? `${demoProject.frequencyHz} Hz` : '—',
-  nominalSpeed: demoProject.nominalSpeedRpm != null ? `${demoProject.nominalSpeedRpm} rpm` : '—',
-};
-
 const analysisCards = [
   { key: 'campbell', title: 'Campbell Diagram', subtitle: 'Natural frequencies vs. speed', icon: BarChart3, rows: [['Speed Range', '0 – 6,000 rpm'], ['Speed Divisions', '200'], ['Modes', '1 – 10'], ['Damping', 'Included']] },
   { key: 'modes', title: 'Modes', subtitle: 'Mode shapes and frequencies', icon: Activity, rows: [['Modes to Compute', '1 – 20'], ['Frequency Range', '0 – 6,000 rpm'], ['Normalization', 'Mass normalized'], ['Include Damping', 'Yes']] },
@@ -176,9 +165,10 @@ function Sidebar({ page, onNavigate }: { page: Page; onNavigate: (page: Page) =>
 }
 
 function TopBar({ saved, valid, onSave, onOpen, onValidate }: { saved: boolean; valid: boolean; onSave: () => void; onOpen: () => void; onValidate: () => void }) {
+  const { project: currentProject } = useProject();
   return (
     <header className="topbar">
-      <button className="project-select" onClick={onOpen}><Folder size={18} /> Project: <strong>{project.ref}</strong><ChevronDown size={16} /></button>
+      <button className="project-select" onClick={onOpen}><Folder size={18} /> Project: <strong>{currentProject.reference}</strong><ChevronDown size={16} /></button>
       <div className="topbar-actions">
         <Button icon={Save} onClick={onSave}>Save</Button>
         <Badge tone={saved ? 'success' : 'warning'}>{saved ? 'Saved' : 'Unsaved'}</Badge>
@@ -191,17 +181,25 @@ function TopBar({ saved, valid, onSave, onOpen, onValidate }: { saved: boolean; 
 }
 
 function ProjectStrip() {
+  const { project: currentProject } = useProject();
   const items = [
-    ['Ref.', project.ref], ['Component', project.component], ['Line', project.line], ['Frame', project.frame],
-    ['Poles', project.poles], ['Frequency', project.frequency], ['Nominal Speed', project.nominalSpeed],
+    ['Ref.', currentProject.reference],
+    ['Component', currentProject.component ?? currentProject.description],
+    ['Line', currentProject.line ?? '—'],
+    ['Frame', currentProject.frame ?? '—'],
+    ['Poles', String(currentProject.poles ?? '—')],
+    ['Frequency', currentProject.frequencyHz != null ? `${currentProject.frequencyHz} Hz` : '—'],
+    ['Nominal Speed', currentProject.nominalSpeedRpm != null ? `${currentProject.nominalSpeedRpm} rpm` : '—'],
   ];
   return <div className="project-strip">{items.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}</div>;
 }
 
 function StatusBar() {
+  const { project: currentProject, projectFilePath, saved } = useProject();
+  const fileLabel = projectFilePath?.split(/[\\/]/).pop() ?? `${currentProject.reference}.rdin.json`;
   return (
     <footer className="statusbar">
-      <div className="status-left"><span className="status-dot" />Ready<span className="sep" />Project: 0V<span className="sep" />File: 0V.rdin<span className="sep" />Last saved: 03/09/2026 13:15</div>
+      <div className="status-left"><span className="status-dot" />Ready<span className="sep" />Project: {currentProject.reference}<span className="sep" />File: {fileLabel}<span className="sep" />{saved ? 'Saved' : 'Unsaved changes'}</div>
       <div className="status-right"><Database size={15} /><span className="status-dot small" />Connected<span className="sep" />Units: metric (mm, kg, N)<ChevronDown size={14} /></div>
     </footer>
   );
@@ -252,6 +250,8 @@ function ShaftViewer({ compact = false, selected = false }: { compact?: boolean;
 }
 
 function OverviewPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
+  const { project: currentProject, validation } = useProject();
+  const totalLength = currentProject.segments.reduce((sum, segment) => sum + segment.lengthMm, 0);
   const analysisTools = [
     ['Campbell Diagram', 'Natural frequencies vs. speed', BarChart3, 'Analysis'],
     ['Modes', 'Mode shapes and frequencies', Activity, 'Analysis'],
@@ -265,7 +265,7 @@ function OverviewPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
     <div className="overview-grid">
       <Card title="Rotor / Shaft Geometry" icon={Box} className="overview-viewer" actions={<><Button icon={Maximize2}>Fit</Button><Button icon={ZoomIn} /><Button icon={ZoomOut} /><Button primary>2D</Button><Button>3D</Button><Button icon={Settings} /></>}><ShaftViewer /></Card>
       <Card title="Analysis Tools" icon={BarChart3} className="analysis-tools"><div className="tool-list">{analysisTools.map(([name, sub, Icon, dest]) => <button key={name} className="tool-row" onClick={() => onNavigate(dest as Page)}><Icon size={21}/><div><strong>{name}</strong><span>{sub}</span></div><ChevronRight size={17}/></button>)}</div></Card>
-      <Card title="Model Summary" icon={ClipboardList} className="summary-card"><div className="metric-grid"><Metric icon={Ruler} label="Shaft Length" value="3,330 mm"/><Metric icon={Weight} label="Shaft Mass" value="1,705.0 kg"/><Metric icon={CircleDot} label="Bearings" value="2"/><Metric icon={Database} label="Distributed Masses" value="3"/><Metric icon={Triangle} label="Concentrated Masses" value="2"/><Metric icon={Activity} label="Forces / Excitations" value="2"/><Metric icon={Triangle} label="Supports" value="2"/><Metric icon={Layers3} label="Shaft Segments" value={String(demoProject.segments.length)}/><Metric icon={CheckCircle2} label="Model Status" value="Valid" tone="success"/></div></Card>
+      <Card title="Model Summary" icon={ClipboardList} className="summary-card"><div className="metric-grid"><Metric icon={Ruler} label="Shaft Length" value={`${totalLength.toLocaleString('en-US', { maximumFractionDigits: 2 })} mm`}/><Metric icon={Weight} label="Shaft Mass" value="1,705.0 kg"/><Metric icon={CircleDot} label="Bearings" value={String(currentProject.bearings.length)}/><Metric icon={Database} label="Distributed Masses" value={String(currentProject.legacyLoads.filter((load) => load.lengthMm > 0).length)}/><Metric icon={Triangle} label="Concentrated Masses" value={String(currentProject.concentratedMasses.length)}/><Metric icon={Activity} label="Forces / Excitations" value={String(currentProject.forces.length)}/><Metric icon={Triangle} label="Supports" value={String(currentProject.supports.length)}/><Metric icon={Layers3} label="Shaft Segments" value={String(currentProject.segments.length)}/><Metric icon={CheckCircle2} label="Model Status" value={validation.valid ? "Valid" : "Review"} tone={validation.valid ? "success" : "warning"}/></div></Card>
       <Card title="Latest Run" icon={Play} className="latest-run" actions={<Button primary icon={Play} onClick={() => onNavigate('Analysis')}>Run Analysis</Button>}><KeyValue rows={[["Run ID", "#007"],["Analysis Type","Critical Speed + Response"],["Speed Range","100 – 6,000 rpm"],["Frequency Points","50"],["Computation Time","12.4 s"],["Date","03/09/2026 13:15:33"]]} /><div className="latest-status"><span>Status</span><Badge tone="success">Completed</Badge></div><div className="split-actions"><Button icon={FolderOpen} onClick={() => onNavigate('Results')}>View Results</Button><Button icon={FileText}>Open Log</Button></div></Card>
       <Card title="Quick Actions" icon={Sparkles} className="quick-actions"><div className="quick-list"><Button icon={Box} onClick={() => onNavigate('Shaft')}>Edit Shaft Geometry</Button><Button icon={CircleDot} onClick={() => onNavigate('Bearings')}>Configure Bearings</Button><Button icon={Weight} onClick={() => onNavigate('Masses')}>Define Masses</Button><Button icon={Activity} onClick={() => onNavigate('Excitations')}>Set Excitations</Button><Button icon={Settings} onClick={() => onNavigate('Analysis')}>Analysis Settings</Button></div></Card>
     </div>
