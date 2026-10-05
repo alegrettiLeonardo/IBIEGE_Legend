@@ -8,6 +8,7 @@ import type {
 import { legacyCompatibilityNotes } from './legacy';
 
 const push = (issues: ValidationIssue[], issue: ValidationIssue) => issues.push(issue);
+const POSITION_EPS_MM = 1e-9;
 
 export function segmentEndPositions(segments: ShaftSegment[]): Array<{ id: string; startMm: number; endMm: number }> {
   let cursor = 0;
@@ -79,7 +80,7 @@ export function validateProject(project: RotorProject): ValidationResult {
     }
 
     const end = load.startMm + load.lengthMm;
-    const contained = positions.some((segment) => load.startMm >= segment.startMm && end <= segment.endMm);
+    const contained = positions.some((segment) => load.startMm >= segment.startMm - POSITION_EPS_MM && end <= segment.endMm + POSITION_EPS_MM);
     if (!contained) {
       push(issues, {
         code: 'LEGACY-LOAD-STEP-001',
