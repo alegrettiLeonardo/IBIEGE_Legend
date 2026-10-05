@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react';
-import { demoProject, massTableRows } from './data/demoProject';
+import { demoProject } from './data/demoProject';
 import { matrixViewForBearing, toLegacyShaftGrid } from './domain';
 import { useProject } from './state/ProjectContext';
 import {
@@ -94,23 +94,6 @@ const project = {
   frequency: demoProject.frequencyHz != null ? `${demoProject.frequencyHz} Hz` : '—',
   nominalSpeed: demoProject.nominalSpeedRpm != null ? `${demoProject.nominalSpeedRpm} rpm` : '—',
 };
-
-const bearings = demoProject.bearings.map((bearing, index) => {
-  const matrix = matrixViewForBearing(bearing);
-  return {
-    id: index + 1,
-    name: bearing.name,
-    position: String(bearing.positionMm),
-    kxx: matrix.stiffness.xx.toExponential(3),
-    kzz: matrix.stiffness.zz.toExponential(3),
-    cxx: matrix.damping.xx.toExponential(3),
-    czz: matrix.damping.zz.toExponential(3),
-    source: bearing.coefficients.kind === 'legacy-scalar' ? 'Legacy scalar' : bearing.coefficients.source,
-    support: bearing.supportId ?? '—',
-  };
-});
-
-const masses = massTableRows();
 
 const analysisCards = [
   { key: 'campbell', title: 'Campbell Diagram', subtitle: 'Natural frequencies vs. speed', icon: BarChart3, rows: [['Speed Range', '0 – 6,000 rpm'], ['Speed Divisions', '200'], ['Modes', '1 – 10'], ['Damping', 'Included']] },
@@ -327,25 +310,96 @@ function ShaftPage({ selected, onSelect }: { selected: number; onSelect: (index:
 }
 
 function BearingsPage({ selected, onSelect }: { selected: number; onSelect: (index: number) => void }) {
-  const b = bearings[selected];
-  const tableRows = bearings.map((item) => [String(item.id), item.name, item.position, 'Radial', item.kxx, item.kzz, item.cxx, item.czz, item.source, item.support, 'Ready']);
+  const { project: currentProject, updateBearing, editIssues } = useProject();
+  const safeSelected = Math.min(selected, Math.max(0, currentProject.bearings.length - 1));
+  const bearing = currentProject.bearings[safeSelected];
+  const matrix = matrixViewForBearing(bearing);
+  const tableRows = currentProject.bearings.map((item, index) => {
+    const view = matrixViewForBearing(item);
+    return [
+      String(index + 1),
+      item.name,
+      String(item.positionMm),
+      'Radial',
+      view.stiffness.xx.toExponential(3),
+      view.stiffness.zz.toExponential(3),
+      view.damping.xx.toExponential(3),
+      view.damping.zz.toExponential(3),
+      item.coefficients.kind === 'legacy-scalar' ? 'Legacy scalar' : item.coefficients.source,
+      item.supportId ?? '—',
+      'Ready',
+    ];
+  });
+  const bearingIssues = editIssues.filter((issue) => !issue.entityId || issue.entityId === bearing.id);
+  const parse = (value: string) => {
+    const parsed = Number(value.replace(',', '.'));
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+  const updateLegacyScalar = (value: string) => {
+    if (bearing.coefficients.kind !== 'legacy-scalar') return;
+    const stiffness = parse(value);
+    updateBearing(bearing.id, {
+      coefficients: {
+        kind: 'legacy-scalar',
+        stiffnessNPerM: stiffness,
+        infinite: stiffness === 0,
+      },
+    });
+  };
+
   return (
     <div className="bearings-grid">
-      <Card title="Bearings & Supports" subtitle="Define bearing coefficients, support connections and boundary conditions" icon={Box} className="bearing-main" actions={<><Button primary icon={Plus}>Add Bearing</Button><Button icon={Trash2} danger>Delete</Button><Button icon={Download}>Import Coefficients</Button><Button icon={Link2}>Link Support</Button></>}><div className="subsection-label">Shaft Overview</div><ShaftViewer compact /><div className="section-toolbar"><h3><Database size={20}/> Bearings</h3><div className="search-box"><Search size={15}/><input placeholder="Search bearings..."/></div></div><DataTable headers={['#','Name','Position [mm]','Type','Kxx [N/m]','Kzz [N/m]','Cxx [N·s/m]','Czz [N·s/m]','Source','Support','Status']} rows={tableRows} selected={selected} onSelect={onSelect} /></Card>
-      <Card title="Bearing Properties" icon={Database} className="bearing-inspector"><div className="inline-fields"><FormField label="Name" value={b.name}/><FormField label="Position" value={b.position} unit="mm"/></div><FormField label="Bearing Type" value="Radial (Journal)" /><h3 className="minor-title">Coefficient Source</h3><div className="source-grid"><SourceTile icon={Database} title="Constant" subtitle="Fixed coefficients" active={b.source === 'Constant'}/><SourceTile icon={FileText} title="File-based" subtitle="Import from file"/><SourceTile icon={Activity} title="Speed-dependent" subtitle="Vs. rotational speed" active={b.source !== 'Constant'}/><SourceTile icon={Link2} title="Linked Support" subtitle="From support entity"/></div><MatrixEditor title="Stiffness Matrix K (N/m)" values={[b.kxx,'0.000e+00','0.000e+00',b.kzz]} /><MatrixEditor title="Damping Matrix C (N·s/m)" values={[b.cxx,'0.000e+00','0.000e+00',b.czz]} /><h3 className="minor-title">Validation</h3><div className="validation-grid">{['Finite values','Physically consistent','Linked to support','Ready for analysis'].map((item) => <span key={item}><CheckCircle2 size={15}/>{item}</span>)}</div></Card>
-      <Card title="Supports" subtitle="Define support entities and link them to bearings" icon={Triangle} className="supports-card" actions={<><Button primary icon={Plus}>Add Support</Button><Button icon={Trash2} danger>Delete</Button><Button icon={Wrench}>Edit Support</Button></>}><DataTable headers={['#','Name','Type','Location [mm]','Linked Bearings','Description','Status']} rows={[["1","SUP 1","Rigid Support","536.47","BRG 1","Housing, left side","Valid"],["2","SUP 2","Rigid Support","3027.0","BRG 2","Housing, right side","Valid"]]} /></Card>
+      <Card title="Bearings & Supports" subtitle="Define bearing coefficients, support connections and boundary conditions" icon={Box} className="bearing-main" actions={<><Button primary icon={Plus}>Add Bearing</Button><Button icon={Trash2} danger>Delete</Button><Button icon={Download}>Import Coefficients</Button><Button icon={Link2}>Link Support</Button></>}><div className="subsection-label">Shaft Overview</div><ShaftViewer compact /><div className="section-toolbar"><h3><Database size={20}/> Bearings</h3><div className="search-box"><Search size={15}/><input placeholder="Search bearings..."/></div></div><DataTable headers={['#','Name','Position [mm]','Type','Kxx [N/m]','Kzz [N/m]','Cxx [N·s/m]','Czz [N·s/m]','Source','Support','Status']} rows={tableRows} selected={safeSelected} onSelect={onSelect} /></Card>
+      <Card title="Bearing Properties" icon={Database} className="bearing-inspector"><div className="inline-fields"><FormField label="Name" value={bearing.name}/><FormField label="Position" value={String(bearing.positionMm)} unit="mm" onChange={(value) => updateBearing(bearing.id, { positionMm: parse(value) })}/></div><FormField label="Bearing Type" value="Radial (Journal)" /><h3 className="minor-title">Coefficient Source</h3><div className="source-grid"><SourceTile icon={Database} title="Legacy scalar" subtitle="Exact IBIEGE coefficient" active={bearing.coefficients.kind === 'legacy-scalar'}/><SourceTile icon={FileText} title="File-based" subtitle="Target RotorDin extension"/><SourceTile icon={Activity} title="Speed-dependent" subtitle="Target RotorDin extension" active={bearing.coefficients.kind === 'matrix' && bearing.coefficients.source === 'speed-dependent'}/><SourceTile icon={Link2} title="Linked Support" subtitle="From support entity"/></div><MatrixEditor title="Stiffness Matrix K (N/m)" values={[matrix.stiffness.xx.toExponential(3),matrix.stiffness.xz.toExponential(3),matrix.stiffness.zx.toExponential(3),matrix.stiffness.zz.toExponential(3)]} editable={[bearing.coefficients.kind === 'legacy-scalar',false,false,bearing.coefficients.kind === 'legacy-scalar']} onChange={(_, value) => updateLegacyScalar(value)} /><MatrixEditor title="Damping Matrix C (N·s/m)" values={[matrix.damping.xx.toExponential(3),matrix.damping.xz.toExponential(3),matrix.damping.zx.toExponential(3),matrix.damping.zz.toExponential(3)]} /><h3 className="minor-title">Validation</h3>{bearingIssues.length ? <div className="inspector-note error-note"><Triangle size={16}/><div><strong>Edit rejected</strong><span>{bearingIssues[0].message}</span></div></div> : <div className="validation-grid">{['Finite values','Legacy scalar preserved','Linked to support','Ready for analysis'].map((item) => <span key={item}><CheckCircle2 size={15}/>{item}</span>)}</div>}</Card>
+      <Card title="Supports" subtitle="Define support entities and link them to bearings" icon={Triangle} className="supports-card" actions={<><Button primary icon={Plus}>Add Support</Button><Button icon={Trash2} danger>Delete</Button><Button icon={Wrench}>Edit Support</Button></>}><DataTable headers={['#','Name','Type','Location [mm]','Linked Bearings','Description','Status']} rows={currentProject.supports.map((support, index) => [String(index + 1), support.name, support.type, String(support.locationMm), currentProject.bearings.filter((item) => item.supportId === support.id).map((item) => item.name).join(', ') || '—', support.name === 'SUP 1' ? 'Housing, left side' : 'Housing, right side', 'Valid'])} /></Card>
     </div>
   );
 }
 
 function MassesPage() {
+  const { project: currentProject, updateLegacyLoad, setRotorStack, editIssues } = useProject();
+  const [selectedMass, setSelectedMass] = useState(2);
+  const safeSelected = Math.min(selectedMass, Math.max(0, currentProject.legacyLoads.length - 1));
+  const selectedLoad = currentProject.legacyLoads[safeSelected];
+  const rows = currentProject.legacyLoads.map((load, index) => [
+    String(index + 1),
+    String(load.startMm),
+    String(load.lengthMm),
+    String(load.massKg),
+    String(load.outerDiameterMm ?? '—'),
+    String(load.innerDiameterMm ?? '—'),
+    load.isRotorStack ? 'Yes' : 'No',
+    load.umpEnabled ? 'Yes' : 'No',
+  ]);
+  const loadIssues = editIssues.filter((issue) => !issue.entityId || issue.entityId === selectedLoad.id);
+  const parse = (value: string) => {
+    const parsed = Number(value.replace(',', '.'));
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+  const totalMass = currentProject.legacyLoads.reduce((sum, load) => sum + load.massKg, 0);
+  const forceRows = currentProject.forces.map((force, index) => [
+    String(index + 1),
+    String(force.positionMm),
+    force.type === 'synchronous' ? 'Synchronous' : force.type === 'unbalance' ? 'Unbalance' : 'Custom',
+    `${force.magnitude} ${force.unit}`,
+    String(force.phaseDeg),
+    force.direction,
+  ]);
+  const responseRows = currentProject.responsePoints.map((point, index) => [
+    String(index + 1),
+    String(point.positionMm),
+    'Displacement',
+    `Radial (${point.coordinate})`,
+    point.note ?? '—',
+  ]);
+
   return (
     <div className="masses-grid">
       <Card title="Masses & Excitations" subtitle="Define distributed masses, rotor packages, forces and response points" icon={Weight} className="mass-header" actions={<><Button icon={Download}>Import</Button><Button icon={Copy}>Duplicate</Button><Button icon={Trash2} danger>Delete</Button><Button primary icon={Plus}>Add Mass</Button><Button primary icon={Plus}>Add Force</Button><Button primary icon={Plus}>Add Response Point</Button></>}><ShaftViewer compact /></Card>
-      <Card title="Distributed Masses / Rotor Package" icon={Weight} className="distributed-masses" actions={<><Button primary icon={Plus}>Add Mass</Button><Button icon={Copy}>Duplicate</Button><Button icon={Trash2} danger>Delete</Button></>}><DataTable headers={['#','Xi [mm]','LC [mm]','Mass [kg]','Dext [mm]','Dint [mm]','Package','UMP']} rows={masses} selected={2} /></Card>
-      <Card title="Selected Mass" icon={Settings} className="mass-inspector"><KeyValue rows={[["Index","3"],["Position Xi","1146 mm"],["Length (LC)","1321 mm"],["Mass","2838 kg"],["Outer Diameter","845 mm"],["Inner Diameter","580 mm"]]} /><label className="toggle-line"><span>Rotor Package</span><input type="checkbox" defaultChecked/></label><label className="toggle-line"><span>Unbalance Mass Prop.</span><input type="checkbox" defaultChecked/></label><div className="info-box"><Settings size={18}/><div><strong>Rotor Package</strong><span>Included in rotor package properties, gyroscopic effects and polar inertia.</span></div></div></Card>
-      <Card title="Forces & Response Points" icon={Activity} className="force-response"><div className="dual-section"><div><div className="section-toolbar"><h3><Activity size={18}/> Forces / Excitations</h3><Button icon={Plus}>Add Force</Button></div><DataTable headers={['#','Xi [mm]','Type','Magnitude','Phase [°]','Direction']} rows={[["1","1146","Synchronous","165608 N","0","Vertical"],["2","2467","Synchronous","165608 N","180","Vertical"]]} /></div><div><div className="section-toolbar"><h3><Triangle size={18}/> Response Points</h3><Button icon={Plus}>Add Response Point</Button></div><DataTable headers={['#','Xi [mm]','Type','Direction','Note']} rows={[["1","536.47","Displacement","Radial (Y)","BRG 1"],["2","3026.97","Displacement","Radial (Y)","BRG 2"]]} /></div></div></Card>
-      <div className="mass-summary"><Metric icon={Weight} label="Total Distributed Mass" value="3,185.0 kg"/><Metric icon={Settings} label="Rotor Package Count" value="1"/><Metric icon={Database} label="Concentrated Masses" value="0"/><Metric icon={Activity} label="Number of Forces" value="2"/><Metric icon={Triangle} label="Response Points" value="2"/></div>
+      <Card title="Distributed Masses / Rotor Package" icon={Weight} className="distributed-masses" actions={<><Button primary icon={Plus}>Add Mass</Button><Button icon={Copy}>Duplicate</Button><Button icon={Trash2} danger>Delete</Button></>}><DataTable headers={['#','Xi [mm]','LC [mm]','Mass [kg]','Dext [mm]','Dint [mm]','Package','UMP']} rows={rows} selected={safeSelected} onSelect={setSelectedMass} /></Card>
+      <Card title="Selected Mass" icon={Settings} className="mass-inspector"><FormField label="Position Xi" value={String(selectedLoad.startMm)} unit="mm" onChange={(value) => updateLegacyLoad(selectedLoad.id, { startMm: parse(value) })}/><FormField label="Length (LC)" value={String(selectedLoad.lengthMm)} unit="mm" onChange={(value) => updateLegacyLoad(selectedLoad.id, { lengthMm: parse(value) })}/><FormField label="Mass" value={String(selectedLoad.massKg)} unit="kg" onChange={(value) => updateLegacyLoad(selectedLoad.id, { massKg: parse(value) })}/><FormField label="Outer Diameter" value={String(selectedLoad.outerDiameterMm ?? 0)} unit="mm" onChange={(value) => updateLegacyLoad(selectedLoad.id, { outerDiameterMm: parse(value) })}/><FormField label="Inner Diameter" value={String(selectedLoad.innerDiameterMm ?? 0)} unit="mm" onChange={(value) => updateLegacyLoad(selectedLoad.id, { innerDiameterMm: parse(value) || undefined })}/><label className="toggle-line"><span>Rotor Package</span><input type="radio" name="rotor-stack" checked={selectedLoad.isRotorStack} onChange={() => setRotorStack(selectedLoad.id)}/></label><label className="toggle-line"><span>Unbalance Mass Prop.</span><input type="checkbox" checked={Boolean(selectedLoad.umpEnabled)} onChange={(event) => updateLegacyLoad(selectedLoad.id, { umpEnabled: event.target.checked })}/></label>{loadIssues.length ? <div className="inspector-note error-note"><Triangle size={16}/><div><strong>Edit rejected</strong><span>{loadIssues[0].message}</span></div></div> : <div className="info-box"><Settings size={18}/><div><strong>{selectedLoad.isRotorStack ? 'Rotor Package' : 'Distributed Mass'}</strong><span>{selectedLoad.isRotorStack ? 'Explicitly persisted in the React domain; no longer inferred from MSFlexGrid cell color.' : 'Legacy Xi/LC/KG semantics preserved for BIEGE/FLECHA compatibility.'}</span></div></div>}</Card>
+      <Card title="Forces & Response Points" icon={Activity} className="force-response"><div className="dual-section"><div><div className="section-toolbar"><h3><Activity size={18}/> Forces / Excitations</h3><Button icon={Plus}>Add Force</Button></div><DataTable headers={['#','Xi [mm]','Type','Magnitude','Phase [°]','Direction']} rows={forceRows} /></div><div><div className="section-toolbar"><h3><Triangle size={18}/> Response Points</h3><Button icon={Plus}>Add Response Point</Button></div><DataTable headers={['#','Xi [mm]','Type','Direction','Note']} rows={responseRows} /></div></div></Card>
+      <div className="mass-summary"><Metric icon={Weight} label="Total Distributed Mass" value={`${totalMass.toLocaleString('en-US')} kg`}/><Metric icon={Settings} label="Rotor Package Count" value={String(currentProject.legacyLoads.filter((load) => load.isRotorStack).length)}/><Metric icon={Database} label="Concentrated Masses" value={String(currentProject.concentratedMasses.length)}/><Metric icon={Activity} label="Number of Forces" value={String(currentProject.forces.length)}/><Metric icon={Triangle} label="Response Points" value={String(currentProject.responsePoints.length)}/></div>
     </div>
   );
 }
@@ -418,8 +472,9 @@ function SourceTile({ icon: Icon, title, subtitle, active }: { icon: LucideIcon;
   return <div className={'source-tile ' + (active ? 'active' : '')}><Icon size={20}/><div><strong>{title}</strong><span>{subtitle}</span></div></div>;
 }
 
-function MatrixEditor({ title, values }: { title: string; values: string[] }) {
-  return <div className="matrix-editor"><div className="matrix-title"><strong>{title}</strong><Badge tone="info">Symmetric</Badge></div><div className="matrix-labels"><span></span><span>X</span><span>Z</span><span>X</span><input defaultValue={values[0]}/><input defaultValue={values[1]}/><span>Z</span><input defaultValue={values[2]}/><input defaultValue={values[3]}/></div></div>;
+function MatrixEditor({ title, values, editable = [false, false, false, false], onChange }: { title: string; values: string[]; editable?: boolean[]; onChange?: (index: number, value: string) => void }) {
+  const input = (index: number) => <input value={values[index]} readOnly={!editable[index]} onChange={(event) => onChange?.(index, event.target.value)}/>;
+  return <div className="matrix-editor"><div className="matrix-title"><strong>{title}</strong><Badge tone="info">Symmetric</Badge></div><div className="matrix-labels"><span></span><span>X</span><span>Z</span><span>X</span>{input(0)}{input(1)}<span>Z</span>{input(2)}{input(3)}</div></div>;
 }
 
 function Artifact({ icon: Icon, title, file, meta }: { icon: LucideIcon; title: string; file: string; meta: string }) {
