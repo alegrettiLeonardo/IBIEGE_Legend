@@ -36,3 +36,43 @@ jobs:
 
       - name: Unit tests
         run: npm test
+
+
+  solver-contract-freeze:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rotordin-studio
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install GNU Fortran and LAPACK/BLAS
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gfortran liblapack-dev libblas-dev
+
+      - name: Verify vendored Fortran source manifest
+        run: python solver/build_solver.py --verify-source
+
+      - name: Build vendored RotorDin solver
+        run: python solver/build_solver.py --clean
+
+      - name: Freeze EST-ST41 Modes result
+        run: |
+          python tools/freeze_est_st41.py \
+            --output artifacts/est-st41-modes
+
+      - name: Upload EST-ST41 frozen candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: est-st41-modes-golden-candidate
+          path: rotordin-studio/artifacts/est-st41-modes
+          if-no-files-found: error
+          retention-days: 30
