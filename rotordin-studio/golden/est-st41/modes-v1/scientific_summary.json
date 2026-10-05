@@ -1,0 +1,174 @@
+{
+  "qualification_id": "A10-EST-ST41-MODES-V1",
+  "source_authority": {
+    "repository": "alegrettiLeonardo/frontend_rotordin",
+    "branch": "fix/solver-audit-647d600b",
+    "head": "c669978bdcc42c06507eac8fda8b6dc39e8bce97",
+    "solver_tree_sha": "542cbbea29923090bb17562c4120a8d5646ffcba"
+  },
+  "fixture": {
+    "reference": "EST",
+    "component": "ST41_1000_B3_60HZ_1675_63536",
+    "nominal_rpm": 1800
+  },
+  "execution": {
+    "analysis": "modes",
+    "flags": [
+      "-std",
+      "-m",
+      "-b"
+    ],
+    "modal_rpm": 1800,
+    "bearing_table_common_range_rpm": [
+      500,
+      4000
+    ],
+    "returncode": 0,
+    "matrix_state_size": 248,
+    "physical_dof": 124
+  },
+  "model_summary": {
+    "sections": 17,
+    "disk_records": 8,
+    "shaft_section_mass_kg": 4935.4,
+    "disk_mass_kg": 10680,
+    "concentrated_mass_kg": 0,
+    "rotor_mass_kg_reported": 15616,
+    "rotor_length_m": 4.9544,
+    "center_of_mass_m": 2.3071
+  },
+  "bearing_coefficients_1800rpm": [
+    {
+      "bearing": 1,
+      "table": 1,
+      "kxx": 231261224.48979586,
+      "kxz": -43605714.28571428,
+      "kzx": -756955102.0408163,
+      "kzz": 2008020408.163265,
+      "cxx": 653285.7142857142,
+      "cxz": -1466632.6530612248,
+      "czx": -1466632.6530612248,
+      "czz": 8423469.387755102
+    },
+    {
+      "bearing": 2,
+      "table": 2,
+      "kxx": 254218367.3469388,
+      "kxz": -83526734.69387756,
+      "kzx": -854291836.7346939,
+      "kzz": 2427693877.55102,
+      "cxx": 637020.4081632654,
+      "cxz": -1488469.387755102,
+      "czx": -1488469.387755102,
+      "czz": 9302653.061224489
+    }
+  ],
+  "spectrum": {
+    "status": "ASYMPTOTICALLY_STABLE",
+    "maximum_growth_s_inv": -0.007348116482037198,
+    "total": 248,
+    "finite": 248,
+    "invalid": 0,
+    "unstable": 0,
+    "nonoscillatory": 4
+  },
+  "modes": [
+    {
+      "mode": 1,
+      "eigenpair": 1,
+      "frequency_hz": 21.488474003713602,
+      "growth_s_inv": -5.574351684866017,
+      "damping_ratio": 0.041251437868758574,
+      "log_decrement": 0.25941123990017473,
+      "whirl": "BW"
+    },
+    {
+      "mode": 2,
+      "eigenpair": 3,
+      "frequency_hz": 35.82582484384177,
+      "growth_s_inv": -8.668507238380498,
+      "damping_ratio": 0.03848100998812883,
+      "log_decrement": 0.24196253055344683,
+      "whirl": "MX"
+    },
+    {
+      "mode": 3,
+      "eigenpair": 5,
+      "frequency_hz": 39.539143716955486,
+      "growth_s_inv": -32.07179920130522,
+      "damping_ratio": 0.12803450826154839,
+      "log_decrement": 0.8111404594619972,
+      "whirl": "MX"
+    },
+    {
+      "mode": 4,
+      "eigenpair": 9,
+      "frequency_hz": 69.3717044144932,
+      "growth_s_inv": -32.03387082957072,
+      "damping_ratio": 0.0732955277193711,
+      "log_decrement": 0.46177142539513816,
+      "whirl": "MX"
+    },
+    {
+      "mode": 5,
+      "eigenpair": 11,
+      "frequency_hz": 71.9364453656196,
+      "growth_s_inv": -17.52566999843081,
+      "damping_ratio": 0.0387453475311446,
+      "log_decrement": 0.24362713377559805,
+      "whirl": "MX"
+    },
+    {
+      "mode": 6,
+      "eigenpair": 13,
+      "frequency_hz": 137.53371673130155,
+      "growth_s_inv": -55.70876669976036,
+      "damping_ratio": 0.06433301655527048,
+      "log_decrement": 0.40505534223726464,
+      "whirl": "MX"
+    },
+    {
+      "mode": 7,
+      "eigenpair": 15,
+      "frequency_hz": 138.11242786745908,
+      "growth_s_inv": -71.17268300263288,
+      "damping_ratio": 0.08174193578546768,
+      "log_decrement": 0.5153242478000201,
+      "whirl": "MX"
+    },
+    {
+      "mode": 8,
+      "eigenpair": 17,
+      "frequency_hz": 208.87300781171626,
+      "growth_s_inv": -57.2494236050941,
+      "damping_ratio": 0.043580891578082835,
+      "log_decrement": 0.2740872274731652,
+      "whirl": "MX"
+    },
+    {
+      "mode": 9,
+      "eigenpair": 19,
+      "frequency_hz": 212.67854306333822,
+      "growth_s_inv": -46.69155339705809,
+      "damping_ratio": 0.034919645891087175,
+      "log_decrement": 0.21954049865365488,
+      "whirl": "MX"
+    },
+    {
+      "mode": 10,
+      "eigenpair": 21,
+      "frequency_hz": 253.60122267942867,
+      "growth_s_inv": -30.505337206044597,
+      "damping_ratio": 0.01914101862935295,
+      "log_decrement": 0.12028860462004032,
+      "whirl": "MX"
+    }
+  ],
+  "comparison_policy": {
+    "input": "byte-identical",
+    "bearing_coefficients": "rtol 1e-10, atol 1e-5",
+    "modal_metrics": "cross-platform tolerance defined in tools/verify_est_st41_golden.py",
+    "mode_shapes": "raw frozen for provenance; not byte-compared because eigenvector sign/phase is not a stable physical invariant",
+    "timestamped_reports": "first stamp line excluded from normalized summary comparison"
+  }
+}
