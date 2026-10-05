@@ -6,6 +6,8 @@ import {
   type ReactNode,
 } from 'react';
 import { demoProject } from '../data/demoProject';
+import type { PrepareRunResponse } from '../../electron/contracts';
+import type { SolverKind } from '../runs/model';
 import {
   addSegmentAtomic,
   moveSegmentAtomic,
@@ -27,8 +29,12 @@ interface ProjectContextValue {
   saved: boolean;
   validation: ReturnType<typeof validateProject>;
   editIssues: ValidationIssue[];
+  projectFilePath?: string;
   markSaved: () => void;
   markDirty: () => void;
+  saveProject: () => Promise<boolean>;
+  openProject: () => Promise<boolean>;
+  prepareRun: (solver: SolverKind) => Promise<PrepareRunResponse | undefined>;
   updateSegment: (id: string, patch: SegmentPatch) => boolean;
   addSegment: (afterIndex?: number) => boolean;
   removeSegment: (id: string) => boolean;
@@ -44,6 +50,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   const [project, setProject] = useState<RotorProject>(() => structuredClone(demoProject));
   const [saved, setSaved] = useState(true);
   const [editIssues, setEditIssues] = useState<ValidationIssue[]>([]);
+  const [projectFilePath, setProjectFilePath] = useState<string>();
 
   const validation = useMemo(() => validateProject(project), [project]);
 
@@ -57,13 +64,94 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     return true;
   };
 
+  const desktopIssue = (code: string, error: unknown) => {
+    setEditIssues([{
+      code,
+      severity: 'error',
+      message: error instanceof Error ? error.message : String(error),
+    }]);
+  };
+
+  const saveProject = async (): Promise<boolean> => {
+    if (!window.rotorDinDesktop) {
+      // Browser/Vite development mode has no privileged filesystem access.
+      setSaved(true);
+      return true;
+    }
+
+    try {
+      const result = await window.rotorDinDesktop.saveProject({
+        project,
+        filePath: projectFilePath,
+      });
+      if (result.cancelled) return false;
+      setProjectFilePath(result.filePath);
+      setSaved(true);
+      setEditIssues([]);
+      return true;
+    } catch (error) {
+      desktopIssue('PROJECT-SAVE-001', error);
+      return false;
+    }
+  };
+
+  const openProject = async (): Promise<boolean> => {
+    if (!window.rotorDinDesktop) {
+      desktopIssue('PROJECT-OPEN-DESKTOP', 'Opening project files requires the Electron desktop shell.');
+      return false;
+    }
+
+    if (!saved && !window.confirm('This project has unsaved changes. Open another project and discard them?')) {
+      return false;
+    }
+
+    try {
+      const result = await window.rotorDinDesktop.openProject();
+      if (result.cancelled || !result.project) return false;
+      setProject(result.project);
+      setProjectFilePath(result.filePath);
+      setSaved(true);
+      setEditIssues([]);
+      return true;
+    } catch (error) {
+      desktopIssue('PROJECT-OPEN-001', error);
+      return false;
+    }
+  };
+
+  const prepareRun = async (solver: SolverKind): Promise<PrepareRunResponse | undefined> => {
+    if (!window.rotorDinDesktop) {
+      desktopIssue('RUN-PREPARE-DESKTOP', 'Run preparation requires the Electron desktop shell.');
+      return undefined;
+    }
+
+    const currentValidation = validateProject(project);
+    if (!currentValidation.valid) {
+      setEditIssues(currentValidation.issues);
+      return undefined;
+    }
+
+    try {
+      const result = await window.rotorDinDesktop.prepareRun({ project, solver });
+      setEditIssues([]);
+      return result;
+    } catch (error) {
+      desktopIssue('RUN-PREPARE-001', error);
+      return undefined;
+    }
+  };
+
   const value: ProjectContextValue = {
     project,
     saved,
     validation,
     editIssues,
+    projectFilePath,
     markSaved: () => setSaved(true),
     markDirty: () => setSaved(false),
+    saveProject,
+    openProject,
+    prepareRun,
     updateSegment: (id, patch) => apply(updateSegmentAtomic(project, id, patch)),
     addSegment: (afterIndex) => apply(addSegmentAtomic(project, afterIndex)),
     removeSegment: (id) => apply(removeSegmentAtomic(project, id)),
