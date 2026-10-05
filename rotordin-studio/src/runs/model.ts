@@ -17,6 +17,8 @@ export interface RunJobRecord {
   inputSha256: string;
   stdoutSha256?: string;
   stderrSha256?: string;
+  parsedResultPath?: string;
+  parsedResultSha256?: string;
   exitCode?: number | null;
   status: RunStatus;
   sections: string[];
