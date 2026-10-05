@@ -12,8 +12,8 @@
     "typecheck": "tsc --noEmit",
     "typecheck:electron": "tsc -p electron/tsconfig.json --noEmit",
     "build:renderer": "vite build",
-    "build:electron": "tsc -p electron/tsconfig.json",
-    "desktop": "electron dist-electron/electron/main.js"
+    "build:electron": "esbuild electron/main.ts --bundle --platform=node --format=esm --external:electron --outfile=dist-electron/main.mjs && esbuild electron/preload.ts --bundle --platform=node --format=cjs --external:electron --outfile=dist-electron/preload.cjs",
+    "desktop": "electron dist-electron/main.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
@@ -28,6 +28,7 @@
     "vite": "^6.0.5",
     "vitest": "^2.1.8",
     "@types/node": "^22.10.2",
-    "electron": "^33.2.1"
+    "electron": "^33.2.1",
+    "esbuild": "^0.24.2"
   }
 }
