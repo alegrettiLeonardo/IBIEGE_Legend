@@ -1,9 +1,10 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { IPC_CHANNELS, type PrepareRunRequest, type ProjectSaveRequest } from './contracts';
+import { IPC_CHANNELS, type ExecuteQualifiedRunRequest, type PrepareRunRequest, type ProjectSaveRequest } from './contracts';
 import { openProjectFile, saveProjectFile } from './services/projectFiles';
 import { prepareRunWorkspace } from './services/runWorkspace';
+import { executeQualifiedRotorDinRun } from './services/qualifiedRotorDinRun';
 
 const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 
@@ -42,6 +43,9 @@ function registerIpc() {
 
   ipcMain.handle(IPC_CHANNELS.runPrepare, async (_event, request: PrepareRunRequest) =>
     prepareRunWorkspace(request));
+
+  ipcMain.handle(IPC_CHANNELS.runExecuteQualified, async (_event, request: ExecuteQualifiedRunRequest) =>
+    executeQualifiedRotorDinRun(request));
 }
 
 app.whenReady().then(() => {
