@@ -1,11 +1,11 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { IPC_CHANNELS, type ExecuteQualifiedRunRequest, type LoadQualifiedRunRequest, type PrepareRunRequest, type ProjectSaveRequest } from './contracts';
+import { IPC_CHANNELS, type ExecuteQualifiedRunRequest, type InspectRunRequest, type LoadQualifiedRunRequest, type OpenRunWorkspaceRequest, type PrepareRunRequest, type ProjectSaveRequest, type ReadRunArtifactRequest, type RevealRunArtifactRequest } from './contracts';
 import { openProjectFile, saveProjectFile } from './services/projectFiles';
 import { prepareRunWorkspace } from './services/runWorkspace';
 import { executeQualifiedRotorDinRun } from './services/qualifiedRotorDinRun';
-import { listQualifiedRuns, loadQualifiedRun } from './services/runHistory';
+import { inspectRun, listQualifiedRuns, loadQualifiedRun, openRunWorkspace, readRunArtifact, revealRunArtifact } from './services/runHistory';
 
 const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 
@@ -53,6 +53,18 @@ function registerIpc() {
 
   ipcMain.handle(IPC_CHANNELS.runLoadQualified, async (_event, request: LoadQualifiedRunRequest) =>
     loadQualifiedRun(request));
+
+  ipcMain.handle(IPC_CHANNELS.runInspect, async (_event, request: InspectRunRequest) =>
+    inspectRun(request));
+
+  ipcMain.handle(IPC_CHANNELS.runReadArtifact, async (_event, request: ReadRunArtifactRequest) =>
+    readRunArtifact(request));
+
+  ipcMain.handle(IPC_CHANNELS.runRevealArtifact, async (_event, request: RevealRunArtifactRequest) =>
+    revealRunArtifact(request));
+
+  ipcMain.handle(IPC_CHANNELS.runOpenWorkspace, async (_event, request: OpenRunWorkspaceRequest) =>
+    openRunWorkspace(request));
 }
 
 app.whenReady().then(() => {
