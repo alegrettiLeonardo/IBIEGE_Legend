@@ -1,0 +1,25 @@
+{
+  "source_repository": "alegrettiLeonardo/frontend_rotordin",
+  "source_branch": "fix/solver-audit-647d600b",
+  "source_head": "c669978bdcc42c06507eac8fda8b6dc39e8bce97",
+  "solver_tree_sha": "542cbbea29923090bb17562c4120a8d5646ffcba",
+  "source_tree_sha256_reported_by_solver_readme": "afe5e162168402b07df8960375fc45a58a094d15efde35380c199dfb27699d6d",
+  "vendored_scope": "solver/",
+  "reference_frontend_scope": [
+    "domain.py",
+    "engineering_units.py",
+    "legacy_import.py",
+    "legacy_package_contract.py",
+    "legacy_mesh.py",
+    "analysis_speed_contract.py",
+    "legacy_calculation_contract.py",
+    "analysis_speed_i18n.py",
+    "i18n.py",
+    "mass_properties.py",
+    "numerical_audit.py",
+    "solver_disks.py",
+    "solver_runtime.py",
+    "solver.py"
+  ],
+  "purpose": "A10 frozen scientific contract authority for RotorDin Studio migration; do not edit vendored solver physics in this branch without a separate solver-audit decision."
+}
