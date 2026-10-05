@@ -72,6 +72,19 @@ jobs:
           python tools/freeze_est_st41.py \
             --output artifacts/est-st41-modes
 
+      - name: Verify EST-ST41 candidate against frozen scientific golden
+        shell: bash
+        run: |
+          set -euo pipefail
+          GOLDEN="golden/est-st41/modes-v1"
+          if [ -f "$GOLDEN/qualification.json" ]; then
+            python tools/verify_est_st41_golden.py \
+              --candidate artifacts/est-st41-modes \
+              --golden "$GOLDEN"
+          else
+            echo "No frozen golden yet; initial freeze will be persisted after artifact upload."
+          fi
+
       - name: Upload EST-ST41 frozen candidate
         uses: actions/upload-artifact@v4
         with:
