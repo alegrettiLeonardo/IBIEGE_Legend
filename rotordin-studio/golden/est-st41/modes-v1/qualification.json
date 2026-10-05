@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "qualification_id": "A10-EST-ST41-MODES-V1",
+  "status": "REAL_SOLVER_OUTPUT_FROZEN_CANDIDATE",
+  "source_authority": {
+    "repository": "alegrettiLeonardo/frontend_rotordin",
+    "branch": "fix/solver-audit-647d600b",
+    "head": "c669978bdcc42c06507eac8fda8b6dc39e8bce97",
+    "solver_tree_sha": "542cbbea29923090bb17562c4120a8d5646ffcba",
+    "source_manifest_sha256": "ea430584a3296baed41dfd7b04bee8c21a462753af352c8fd105f317d1eb59fd",
+    "source_provenance_sha256": "75309deb86148e7062d52ebca712e4ca4820935bba5dfb39201342ff8d72e5d7"
+  },
+  "fixture": {
+    "name": "EST-ST41_1000_B3_60HZ_1675_63536.irdin.txt",
+    "sha256": "470e57799e1d75c6b0c48f4631feb3ecb0975a40e191a48af3fcf330146a7c70",
+    "reference": "EST",
+    "component": "ST41_1000_B3_60HZ_1675_63536",
+    "nominal_rpm": 1800.0
+  },
+  "analysis": {
+    "kind": "modes",
+    "reason": "The source file has no authoritative enabled-analysis bitset. Modes at nominal speed exercises the exact shaft/mass/bearing/support contract without altering the file's Campbell range.",
+    "modal_rpm": 1800.0,
+    "bearing_table_common_range_rpm": [
+      500.0,
+      4000.0
+    ],
+    "command": [
+      "/home/runner/work/IBIEGE_Legend/IBIEGE_Legend/rotordin-studio/solver/rotordin",
+      "-std",
+      "-m",
+      "-b"
+    ],
+    "command_text": "/home/runner/work/IBIEGE_Legend/IBIEGE_Legend/rotordin-studio/solver/rotordin -std -m -b"
+  },
+  "legacy_contract": {
+    "package_divisions": 6,
+    "disk_density_kg_m3": 7850.0,
+    "campbell_raw_rpm": [
+      0.0,
+      3000.0
+    ],
+    "response_grid": {
+      "version": 2,
+      "raw_d_rpmi": 300.0,
+      "raw_d_rpmf": 3000.0,
+      "raw_d_div": 400.0,
+      "effective_initial_rpm": 500.0,
+      "effective_final_rpm": 3000.0,
+      "converted_step_rpm": 6.234413965087282,
+      "number_of_points": 402,
+      "source_semantics": "legacy_unbfd_division_parameter",
+      "bearing_table_clipped": true
+    },
+    "import_warnings": [
+      "rpm i legado (0) é menor que o primeiro ponto das tabelas de mancal (500 rpm). Ajuste rpm i antes de salvar/executar, se necessário."
+    ]
+  },
+  "artifacts": {
+    "solver_executable_sha256": "5a5b1f777c752335717e1a6445441d7523369de5e3078412c7ffe66533c8b5eb",
+    "input_sha256": "c499c0b94baf79db1c76991b201a3905d2d3826c0116ecc70d33431367b866c2",
+    "stdout_sha256": "5b4f70fe2c2ee1ffa19f9b2c9b3ec14f6f528cce7f53e9a48368d9ea380fc4a5",
+    "stderr_sha256": "d756ca59ed38df5a1b818c096dc1b7c75b5ec62140d2889f83ab514acc3bc323",
+    "sections": {
+      "MODEL_AUDIT": "ef9e4b417a9ecd8df22baa9580eb5d1f2c353e69aa9cabaf92fa4118ff79ecaf",
+      "exectime.out": "0afcb30153f0b7b040f8829519527830321551dc2816e48514ac23c63d1b88e6",
+      "modeshp.out": "a1e212ee1cc64229bcf3c207e1d68f9c19a2692e88d8aeedfd225f0202529e4a",
+      "output.out": "c13a073ab9aaf0b755288a9ccf6e3c24f10ee7b615de69ff3e0c3171f1af33df",
+      "rdaudit.out": "93959d570e8e55b3c3d0e9ec9d485e7503ad95103a0e971422ef0cd29dc814ec"
+    }
+  },
+  "environment": {
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+    "python": "3.12.14",
+    "compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+  }
+}
