@@ -7,6 +7,8 @@ export const IPC_CHANNELS = {
   projectOpen: 'project:open',
   runPrepare: 'run:prepare',
   runExecuteQualified: 'run:execute-qualified',
+  runListQualified: 'run:list-qualified',
+  runLoadQualified: 'run:load-qualified',
 } as const;
 
 export interface ProjectSaveRequest {
@@ -59,9 +61,25 @@ export interface ExecuteQualifiedRunResponse {
   jobs: QualifiedRunJobResponse[];
 }
 
+export interface QualifiedRunSummary {
+  runId: string;
+  projectReference: string;
+  startedAt: string;
+  finishedAt?: string;
+  status: RunManifest['status'];
+  analyses: AnalysisKind[];
+  artifactCount: number;
+}
+
+export interface LoadQualifiedRunRequest {
+  runId: string;
+}
+
 export interface RotorDinDesktopApi {
   saveProject(request: ProjectSaveRequest): Promise<ProjectSaveResponse>;
   openProject(): Promise<ProjectOpenResponse>;
   prepareRun(request: PrepareRunRequest): Promise<PrepareRunResponse>;
   executeQualifiedRun(request: ExecuteQualifiedRunRequest): Promise<ExecuteQualifiedRunResponse>;
+  listQualifiedRuns(): Promise<QualifiedRunSummary[]>;
+  loadQualifiedRun(request: LoadQualifiedRunRequest): Promise<ExecuteQualifiedRunResponse>;
 }
