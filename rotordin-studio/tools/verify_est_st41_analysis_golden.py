@@ -92,6 +92,19 @@ def main() -> int:
 
     expected = json.loads((golden / "parsed_results.json").read_text(encoding="utf-8"))
     actual = json.loads((candidate / "parsed_results.json").read_text(encoding="utf-8"))
+
+    # RD_AUDIT_V1 contains the complete adaptive numerical trace.  The number
+    # and exact ordering of refinement/search records can legitimately differ
+    # across LAPACK/OpenBLAS/compiler platforms while converging to the same
+    # reported engineering result (Campbell crossings, response, line, map,
+    # orbit).  Keep rdaudit.out frozen as provenance, but do not make its raw
+    # trace a cross-platform equality gate.  The stable parsed engineering
+    # outputs remain tolerance-gated below.
+    for payload, label in ((expected, "golden"), (actual, "candidate")):
+        audit = payload.pop("numerical_audit", None)
+        if isinstance(audit, dict) and audit.get("parse_errors"):
+            errors.append(f"{label} numerical_audit contains parser errors: {audit['parse_errors']!r}")
+
     compare(expected, actual, "parsed_results", errors, rtol=args.rtol, atol=args.atol)
 
     if errors:
