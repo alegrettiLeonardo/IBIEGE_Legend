@@ -1,0 +1,91 @@
+/**
+$Id$
+@mainpage RotorDin Documentation
+
+@section Introduction
+RotorDin is a rotordynamics calculation program. 
+Solves a differential equations system using LAPACK numeric eigenvalues calculation.
+It calculates the basic Campbell diagram, unbalance response, time response, undamped
+critical speed map, stability map, orbit and maybe others at now.<br>
+Torsion basic calculations, using elements with two or three node, static,
+frequency, harmonic and time response.<br>
+It uses input files that can be directly read or redirected from the
+console using command line arguments, in this case just one input file.<br>
+It can also generate HPGL plot outputs. One can show these files using an appropriate viewer. 
+Check one viewer at <a href="http://service-hpglview.web.cern.ch/service-hpglview/hpglviewer.html">
+CERN HP-GL Viewer</a>.
+<p>Copyright WEG and UTFPR/UFPR - Prof. C. A. Bavastri.<br>
+ based on prior Matlab &reg; algorithms form H. L. V. dos Santos</p>
+
+@section Calculations
+The available calculation options as shown on help request (-h):
+\verbatim
+ command line arguments (case sensitive):
+ [-a]   : undamped angular critical speed map(l)
+ [-b]   : include bearing support stiffness(l)
+ [-c]   : Campbell diagram(l,t) and stability map(l)
+ [-e]   : export FE geometry
+ [-f]   : unbalance(l)/frequency(t) response
+ [-h]   : show this help
+ [-j]   : speed var bearing params(l)
+ [-k]   : undamped critical speed map(l)
+ [-l]   : generates an operational log
+ [-m]   : modal shapes
+ [-n]   : time transient(t)
+ [-o]   : <file*> override/<d>ump messages
+ [-p]   : output HPGL plot (if available)
+ [-r]   : flexural-torsion analysis(t)
+ [-s]   : static(t) elastic line(l)
+ [-t]   : time(l) orbits and shape/harmonic(t) response
+ [-v]   : check current version
+ [-x]   : <HB/mm> export plain<Harwell-Boeing/mat.market>
+ [-i]   : <file*> define input <file> name
+ [-d]   : <folder*> define output(/input) <folder> name
+ [-g]   : <file*> <b/s/t> input <bea/sup/tor> <file> mask
+ [-std] : use standard i/o and error (wo files)
+ <optional>, *not -std, avail:(l)ateral (t)orsion
+ \endverbatim
+
+@section Compiling
+One should be able to build it on a Fortran 77 compatible legacy compiler, 
+but Fortran 90 is recommended and required for some routines. 
+In this case, should compile also blas.f and lapack.f using the include 'dlamch7.inc'.
+Remove when using optimized libraries for blas and or lapack. Please remember to update
+the compiler information include file compiler.inc nad build date on build.inc.
+Time-torque function evaluator uses recursive subroutines that is not allowed in
+strictly 77 standard. May be necessary remove 'evalf.f' source code from Makefile
+and the the function evaluation becomes unavailable.
+Include "c" or "Fortran" compiler preprocessor switch -cpp or -fpp. If using
+<a href="https://www.gnu.org/software/make/manual/html_node/Makefiles.html">make</a>
+ files, please check output directories:<br>
+bin, tmp, tmp/lapack, tmp/torsion, tmp/torsion/evalf.
+<p>For the optimized Lapack library check:<a href="https://www.openblas.net">OpenBLAS</a>.</p>
+
+@section Notes
+<ul><li>When using the console reading option (-std) all input files, main, options, 
+bearing and support when used, must be concatenated properly and redirected using shell sign like &lt;.
+The standard output can also be redirected from the console to a file using shell redirection sign like &gt;.
+An example might be: rotordin -std &lt; input.txt &gt; output.txt.</li><li>When using the
+console reading (-std) and the calculation uses bearing data, the OPTIONS section should contain the word "op(tions)".
+By the way, the last OPTIONS should contain the desired calculation options as small cap letters,
+as example for Campbell, unbalance response, static and log options, "cfsl" (without quotes).
+</li></ul>
+
+@section References
+Some other specific references are found on full documentation.
+<ol>
+<li>Rotordynamics prediction in engineering, <br>
+Lalanne, Michel and Ferraris, Guy,J. Wiley and Sons,<br>
+Chichester, ISBN 0-470-86037-5, 1990.</li>
+<li>LAPACK - Linear Algebra PACKage - follow <a href="http://www.netlib.org/lapack/">LAPACK</a></li>
+<li>E. J. Nestorides, A Handbook on Torsional Vibration, Cambridge: B.I.C.E.R.A. 
+Research Laboratory, At the University Press, 1958.</li> 
+<li>W. J. Chen e E. J. Gunter, Introduction To Dynamics Of Rotor-Bearing Systems, 
+Trafford, 2007, p. 482.</li>
+<li>G. Diana, "DINAMICA E VIBRAZIONE DELLE MACCHINE - Dinamica dei Rotori," 
+Edizione Spiegel, 1984.</li>
+<li>Walker,Duncan N. Torsional Vibration of Turbo-Machinery.</li></ol> 
+
+@section SVN
+$HeadURL$
+*/
