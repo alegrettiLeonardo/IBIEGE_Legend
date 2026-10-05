@@ -31,6 +31,7 @@ interface ProjectContextValue {
   validation: ReturnType<typeof validateProject>;
   editIssues: ValidationIssue[];
   projectFilePath?: string;
+  selectedRun?: ExecuteQualifiedRunResponse;
   markSaved: () => void;
   markDirty: () => void;
   saveProject: () => Promise<boolean>;
@@ -53,6 +54,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   const [saved, setSaved] = useState(true);
   const [editIssues, setEditIssues] = useState<ValidationIssue[]>([]);
   const [projectFilePath, setProjectFilePath] = useState<string>();
+  const [selectedRun, setSelectedRun] = useState<ExecuteQualifiedRunResponse>();
 
   const validation = useMemo(() => validateProject(project), [project]);
 
@@ -114,6 +116,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       setProjectFilePath(result.sourceFormat === 'native-json' ? result.filePath : undefined);
       setSaved(result.sourceFormat === 'native-json');
       setEditIssues(result.issues ?? []);
+      setSelectedRun(undefined);
       return true;
     } catch (error) {
       desktopIssue('PROJECT-OPEN-001', error);
@@ -160,6 +163,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     try {
       const result = await window.rotorDinDesktop.executeQualifiedRun({ project, analyses });
       setEditIssues([]);
+      setSelectedRun(result);
       return result;
     } catch (error) {
       desktopIssue('RUN-EXEC-001', error);
@@ -173,6 +177,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     validation,
     editIssues,
     projectFilePath,
+    selectedRun,
     markSaved: () => setSaved(true),
     markDirty: () => setSaved(false),
     saveProject,
