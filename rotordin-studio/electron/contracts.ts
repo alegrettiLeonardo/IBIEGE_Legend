@@ -1,4 +1,5 @@
 import type { AnalysisKind, RotorProject, ValidationIssue } from '../src/domain';
+import type { RotorDinParsedResults } from '../src/adapters/rotordinResultData';
 import type { RunManifest, RunWorkspacePlan, SolverKind } from '../src/runs/model';
 
 export const IPC_CHANNELS = {
@@ -48,6 +49,8 @@ export interface QualifiedRunJobResponse {
   flags: string[];
   sectionNames: string[];
   criticalSpeeds: Array<{ rpm: number; hz: number; harmonic: string }>;
+  parsedResultPath: string;
+  results: RotorDinParsedResults;
 }
 
 export interface ExecuteQualifiedRunResponse {
