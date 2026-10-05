@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { matrixViewForBearing, toLegacyShaftGrid } from './domain';
 import { useProject } from './state/ProjectContext';
 import {
@@ -105,7 +105,7 @@ const runs = [
 ];
 
 function App() {
-  const { saved, validation, markDirty, saveProject, openProject } = useProject();
+  const { project: currentProject, saved, validation, markDirty, saveProject, openProject } = useProject();
   const [page, setPage] = useState<Page>('Overview');
   const [activeSegment, setActiveSegment] = useState(6);
   const [activeBearing, setActiveBearing] = useState(0);
@@ -113,6 +113,20 @@ function App() {
   const [enabledAnalyses, setEnabledAnalyses] = useState<Record<string, boolean>>(
     Object.fromEntries(analysisCards.map((item) => [item.key, true])),
   );
+
+  useEffect(() => {
+    const imported = Object.fromEntries(currentProject.analyses.map((item) => [item.kind, item.enabled]));
+    setEnabledAnalyses(Object.fromEntries(analysisCards.map((item) => [
+      item.key,
+      item.key === 'response'
+        ? Boolean(imported['unbalance-response'])
+        : item.key === 'line'
+          ? Boolean(imported['elastic-line'])
+          : item.key === 'map'
+            ? Boolean(imported['critical-speed-map'])
+            : Boolean(imported[item.key]),
+    ])));
+  }, [currentProject.id, currentProject.analyses]);
 
   const pageContent = useMemo(() => {
     switch (page) {
@@ -276,13 +290,15 @@ function ShaftPage({ selected, onSelect }: { selected: number; onSelect: (index:
   const { project: currentProject, updateSegment, addSegment, removeSegment, moveSegment, editIssues } = useProject();
   const rows = toLegacyShaftGrid(currentProject.segments).map((row, index) => {
     const segment = currentProject.segments[index];
-    const type = segment.sectionType === 'ribbed'
-      ? 'Ribbed'
-      : segment.sectionType === 'hollow'
-        ? 'Hollow'
-        : segment.endOuterDiameterMm
-          ? 'Tapered'
-          : 'Shaft';
+    const type = segment.ribbed && (segment.innerDiameterMm ?? 0) > 0
+      ? 'Ribbed + Hollow'
+      : segment.ribbed
+        ? 'Ribbed'
+        : (segment.innerDiameterMm ?? 0) > 0
+          ? 'Hollow'
+          : segment.endOuterDiameterMm
+            ? 'Tapered'
+            : 'Shaft';
     return [
       String(index + 1), type, String(row.L ?? 0), String(row.D ?? 0), String(row.DPCT ?? 0),
       String(row.A ?? 0), String(row.B ?? 0), String(row.C ?? 0), String(row.NR_COST ?? 0),
@@ -301,7 +317,7 @@ function ShaftPage({ selected, onSelect }: { selected: number; onSelect: (index:
   return (
     <div className="shaft-page-grid">
       <Card title="Shaft Modeler" icon={Box} className="shaft-main" actions={<><Button icon={Maximize2}>Fit</Button><Button icon={ZoomIn}/><Button icon={ZoomOut}/><Button icon={MousePointer2}/><Button icon={Ruler}>Measure</Button><Button icon={Eye}>Layers</Button><Button primary>2D</Button><Button>3D</Button><Button icon={Upload}>Export</Button></>}><ShaftViewer selected /></Card>
-      <Card title="Segment Properties" icon={SlidersHorizontal} className="segment-inspector"><div className="inspector-nav"><Button icon={ChevronLeft} onClick={() => onSelect(Math.max(0, safeSelected - 1))}/><strong>Segment {safeSelected + 1} of {rows.length}</strong><Button icon={ChevronRight} onClick={() => onSelect(Math.min(rows.length - 1, safeSelected + 1))}/></div><FormField label="Type" value={s[1]} /><FormField label="Length (L)" value={s[2]} unit="mm" onChange={(value) => updateSegment(segment.id, { lengthMm: numberValue(value) })} /><FormField label="Outer Diameter (D)" value={s[3]} unit="mm" onChange={(value) => updateSegment(segment.id, { outerDiameterMm: numberValue(value) })} /><FormField label="Package Diameter (DPCT)" value={s[4]} unit="mm" onChange={segment.sectionType === 'ribbed' ? (value) => updateSegment(segment.id, { ribbed: { packageDiameterMm: numberValue(value) } }) : undefined} /><FormField label="Inner Diameter (Dint)" value={s[9]} unit="mm" onChange={segment.sectionType === 'hollow' ? (value) => updateSegment(segment.id, { innerDiameterMm: numberValue(value) }) : undefined} /><FormField label="End Diameter (Df)" value={s[10]} unit="mm" onChange={(value) => updateSegment(segment.id, { endOuterDiameterMm: numberValue(value) || undefined })} /><FormField label="Rib Count" value={s[8]} onChange={segment.sectionType === 'ribbed' ? (value) => updateSegment(segment.id, { ribbed: { ribCount: numberValue(value) } }) : undefined} />{segmentIssues.length > 0 ? <div className="inspector-note error-note"><Triangle size={16}/><div><strong>Edit rejected</strong><span>{segmentIssues[0].message}</span></div></div> : <div className="inspector-note"><CheckCircle2 size={16}/><div><strong>Geometry valid</strong><span>Selected segment is physically consistent.</span></div></div>}</Card>
+      <Card title="Segment Properties" icon={SlidersHorizontal} className="segment-inspector"><div className="inspector-nav"><Button icon={ChevronLeft} onClick={() => onSelect(Math.max(0, safeSelected - 1))}/><strong>Segment {safeSelected + 1} of {rows.length}</strong><Button icon={ChevronRight} onClick={() => onSelect(Math.min(rows.length - 1, safeSelected + 1))}/></div><FormField label="Type" value={s[1]} /><FormField label="Length (L)" value={s[2]} unit="mm" onChange={(value) => updateSegment(segment.id, { lengthMm: numberValue(value) })} /><FormField label="Outer Diameter (D)" value={s[3]} unit="mm" onChange={(value) => updateSegment(segment.id, { outerDiameterMm: numberValue(value) })} /><FormField label="Package Diameter (DPCT)" value={s[4]} unit="mm" onChange={segment.ribbed ? (value) => updateSegment(segment.id, { ribbed: { packageDiameterMm: numberValue(value) } }) : undefined} /><FormField label="Inner Diameter (Dint)" value={s[9]} unit="mm" onChange={(segment.innerDiameterMm ?? 0) > 0 ? (value) => updateSegment(segment.id, { innerDiameterMm: numberValue(value) }) : undefined} /><FormField label="End Diameter (Df)" value={s[10]} unit="mm" onChange={(value) => updateSegment(segment.id, { endOuterDiameterMm: numberValue(value) || undefined })} /><FormField label="Rib Count" value={s[8]} onChange={segment.sectionType === 'ribbed' ? (value) => updateSegment(segment.id, { ribbed: { ribCount: numberValue(value) } }) : undefined} />{segmentIssues.length > 0 ? <div className="inspector-note error-note"><Triangle size={16}/><div><strong>Edit rejected</strong><span>{segmentIssues[0].message}</span></div></div> : <div className="inspector-note"><CheckCircle2 size={16}/><div><strong>Geometry valid</strong><span>Selected segment is physically consistent.</span></div></div>}</Card>
       <div className="shaft-metrics"><Metric icon={Ruler} label="Total Length" value={`${totalLength.toLocaleString('en-US', { maximumFractionDigits: 2 })} mm`}/><Metric icon={Weight} label="Shaft Mass" value="1,705.0 kg"/><Metric icon={Layers3} label="Number of Segments" value={String(rows.length)}/><Metric icon={CheckCircle2} label="Geometry Validation" value={segmentIssues.length ? "Rejected edit" : "Valid"} tone={segmentIssues.length ? "warning" : "success"}/></div>
       <Card title="Shaft Segments" icon={ClipboardList} className="segments-card" actions={<><Button primary icon={Plus} onClick={() => { if (addSegment(safeSelected)) onSelect(safeSelected + 1); }}>Add Segment</Button><Button icon={FileText} onClick={() => { if (addSegment(Math.max(-1, safeSelected - 1))) onSelect(safeSelected); }}>Insert</Button><Button icon={Copy} onClick={() => { if (addSegment(safeSelected)) onSelect(safeSelected + 1); }}>Duplicate</Button><Button icon={Trash2} danger onClick={() => { if (removeSegment(segment.id)) onSelect(Math.max(0, safeSelected - 1)); }}>Delete</Button><Button icon={MoveUp} onClick={() => { if (moveSegment(segment.id, -1)) onSelect(Math.max(0, safeSelected - 1)); }}>Move Up</Button><Button icon={MoveDown} onClick={() => { if (moveSegment(segment.id, 1)) onSelect(Math.min(rows.length - 1, safeSelected + 1)); }}>Move Down</Button></>}><DataTable headers={['#','Type','L [mm]','D [mm]','DPCT','A','B','C','Ribs','Dint [mm]','Df [mm]']} rows={rows} selected={safeSelected} onSelect={onSelect} /></Card>
       <Card title="Visual Options" icon={Eye} className="visual-options">{['Show Bearings','Show Supports','Show Masses / Rotors','Show Loads','Show Dimensions','Show Segment Numbers','Show Centerline'].map((label, i) => <label className="check-row" key={label}><input type="checkbox" defaultChecked={i !== 5}/><span>{label}</span></label>)}<FormField label="View Preset" value="Standard" /></Card>
@@ -350,7 +366,7 @@ function BearingsPage({ selected, onSelect }: { selected: number; onSelect: (ind
   return (
     <div className="bearings-grid">
       <Card title="Bearings & Supports" subtitle="Define bearing coefficients, support connections and boundary conditions" icon={Box} className="bearing-main" actions={<><Button primary icon={Plus}>Add Bearing</Button><Button icon={Trash2} danger>Delete</Button><Button icon={Download}>Import Coefficients</Button><Button icon={Link2}>Link Support</Button></>}><div className="subsection-label">Shaft Overview</div><ShaftViewer compact /><div className="section-toolbar"><h3><Database size={20}/> Bearings</h3><div className="search-box"><Search size={15}/><input placeholder="Search bearings..."/></div></div><DataTable headers={['#','Name','Position [mm]','Type','Kxx [N/m]','Kzz [N/m]','Cxx [N·s/m]','Czz [N·s/m]','Source','Support','Status']} rows={tableRows} selected={safeSelected} onSelect={onSelect} /></Card>
-      <Card title="Bearing Properties" icon={Database} className="bearing-inspector"><div className="inline-fields"><FormField label="Name" value={bearing.name}/><FormField label="Position" value={String(bearing.positionMm)} unit="mm" onChange={(value) => updateBearing(bearing.id, { positionMm: parse(value) })}/></div><FormField label="Bearing Type" value="Radial (Journal)" /><h3 className="minor-title">Coefficient Source</h3><div className="source-grid"><SourceTile icon={Database} title="Legacy scalar" subtitle="Exact IBIEGE coefficient" active={bearing.coefficients.kind === 'legacy-scalar'}/><SourceTile icon={FileText} title="File-based" subtitle="Target RotorDin extension"/><SourceTile icon={Activity} title="Speed-dependent" subtitle="Target RotorDin extension" active={bearing.coefficients.kind === 'matrix' && bearing.coefficients.source === 'speed-dependent'}/><SourceTile icon={Link2} title="Linked Support" subtitle="From support entity"/></div><MatrixEditor title="Stiffness Matrix K (N/m)" values={[matrix.stiffness.xx.toExponential(3),matrix.stiffness.xz.toExponential(3),matrix.stiffness.zx.toExponential(3),matrix.stiffness.zz.toExponential(3)]} editable={[bearing.coefficients.kind === 'legacy-scalar',false,false,bearing.coefficients.kind === 'legacy-scalar']} onChange={(_, value) => updateLegacyScalar(value)} /><MatrixEditor title="Damping Matrix C (N·s/m)" values={[matrix.damping.xx.toExponential(3),matrix.damping.xz.toExponential(3),matrix.damping.zx.toExponential(3),matrix.damping.zz.toExponential(3)]} /><h3 className="minor-title">Validation</h3>{bearingIssues.length ? <div className="inspector-note error-note"><Triangle size={16}/><div><strong>Edit rejected</strong><span>{bearingIssues[0].message}</span></div></div> : <div className="validation-grid">{['Finite values','Legacy scalar preserved','Linked to support','Ready for analysis'].map((item) => <span key={item}><CheckCircle2 size={15}/>{item}</span>)}</div>}</Card>
+      <Card title="Bearing Properties" icon={Database} className="bearing-inspector"><div className="inline-fields"><FormField label="Name" value={bearing.name}/><FormField label="Position" value={String(bearing.positionMm)} unit="mm" onChange={(value) => updateBearing(bearing.id, { positionMm: parse(value) })}/></div><FormField label="Bearing Type" value="Radial (Journal)" /><h3 className="minor-title">Coefficient Source</h3><div className="source-grid"><SourceTile icon={Database} title="Legacy scalar" subtitle="Exact IBIEGE coefficient" active={bearing.coefficients.kind === 'legacy-scalar'}/><SourceTile icon={FileText} title="File-based" subtitle="Target RotorDin extension"/><SourceTile icon={Activity} title="Speed-dependent" subtitle="Target RotorDin extension" active={bearing.coefficients.kind === 'matrix' && bearing.coefficients.source === 'speed-dependent'}/><SourceTile icon={Link2} title="Linked Support" subtitle="From support entity"/></div>{bearing.coefficients.kind === 'matrix' && bearing.coefficients.table?.length ? <div className="info-box"><Activity size={18}/><div><strong>Speed-dependent table</strong><span>{bearing.coefficients.table.length} points • {bearing.coefficients.table[0].speedRpm}–{bearing.coefficients.table[bearing.coefficients.table.length - 1].speedRpm} rpm • source {bearing.coefficients.sourceFile ?? 'embedded'}</span></div></div> : null}<MatrixEditor title="Stiffness Matrix K (N/m)" values={[matrix.stiffness.xx.toExponential(3),matrix.stiffness.xz.toExponential(3),matrix.stiffness.zx.toExponential(3),matrix.stiffness.zz.toExponential(3)]} editable={[bearing.coefficients.kind === 'legacy-scalar',false,false,bearing.coefficients.kind === 'legacy-scalar']} onChange={(_, value) => updateLegacyScalar(value)} /><MatrixEditor title="Damping Matrix C (N·s/m)" values={[matrix.damping.xx.toExponential(3),matrix.damping.xz.toExponential(3),matrix.damping.zx.toExponential(3),matrix.damping.zz.toExponential(3)]} /><h3 className="minor-title">Validation</h3>{bearingIssues.length ? <div className="inspector-note error-note"><Triangle size={16}/><div><strong>Edit rejected</strong><span>{bearingIssues[0].message}</span></div></div> : <div className="validation-grid">{['Finite values','Legacy scalar preserved','Linked to support','Ready for analysis'].map((item) => <span key={item}><CheckCircle2 size={15}/>{item}</span>)}</div>}</Card>
       <Card title="Supports" subtitle="Define support entities and link them to bearings" icon={Triangle} className="supports-card" actions={<><Button primary icon={Plus}>Add Support</Button><Button icon={Trash2} danger>Delete</Button><Button icon={Wrench}>Edit Support</Button></>}><DataTable headers={['#','Name','Type','Location [mm]','Linked Bearings','Description','Status']} rows={currentProject.supports.map((support, index) => [String(index + 1), support.name, support.type, String(support.locationMm), currentProject.bearings.filter((item) => item.supportId === support.id).map((item) => item.name).join(', ') || '—', support.name === 'SUP 1' ? 'Housing, left side' : 'Housing, right side', 'Valid'])} /></Card>
     </div>
   );
@@ -405,7 +421,50 @@ function MassesPage() {
 }
 
 function AnalysisPage({ enabled, onToggle }: { enabled: Record<string, boolean>; onToggle: (key: string) => void }) {
-  const { prepareRun, validation } = useProject();
+  const { project: currentProject, prepareRun, validation } = useProject();
+  const settings = currentProject.settings;
+  const formatRange = (a?: number, b?: number) => a != null && b != null ? `${a.toLocaleString()} – ${b.toLocaleString()} rpm` : 'Not configured';
+  const displayRows = (key: string, fallback: string[][]): string[][] => {
+    switch (key) {
+      case 'campbell':
+        return [
+          ['Speed Range', formatRange(settings?.campbell?.initialRpm, settings?.campbell?.finalRpm)],
+          ['Speed Divisions', String(settings?.campbell?.divisions ?? '—')],
+          ['Rotations', String(settings?.campbell?.rotations ?? '—')],
+          ['Interpolation', String(settings?.campbell?.interpolationPoints ?? '—')],
+        ];
+      case 'modes':
+        return [
+          ['Modes to Compute', String(settings?.modes?.modes ?? '—')],
+          ['Nominal Speed', settings?.speed?.nominalRpm != null ? `${settings.speed.nominalRpm} rpm` : '—'],
+          ['Young\'s Modulus', settings?.material?.youngsModulusPa != null ? settings.material.youngsModulusPa.toExponential(3) : '—'],
+          ['Density', settings?.material?.densityKgPerM3 != null ? `${settings.material.densityKgPerM3} kg/m³` : '—'],
+        ];
+      case 'response':
+        return [
+          ['Speed Range', formatRange(settings?.unbalanceResponse?.initialRpm, settings?.unbalanceResponse?.finalRpm)],
+          ['Speed Divisions', String(settings?.unbalanceResponse?.divisions ?? '—')],
+          ['Modes', String(settings?.unbalanceResponse?.modes ?? '—')],
+          ['Unbalance Positions', String(currentProject.forces.filter((force) => force.type === 'unbalance').length)],
+        ];
+      case 'line':
+        return [
+          ['Speed', settings?.speed?.nominalRpm != null ? `${settings.speed.nominalRpm} rpm` : '—'],
+          ['Inclination', `${settings?.elasticLine?.inclinationDeg ?? 0}°`],
+          ['Gravity', `${settings?.elasticLine?.gravityMPerS2 ?? 9.81} m/s²`],
+          ['Display', 'X, Z (2D)'],
+        ];
+      case 'map':
+        return [
+          ['Initial Stiffness', settings?.criticalSpeedMap?.initialStiffnessNPerM != null ? settings.criticalSpeedMap.initialStiffnessNPerM.toExponential(2) : '—'],
+          ['Divisions', String(settings?.criticalSpeedMap?.divisions ?? '—')],
+          ['Maps', String(settings?.graphics?.maps ?? '—')],
+          ['Identification', 'Automatic'],
+        ];
+      default:
+        return fallback;
+    }
+  };
   const [prepareStatus, setPrepareStatus] = useState<string>();
   const prepareSelectedRun = async () => {
     if (!validation.valid) {
@@ -421,7 +480,7 @@ function AnalysisPage({ enabled, onToggle }: { enabled: Record<string, boolean>;
   return (
     <div className="analysis-layout">
       <div className="analysis-top"><div><h1><BarChart3/> Analysis Plan</h1><p>Select and configure analyses to run. Each analysis uses the current model and shared settings.</p></div><div className="analysis-top-metrics"><div><CheckCircle2/> <span>Analysis Package<strong>Ready</strong></span></div><div><BarChart3/> <span>Enabled Analyses<strong>{count} / 7</strong></span></div><div><Triangle/> <span>Warnings<strong>0</strong></span></div><Button primary icon={Play} onClick={() => { void prepareSelectedRun(); }}>Run Selected</Button></div></div>{prepareStatus && <div className="run-preparation-note">{prepareStatus}</div>}
-      <div className="analysis-cards">{analysisCards.map((item) => <AnalysisCard key={item.key} item={item} enabled={enabled[item.key]} onToggle={() => onToggle(item.key)} />)}<div className="more-analysis"><Plus size={30}/><strong>More Analyses</strong><span>Additional specialized analyses coming soon.</span></div></div>
+      <div className="analysis-cards">{analysisCards.map((item) => <AnalysisCard key={item.key} item={{ ...item, rows: displayRows(item.key, item.rows) }} enabled={enabled[item.key]} onToggle={() => onToggle(item.key)} />)}<div className="more-analysis"><Plus size={30}/><strong>More Analyses</strong><span>Additional specialized analyses coming soon.</span></div></div>
       <Card title="Shared Analysis Settings" icon={Settings} className="shared-settings"><h3 className="minor-title">Material Properties</h3><FormField label="Young's Modulus (E)" value="2.10e+11" unit="Pa"/><FormField label="Density (ρ)" value="7,800" unit="kg/m³"/><FormField label="Poisson's Ratio (ν)" value="0.30"/><h3 className="minor-title">Analysis Controls</h3><FormField label="Speed Range" value="0 – 6,000" unit="rpm"/><FormField label="Speed Divisions" value="200"/><FormField label="Frequency Points" value="50"/><FormField label="Modes (Default)" value="1 – 20"/><h3 className="minor-title">Plot & Display</h3>{['Show Grid','Show Critical Speeds','Show Bearings'].map((label) => <label className="check-row" key={label}><input type="checkbox" defaultChecked/><span>{label}</span></label>)}<Button icon={RefreshCcw}>Reset to Defaults</Button></Card>
     </div>
   );
