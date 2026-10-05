@@ -132,6 +132,58 @@ export interface AnalysisSelection {
   enabled: boolean;
 }
 
+export interface RotorProjectSettings {
+  material?: {
+    youngsModulusPa?: number;
+    densityKgPerM3?: number;
+    poissonRatio?: number;
+    diskDensityKgPerM3?: number;
+  };
+  speed?: {
+    nominalRpm?: number;
+    initialRpm?: number;
+    finalRpm?: number;
+  };
+  discretization?: {
+    divisions?: number;
+    maxDivisions?: number;
+    relativeLoadLimit?: number;
+    packageDivisions?: number;
+  };
+  campbell?: {
+    initialRpm?: number;
+    finalRpm?: number;
+    divisions?: number;
+    rotations?: number;
+    interpolationPoints?: number;
+  };
+  unbalanceResponse?: {
+    initialRpm?: number;
+    finalRpm?: number;
+    divisions?: number;
+    modes?: number;
+  };
+  modes?: {
+    modes?: number;
+  };
+  elasticLine?: {
+    inclinationDeg?: number;
+    gravityMPerS2?: number;
+  };
+  criticalSpeedMap?: {
+    initialStiffnessNPerM?: number;
+    divisions?: number;
+  };
+  graphics?: {
+    scale?: number;
+    x0?: number;
+    responseCurves?: number;
+    modes?: number;
+    maps?: number;
+    logDecrementCurves?: number;
+  };
+}
+
 export interface RotorProject {
   id: EntityId;
   reference: string;
@@ -143,6 +195,7 @@ export interface RotorProject {
   frequencyHz?: number;
   nominalSpeedRpm?: number;
   user?: string;
+  settings?: RotorProjectSettings;
   segments: ShaftSegment[];
   bearings: Bearing[];
   legacyLoads: LegacyMassLoad[];
