@@ -341,7 +341,7 @@ export default function RunsWorkspace({ onResults }: { onResults: () => void }) 
   const compareAgainst = async (runId: string) => {
     setCompareRunId(runId || undefined);
     setComparison(undefined);
-    if (!runId || !selectedRunId || runId === selectedRunId) return;
+    if (!selectedSummary?.hasResults || !runId || !selectedRunId || runId === selectedRunId) return;
     const [baseline, candidate] = await Promise.all([
       loadQualifiedRunData(selectedRunId),
       loadQualifiedRunData(runId),
