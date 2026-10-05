@@ -21,6 +21,7 @@ import {
   Folder,
   FolderOpen,
   Gauge,
+  Home,
   Layers3,
   Link2,
   Lock,
@@ -68,7 +69,7 @@ type Page =
 type Tone = 'success' | 'info' | 'warning' | 'danger' | 'neutral';
 
 const navItems: Array<{ page: Page; icon: LucideIcon }> = [
-  { page: 'Overview', icon: HomeIcon },
+  { page: 'Overview', icon: Home },
   { page: 'Shaft', icon: Gauge },
   { page: 'Bearings', icon: CircleDot },
   { page: 'Masses', icon: Weight },
@@ -80,9 +81,6 @@ const navItems: Array<{ page: Page; icon: LucideIcon }> = [
   { page: 'Settings', icon: Settings },
 ];
 
-function HomeIcon(props: { size?: number }) {
-  return <svg width={props.size ?? 19} height={props.size ?? 19} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>;
-}
 
 const project = {
   ref: '0V',
