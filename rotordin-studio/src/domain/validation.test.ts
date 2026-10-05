@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { demoProject } from '../data/demoProject';
+import { legacyCompatibilityNotes } from './legacy';
 import { loadsOverlapInclusive, validateProject } from './validation';
 
 describe('validation derived from legacy behavior', () => {
@@ -14,20 +15,21 @@ describe('validation derived from legacy behavior', () => {
     expect(result.issues.filter((issue) => issue.severity === 'error')).toEqual([]);
   });
 
-  it('rejects a shaft containing both hollow and ribbed segments because legacy IncSgmnt/AltSgmnt forbids it', () => {
+  it('allows modern combined ribbed+hollow geometry but keeps IBIEGE incompatibility explicit', () => {
     const project = structuredClone(demoProject);
     project.segments = [
-      { id: 'h', sectionType: 'hollow', lengthMm: 100, outerDiameterMm: 80, innerDiameterMm: 30 },
       {
-        id: 'r',
+        id: 'combined',
         sectionType: 'ribbed',
         lengthMm: 100,
         outerDiameterMm: 80,
+        innerDiameterMm: 30,
         ribbed: { packageDiameterMm: 120, ribThicknessMm: 5, hammerThicknessMm: 5, hammerWidthMm: 8, ribCount: 6 },
       },
     ];
     project.legacyLoads = [];
     const result = validateProject(project);
-    expect(result.issues.some((issue) => issue.code === 'LEGACY-SHAFT-002')).toBe(true);
+    expect(result.valid).toBe(true);
+    expect(legacyCompatibilityNotes(project).some((issue) => issue.code === 'LEGACY-SHAFT-003')).toBe(true);
   });
 });
