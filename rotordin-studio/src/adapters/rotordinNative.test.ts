@@ -1,14 +1,14 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { decodeIrDinBytes, importIrDinText } from './irdinText';
+import { importIrDinText } from './irdinText';
 import { serializeRotorDinNative } from './rotordinNative';
 
 const fixtureUrl = new URL('../../tests/fixtures/EST-ST41_1000_B3_60HZ_1675_63536.irdin.txt', import.meta.url);
 const goldenUrl = new URL('../../golden/est-st41/modes-v1/input.txt', import.meta.url);
 
 const project = importIrDinText(
-  decodeIrDinBytes(readFileSync(fileURLToPath(fixtureUrl))),
+  readFileSync(fileURLToPath(fixtureUrl), 'utf8'),
 ).project;
 
 describe('audited current RotorDin native TypeScript serializer', () => {
