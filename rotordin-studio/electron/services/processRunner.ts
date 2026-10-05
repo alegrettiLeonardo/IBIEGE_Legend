@@ -6,6 +6,7 @@ export interface ProcessRunRequest {
   cwd: string;
   timeoutMs: number;
   stdinText?: string;
+  env?: NodeJS.ProcessEnv;
   /**
    * Solver execution remains gated until a solver-specific Golden Master is
    * frozen. Callers must provide the qualification identifier explicitly.
@@ -45,6 +46,7 @@ export async function runQualifiedProcess(request: ProcessRunRequest): Promise<P
       cwd: request.cwd,
       shell: false,
       windowsHide: true,
+      env: request.env ?? process.env,
       stdio: [request.stdinText == null ? 'ignore' : 'pipe', 'pipe', 'pipe'],
     });
 
