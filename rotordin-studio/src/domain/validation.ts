@@ -5,7 +5,6 @@ import type {
   ValidationIssue,
   ValidationResult,
 } from './model';
-import { legacyCompatibilityNotes } from './legacy';
 
 const push = (issues: ValidationIssue[], issue: ValidationIssue) => issues.push(issue);
 const POSITION_EPS_MM = 1e-9;
@@ -22,9 +21,6 @@ export function segmentEndPositions(segments: ShaftSegment[]): Array<{ id: strin
 export function validateProject(project: RotorProject): ValidationResult {
   const issues: ValidationIssue[] = [];
 
-  let hasRibbed = false;
-  let hasHollow = false;
-
   project.segments.forEach((segment) => {
     if (!(segment.lengthMm > 0)) {
       push(issues, { code: 'SHAFT-LENGTH-001', severity: 'error', entityId: segment.id, message: 'Segment length must be greater than zero.' });
@@ -36,16 +32,14 @@ export function validateProject(project: RotorProject): ValidationResult {
       push(issues, { code: 'SHAFT-TAPER-001', severity: 'error', entityId: segment.id, message: 'Taper end diameter must be greater than zero.' });
     }
 
-    if (segment.sectionType === 'hollow') {
-      hasHollow = true;
-      const dInt = segment.innerDiameterMm ?? 0;
+    if (segment.innerDiameterMm != null && segment.innerDiameterMm !== 0) {
+      const dInt = segment.innerDiameterMm;
       if (dInt <= 0 || dInt >= segment.outerDiameterMm) {
-        push(issues, { code: 'SHAFT-HOLLOW-001', severity: 'error', entityId: segment.id, message: 'Hollow segment inner diameter must satisfy 0 < Dint < D.' });
+        push(issues, { code: 'SHAFT-HOLLOW-001', severity: 'error', entityId: segment.id, message: 'Inner diameter must satisfy 0 < Dint < D.' });
       }
     }
 
-    if (segment.sectionType === 'ribbed') {
-      hasRibbed = true;
+    if (segment.ribbed) {
       const rib = segment.ribbed;
       if (!rib) {
         push(issues, { code: 'SHAFT-RIB-001', severity: 'error', entityId: segment.id, message: 'Ribbed segment is missing rib geometry.' });
@@ -59,15 +53,6 @@ export function validateProject(project: RotorProject): ValidationResult {
       }
     }
   });
-
-  if (hasRibbed && hasHollow) {
-    push(issues, {
-      code: 'LEGACY-SHAFT-002',
-      severity: 'error',
-      legacySource: 'frmMain IncSgmnt/AltSgmnt',
-      message: 'Legacy IBIEGE does not permit hollow and ribbed segments in the same shaft model.',
-    });
-  }
 
   const positions = segmentEndPositions(project.segments);
 
@@ -116,8 +101,6 @@ export function validateProject(project: RotorProject): ValidationResult {
       push(issues, { code: 'BRG-K-001', severity: 'error', entityId: bearing.id, message: 'Legacy scalar bearing stiffness cannot be negative.' });
     }
   });
-
-  issues.push(...legacyCompatibilityNotes(project));
 
   return {
     valid: !issues.some((issue) => issue.severity === 'error'),
