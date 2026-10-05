@@ -157,9 +157,9 @@ The table parser preserves:
 
 The eight-coefficient table mapping follows the column order visible in the supplied current RotorDin UI:
 
-`Kxx,Kzz,Kxz,Kzx,Cxx,Czz,Cxz,Czx`
+`Kxx,Kxz,Kzx,Kzz,Cxx,Cxz,Czx,Czz`
 
-Because the current irDin source code is not in this repository, this mapping remains a qualified UI/file-format interpretation and should be checked against the current solver/frontend source when that source becomes available.
+The current Fortran `entrada.f90`/`beatab` contract is now the authority: TABLE rows are `rpm,kxx,kxz,kzx,kzz,cxx,cxz,czx,czz[,kph,kth]`. This differs from the legacy UI grid order and is intentionally handled separately.
 
 ## [Desbal]
 
@@ -177,13 +177,11 @@ The production file uses coordinate codes 1 and 2.
 
 The current IBIEGE repository does not contain the irDin parser that defines these codes.
 
-For the React visualization only, A9 provisionally maps:
+The Fortran output contract in `saidas.f90` documents `desp=1` as horizontal and `desp=2` as vertical; the native lateral DOFs are `x,z`. The importer therefore maps:
 - 1 → X
 - 2 → Z
 
-and stores the original numeric code in `sourceCoordinateCode`.
-
-Every import emits `IRDIN-RESP-COORD-001` until the current irDin source confirms the mapping.
+and still stores the original numeric code in `sourceCoordinateCode` for auditability.
 
 ## [Concent]
 
