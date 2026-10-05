@@ -6,6 +6,7 @@ import {
   FileText,
   Gauge,
   Orbit,
+  RefreshCcw,
   ShieldCheck,
   Target,
 } from 'lucide-react';
@@ -385,7 +386,7 @@ function OrbitPanel({ data, selected, onSelect }: { data: NonNullable<RotorDinPa
 }
 
 export default function ResultsWorkspace() {
-  const { selectedRun } = useProject();
+  const { selectedRun, runHistory, refreshRunHistory, selectQualifiedRun } = useProject();
   const merged = useMemo(
     () => mergeRotorDinParsedResults(selectedRun?.jobs.map((job) => job.results) ?? []),
     [selectedRun],
@@ -434,10 +435,20 @@ export default function ResultsWorkspace() {
           <h1><BarChart3 size={22}/> Results Workspace</h1>
           <p>Native RotorDin outputs parsed from the selected run manifest. No demonstration curves are used.</p>
         </div>
-        <div className="result-run-summary">
-          <span>{manifest.artifacts.length} artifacts</span>
-          <span>{selectedRun.jobs.length} native jobs</span>
-          <span>{Object.keys(manifest.qualifications ?? {}).length} qualifications</span>
+        <div className="result-heading-controls">
+          <label className="result-run-selector">
+            <span>Selected run</span>
+            <select value={manifest.runId} onChange={(event) => { void selectQualifiedRun(event.target.value); }}>
+              {!runHistory.some((row) => row.runId === manifest.runId) && <option value={manifest.runId}>{manifest.runId}</option>}
+              {runHistory.map((row) => <option value={row.runId} key={row.runId}>{row.runId} • {row.projectReference}</option>)}
+            </select>
+          </label>
+          <button className="result-refresh" title="Refresh run history" onClick={() => { void refreshRunHistory(); }}><RefreshCcw size={15}/></button>
+          <div className="result-run-summary">
+            <span>{manifest.artifacts.length} artifacts</span>
+            <span>{selectedRun.jobs.length} native jobs</span>
+            <span>{Object.keys(manifest.qualifications ?? {}).length} qualifications</span>
+          </div>
         </div>
       </div>
 
