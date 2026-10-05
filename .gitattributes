@@ -1,0 +1,3 @@
+# Vendored RotorDin scientific source is byte-audited by SOURCE_MANIFEST.sha256.
+rotordin-studio/solver/src/source/** -text
+rotordin-studio/solver/SOURCE_MANIFEST.sha256 text eol=lf
