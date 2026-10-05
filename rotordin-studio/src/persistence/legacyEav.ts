@@ -67,8 +67,8 @@ export function decodeLegacyEav(
   header: LegacyCalculationHeader,
   characteristics: LegacyCharacteristic[],
 ): LegacyImportResult<RotorProject> {
-  const shaftRaw = byLine(characteristics, shaftNames) as LegacyShaftGridRow[];
-  const loadRaw = byLine(characteristics, loadNames) as LegacyLoadGridRow[];
+  const shaftRaw = byLine(characteristics, shaftNames) as unknown as LegacyShaftGridRow[];
+  const loadRaw = byLine(characteristics, loadNames) as unknown as LegacyLoadGridRow[];
 
   const shaft = importLegacyShaftGrid(shaftRaw);
   const loads = importLegacyLoadGrid(loadRaw);
