@@ -88,8 +88,8 @@ describe('current irDin text importer', () => {
     expect(bearing.coefficients.table).toHaveLength(2);
     expect(bearing.coefficients.table?.[0]).toMatchObject({
       speedRpm: 500,
-      stiffness: { xx: 1, zz: 2, xz: 3, zx: 4 },
-      damping: { xx: 5, zz: 6, xz: 7, zx: 8 },
+      stiffness: { xx: 1, xz: 2, zx: 3, zz: 4 },
+      damping: { xx: 5, xz: 6, zx: 7, zz: 8 },
     });
   });
 
