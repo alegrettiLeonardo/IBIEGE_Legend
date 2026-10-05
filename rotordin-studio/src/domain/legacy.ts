@@ -188,5 +188,29 @@ export function legacyCompatibilityNotes(project: RotorProject): ValidationIssue
     });
   }
 
+
+  const hasRibbed = project.segments.some((segment) => segment.ribbed != null);
+  const hasHollow = project.segments.some((segment) => (segment.innerDiameterMm ?? 0) > 0);
+  if (hasRibbed && hasHollow) {
+    issues.push({
+      code: 'LEGACY-SHAFT-002',
+      severity: 'error',
+      legacySource: 'frmMain IncSgmnt/AltSgmnt + exporta_biege',
+      message: 'Legacy IBIEGE/BIEGE14 cannot represent a shaft model containing ribbed and hollow geometry together. Current irDin files may contain this combination and must use the modern RotorDin path.',
+    });
+  }
+
+  for (const segment of project.segments) {
+    if (segment.ribbed && (segment.innerDiameterMm ?? 0) > 0) {
+      issues.push({
+        code: 'LEGACY-SHAFT-003',
+        severity: 'error',
+        entityId: segment.id,
+        legacySource: 'frmMain exporta_biege',
+        message: 'BIEGE14 selects either ST or HL globally and cannot serialize a segment that is simultaneously ribbed and hollow.',
+      });
+    }
+  }
+
   return issues;
 }
