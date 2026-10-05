@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from 'react';
 import { demoProject } from '../data/demoProject';
-import type { PrepareRunResponse } from '../../electron/contracts';
+import type { ExecuteQualifiedRunResponse, PrepareRunResponse } from '../../electron/contracts';
 import type { SolverKind } from '../runs/model';
 import {
   addSegmentAtomic,
@@ -17,6 +17,7 @@ import {
   updateLegacyLoadAtomic,
   updateSegmentAtomic,
   validateProject,
+  type AnalysisKind,
   type BearingPatch,
   type LegacyLoadPatch,
   type RotorProject,
@@ -35,6 +36,7 @@ interface ProjectContextValue {
   saveProject: () => Promise<boolean>;
   openProject: () => Promise<boolean>;
   prepareRun: (solver: SolverKind) => Promise<PrepareRunResponse | undefined>;
+  executeQualifiedRun: (analyses: AnalysisKind[]) => Promise<ExecuteQualifiedRunResponse | undefined>;
   updateSegment: (id: string, patch: SegmentPatch) => boolean;
   addSegment: (afterIndex?: number) => boolean;
   removeSegment: (id: string) => boolean;
@@ -141,6 +143,30 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const executeQualifiedRun = async (
+    analyses: AnalysisKind[],
+  ): Promise<ExecuteQualifiedRunResponse | undefined> => {
+    if (!window.rotorDinDesktop) {
+      desktopIssue('RUN-EXEC-DESKTOP', 'Qualified solver execution requires the Electron desktop shell.');
+      return undefined;
+    }
+
+    const currentValidation = validateProject(project);
+    if (!currentValidation.valid) {
+      setEditIssues(currentValidation.issues);
+      return undefined;
+    }
+
+    try {
+      const result = await window.rotorDinDesktop.executeQualifiedRun({ project, analyses });
+      setEditIssues([]);
+      return result;
+    } catch (error) {
+      desktopIssue('RUN-EXEC-001', error);
+      return undefined;
+    }
+  };
+
   const value: ProjectContextValue = {
     project,
     saved,
@@ -152,6 +178,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     saveProject,
     openProject,
     prepareRun,
+    executeQualifiedRun,
     updateSegment: (id, patch) => apply(updateSegmentAtomic(project, id, patch)),
     addSegment: (afterIndex) => apply(addSegmentAtomic(project, afterIndex)),
     removeSegment: (id) => apply(removeSegmentAtomic(project, id)),
