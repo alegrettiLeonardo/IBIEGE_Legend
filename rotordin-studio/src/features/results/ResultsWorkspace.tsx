@@ -440,7 +440,7 @@ export default function ResultsWorkspace() {
             <span>Selected run</span>
             <select value={manifest.runId} onChange={(event) => { void selectQualifiedRun(event.target.value); }}>
               {!runHistory.some((row) => row.runId === manifest.runId) && <option value={manifest.runId}>{manifest.runId}</option>}
-              {runHistory.map((row) => <option value={row.runId} key={row.runId}>{row.runId} • {row.projectReference}</option>)}
+              {runHistory.filter((row) => row.hasResults).map((row) => <option value={row.runId} key={row.runId}>{row.runId} • {row.projectReference}</option>)}
             </select>
           </label>
           <button className="result-refresh" title="Refresh run history" onClick={() => { void refreshRunHistory(); }}><RefreshCcw size={15}/></button>
