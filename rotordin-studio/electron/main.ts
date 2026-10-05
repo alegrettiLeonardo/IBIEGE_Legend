@@ -5,6 +5,7 @@ import { IPC_CHANNELS, type ExecuteQualifiedRunRequest, type PrepareRunRequest, 
 import { openProjectFile, saveProjectFile } from './services/projectFiles';
 import { prepareRunWorkspace } from './services/runWorkspace';
 import { executeQualifiedRotorDinRun } from './services/qualifiedRotorDinRun';
+import { listQualifiedRuns, loadQualifiedRun } from './services/runHistory';
 
 const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 
@@ -46,6 +47,12 @@ function registerIpc() {
 
   ipcMain.handle(IPC_CHANNELS.runExecuteQualified, async (_event, request: ExecuteQualifiedRunRequest) =>
     executeQualifiedRotorDinRun(request));
+
+  ipcMain.handle(IPC_CHANNELS.runListQualified, async () =>
+    listQualifiedRuns());
+
+  ipcMain.handle(IPC_CHANNELS.runLoadQualified, async (_event, request: LoadQualifiedRunRequest) =>
+    loadQualifiedRun(request));
 }
 
 app.whenReady().then(() => {
