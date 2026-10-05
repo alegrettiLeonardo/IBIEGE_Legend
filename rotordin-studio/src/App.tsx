@@ -562,16 +562,4 @@ function Artifact({ icon: Icon, title, file, meta }: { icon: LucideIcon; title: 
   return <div className="artifact"><Icon size={28}/><div><strong>{title}</strong><span>{file}</span><small>{meta}</small></div><Download size={17}/></div>;
 }
 
-function CampbellChart() {
-  return <div className="chart-shell"><svg viewBox="0 0 760 300"><g className="chart-grid">{[40,90,140,190,240].map((y) => <line key={y} x1="55" y1={y} x2="730" y2={y}/>)}{[55,160,265,370,475,580,685].map((x) => <line key={x} x1={x} y1="25" x2={x} y2="255"/>)}</g><line className="axis" x1="55" y1="255" x2="730" y2="255"/><line className="axis" x1="55" y1="25" x2="55" y2="255"/><path className="mode-line" d="M55 205 C160 200, 250 198, 340 190 S570 165,730 135"/><path className="mode-line" d="M55 160 C160 158, 245 160, 350 150 S585 112,730 84"/><path className="mode-line" d="M55 90 C180 90, 260 85, 350 72 S580 45,730 25"/><path className="order-line" d="M55 255 L730 70"/><path className="order-line" d="M55 255 L730 155"/><path className="order-line" d="M55 255 L730 215"/><g className="chart-labels"><text x="20" y="28">Hz</text><text x="660" y="287">Speed [rpm]</text><text x="700" y="60">3X</text><text x="700" y="145">2X</text><text x="700" y="208">1X</text></g></svg></div>;
-}
-
-function ResponseChart() {
-  return <div className="chart-shell"><svg viewBox="0 0 760 265"><g className="chart-grid">{[35,75,115,155,195,235].map((y) => <line key={y} x1="55" y1={y} x2="730" y2={y}/>)}{[55,160,265,370,475,580,685].map((x) => <line key={x} x1={x} y1="20" x2={x} y2="235"/>)}</g><line className="axis" x1="55" y1="235" x2="730" y2="235"/><line className="axis" x1="55" y1="20" x2="55" y2="235"/><path className="response-line" d="M55 225 C95 205,125 178,150 72 C168 182,195 200,255 207 C340 210,360 195,382 80 C400 193,465 200,560 196 C605 190,625 166,650 75 C670 178,690 190,730 192"/><path className="response-line alt" d="M55 230 C110 215,135 190,150 108 C170 195,210 212,290 214 C345 214,365 205,382 112 C404 203,470 210,565 205 C610 201,632 185,650 112 C675 193,700 200,730 202"/></svg></div>;
-}
-
-function OrbitChart() {
-  return <div className="orbit-plot"><svg viewBox="0 0 280 240"><g className="chart-grid">{[40,80,120,160,200].map((y) => <line key={y} x1="30" y1={y} x2="250" y2={y}/>)}{[50,90,130,170,210].map((x) => <line key={x} x1={x} y1="20" x2={x} y2="220"/>)}</g><line className="axis" x1="30" y1="120" x2="250" y2="120"/><line className="axis" x1="140" y1="20" x2="140" y2="220"/><ellipse cx="140" cy="120" rx="82" ry="38" transform="rotate(-28 140 120)" fill="none" stroke="#1677c8" strokeWidth="3"/><circle cx="140" cy="120" r="4" fill="#1677c8"/></svg><Badge tone="info">Forward Whirl</Badge></div>;
-}
-
 export default App;
