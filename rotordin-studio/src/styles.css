@@ -503,3 +503,26 @@ th:last-child, td:last-child { border-right: 0; }
   font-size: 9.5px;
   color: #506b80;
 }
+
+.result-heading-controls { display: flex; align-items: center; gap: 8px; }
+.result-run-selector { display: flex; align-items: center; gap: 7px; color: #526d82; font-size: 9.5px; font-weight: 700; }
+.result-run-selector select {
+  height: 30px;
+  max-width: 315px;
+  border: 1px solid #cddae3;
+  border-radius: 6px;
+  background: white;
+  color: #173650;
+  padding: 0 8px;
+  font-size: 10px;
+}
+.result-refresh {
+  width: 31px;
+  height: 31px;
+  border: 1px solid #cfdae3;
+  border-radius: 6px;
+  background: #fff;
+  color: #0e68b4;
+  display: grid;
+  place-items: center;
+}
