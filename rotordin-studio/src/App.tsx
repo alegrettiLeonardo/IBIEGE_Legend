@@ -116,7 +116,7 @@ const runs = [
 ];
 
 function App() {
-  const { saved, validation, markSaved, markDirty } = useProject();
+  const { saved, validation, markDirty, saveProject, openProject } = useProject();
   const [page, setPage] = useState<Page>('Overview');
   const [activeSegment, setActiveSegment] = useState(6);
   const [activeBearing, setActiveBearing] = useState(0);
@@ -144,7 +144,7 @@ function App() {
     <div className="app-shell">
       <Sidebar page={page} onNavigate={setPage} />
       <div className="app-main">
-        <TopBar saved={saved} valid={validation.valid} onSave={markSaved} onValidate={() => undefined} />
+        <TopBar saved={saved} valid={validation.valid} onSave={() => { void saveProject(); }} onOpen={() => { void openProject(); }} onValidate={() => undefined} />
         <ProjectStrip />
         <main className="page-content" onInput={markDirty}>{pageContent}</main>
         <StatusBar />
@@ -175,10 +175,10 @@ function Sidebar({ page, onNavigate }: { page: Page; onNavigate: (page: Page) =>
   );
 }
 
-function TopBar({ saved, valid, onSave, onValidate }: { saved: boolean; valid: boolean; onSave: () => void; onValidate: () => void }) {
+function TopBar({ saved, valid, onSave, onOpen, onValidate }: { saved: boolean; valid: boolean; onSave: () => void; onOpen: () => void; onValidate: () => void }) {
   return (
     <header className="topbar">
-      <button className="project-select"><Folder size={18} /> Project: <strong>0V</strong><ChevronDown size={16} /></button>
+      <button className="project-select" onClick={onOpen}><Folder size={18} /> Project: <strong>{project.ref}</strong><ChevronDown size={16} /></button>
       <div className="topbar-actions">
         <Button icon={Save} onClick={onSave}>Save</Button>
         <Badge tone={saved ? 'success' : 'warning'}>{saved ? 'Saved' : 'Unsaved'}</Badge>
@@ -405,10 +405,22 @@ function MassesPage() {
 }
 
 function AnalysisPage({ enabled, onToggle }: { enabled: Record<string, boolean>; onToggle: (key: string) => void }) {
+  const { prepareRun, validation } = useProject();
+  const [prepareStatus, setPrepareStatus] = useState<string>();
+  const prepareSelectedRun = async () => {
+    if (!validation.valid) {
+      setPrepareStatus('Model validation must pass before a run can be prepared.');
+      return;
+    }
+    const result = await prepareRun('rotordin');
+    setPrepareStatus(result
+      ? `Prepared ${result.manifest.runId}. Solver execution remains qualification-gated.`
+      : 'Run workspace was not prepared.');
+  };
   const count = Object.values(enabled).filter(Boolean).length;
   return (
     <div className="analysis-layout">
-      <div className="analysis-top"><div><h1><BarChart3/> Analysis Plan</h1><p>Select and configure analyses to run. Each analysis uses the current model and shared settings.</p></div><div className="analysis-top-metrics"><div><CheckCircle2/> <span>Analysis Package<strong>Ready</strong></span></div><div><BarChart3/> <span>Enabled Analyses<strong>{count} / 7</strong></span></div><div><Triangle/> <span>Warnings<strong>0</strong></span></div><Button primary icon={Play}>Run Selected</Button></div></div>
+      <div className="analysis-top"><div><h1><BarChart3/> Analysis Plan</h1><p>Select and configure analyses to run. Each analysis uses the current model and shared settings.</p></div><div className="analysis-top-metrics"><div><CheckCircle2/> <span>Analysis Package<strong>Ready</strong></span></div><div><BarChart3/> <span>Enabled Analyses<strong>{count} / 7</strong></span></div><div><Triangle/> <span>Warnings<strong>0</strong></span></div><Button primary icon={Play} onClick={() => { void prepareSelectedRun(); }}>Run Selected</Button></div></div>{prepareStatus && <div className="run-preparation-note">{prepareStatus}</div>}
       <div className="analysis-cards">{analysisCards.map((item) => <AnalysisCard key={item.key} item={item} enabled={enabled[item.key]} onToggle={() => onToggle(item.key)} />)}<div className="more-analysis"><Plus size={30}/><strong>More Analyses</strong><span>Additional specialized analyses coming soon.</span></div></div>
       <Card title="Shared Analysis Settings" icon={Settings} className="shared-settings"><h3 className="minor-title">Material Properties</h3><FormField label="Young's Modulus (E)" value="2.10e+11" unit="Pa"/><FormField label="Density (ρ)" value="7,800" unit="kg/m³"/><FormField label="Poisson's Ratio (ν)" value="0.30"/><h3 className="minor-title">Analysis Controls</h3><FormField label="Speed Range" value="0 – 6,000" unit="rpm"/><FormField label="Speed Divisions" value="200"/><FormField label="Frequency Points" value="50"/><FormField label="Modes (Default)" value="1 – 20"/><h3 className="minor-title">Plot & Display</h3>{['Show Grid','Show Critical Speeds','Show Bearings'].map((label) => <label className="check-row" key={label}><input type="checkbox" defaultChecked/><span>{label}</span></label>)}<Button icon={RefreshCcw}>Reset to Defaults</Button></Card>
     </div>
