@@ -65,7 +65,7 @@ const zeroSection = (segment: ShaftSegment): Omit<FlechaSection, 'lengthMm' | 'd
   if (segment.sectionType === 'ribbed' && segment.ribbed) {
     return {
       outerDiameterMm: segment.outerDiameterMm,
-      innerDiameterMm: 0,
+      innerDiameterMm: segment.innerDiameterMm ?? 0,
       webWidthMm: segment.ribbed.ribThicknessMm,
       webHeightMm: segment.ribbed.packageDiameterMm
         - segment.outerDiameterMm
