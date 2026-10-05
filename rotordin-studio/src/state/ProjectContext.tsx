@@ -10,8 +10,13 @@ import {
   addSegmentAtomic,
   moveSegmentAtomic,
   removeSegmentAtomic,
+  setRotorStackAtomic,
+  updateBearingAtomic,
+  updateLegacyLoadAtomic,
   updateSegmentAtomic,
   validateProject,
+  type BearingPatch,
+  type LegacyLoadPatch,
   type RotorProject,
   type SegmentPatch,
   type ValidationIssue,
@@ -28,6 +33,9 @@ interface ProjectContextValue {
   addSegment: (afterIndex?: number) => boolean;
   removeSegment: (id: string) => boolean;
   moveSegment: (id: string, direction: -1 | 1) => boolean;
+  updateBearing: (id: string, patch: BearingPatch) => boolean;
+  updateLegacyLoad: (id: string, patch: LegacyLoadPatch) => boolean;
+  setRotorStack: (id: string) => boolean;
 }
 
 const ProjectContext = createContext<ProjectContextValue | null>(null);
@@ -60,6 +68,9 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     addSegment: (afterIndex) => apply(addSegmentAtomic(project, afterIndex)),
     removeSegment: (id) => apply(removeSegmentAtomic(project, id)),
     moveSegment: (id, direction) => apply(moveSegmentAtomic(project, id, direction)),
+    updateBearing: (id, patch) => apply(updateBearingAtomic(project, id, patch)),
+    updateLegacyLoad: (id, patch) => apply(updateLegacyLoadAtomic(project, id, patch)),
+    setRotorStack: (id) => apply(setRotorStackAtomic(project, id)),
   };
 
   return <ProjectContext.Provider value={value}>{children}</ProjectContext.Provider>;
