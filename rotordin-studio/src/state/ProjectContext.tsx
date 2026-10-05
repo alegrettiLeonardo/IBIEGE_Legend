@@ -190,8 +190,9 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     try {
       const rows = await window.rotorDinDesktop.listQualifiedRuns();
       setRunHistory(rows);
-      if (!selectedRun && rows[0]) {
-        const latest = await window.rotorDinDesktop.loadQualifiedRun({ runId: rows[0].runId });
+      const latestWithResults = rows.find((row) => row.hasResults);
+      if (!selectedRun && latestWithResults) {
+        const latest = await window.rotorDinDesktop.loadQualifiedRun({ runId: latestWithResults.runId });
         setSelectedRun(latest);
       }
     } catch (error) {
