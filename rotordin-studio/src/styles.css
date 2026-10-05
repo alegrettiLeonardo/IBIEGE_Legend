@@ -256,3 +256,6 @@ th:last-child, td:last-child { border-right: 0; }
   .overview-grid { grid-template-columns: minmax(520px, 1.5fr) minmax(320px, .9fr) 285px; }
   .analysis-cards { grid-template-columns: repeat(2, 1fr); }
 }
+
+.error-note { border-color: #efc4c4 !important; background: #fff1f1 !important; color: #b52d2d !important; }
+.error-note span { color: #8a4d4d !important; }
