@@ -3,6 +3,7 @@ import { matrixViewForBearing, toLegacyShaftGrid, type AnalysisKind } from './do
 import { qualificationFor } from './runs/qualification';
 import { useProject } from './state/ProjectContext';
 import ResultsWorkspace from './features/results/ResultsWorkspace';
+import RunsWorkspace from './features/runs/RunsWorkspace';
 import {
   Activity,
   BarChart3,
@@ -96,22 +97,11 @@ const analysisCards = [
   { key: 'stability', title: 'Stability / Log Decrement', subtitle: 'Stability analysis and damping', icon: ShieldCheck, rows: [['Speed Range', '0 – 6,000 rpm'], ['Speed Divisions', '100'], ['Perturbation', 'Modal'], ['Output', 'Log Decrement']] },
 ];
 
-const runs = [
-  ['#007', '03/09/2026 13:15', 'Critical Speed + Response', 'RD-Solver v2026.1', 'Success', '12.4 s', 'a3f9c7e1', 'Final design check'],
-  ['#006', '03/09/2026 11:42', 'Unbalance Response', 'RD-Solver v2026.1', 'Qualified', '28.7 s', 'd4b1e9a5', 'Tolerance study'],
-  ['#005', '02/09/2026 16:03', 'Modal Analysis', 'RD-Solver v2026.0', 'Success', '7.1 s', '9c2d4f8a', 'Updated bearing data'],
-  ['#004', '02/09/2026 14:21', 'Critical Speed', 'RD-Solver v2026.0', 'Warning', '10.6 s', 'f7a9b2c3', 'Coarse mesh'],
-  ['#003', '01/09/2026 10:17', 'Transient Response', 'RD-Solver v2026.0', 'Success', '41.3 s', '3e6d1a90', 'Startup simulation'],
-  ['#002', '31/08/2026 15:08', 'Unbalance Response', 'RD-Solver v2025.3', 'Failed', '6.8 s', 'b8d4e2f1', 'Numerical divergence'],
-  ['#001', '31/08/2026 09:54', 'Modal Analysis', 'RD-Solver v2025.3', 'Success', '5.2 s', 'c1a7d9e0', 'Initial model'],
-];
-
 function App() {
   const { project: currentProject, saved, validation, markDirty, saveProject, openProject } = useProject();
   const [page, setPage] = useState<Page>('Overview');
   const [activeSegment, setActiveSegment] = useState(6);
   const [activeBearing, setActiveBearing] = useState(0);
-  const [activeRun, setActiveRun] = useState(0);
   const [enabledAnalyses, setEnabledAnalyses] = useState<Record<string, boolean>>(
     Object.fromEntries(analysisCards.map((item) => [item.key, true])),
   );
@@ -139,11 +129,11 @@ function App() {
       case 'Analysis': return <AnalysisPage enabled={enabledAnalyses} onToggle={(key) => setEnabledAnalyses((prev) => ({ ...prev, [key]: !prev[key] }))} onResults={() => setPage('Results')} />;
       case 'Results': return <ResultsPage />;
       case 'Runs':
-      case 'Reports': return <RunsPage selected={activeRun} onSelect={setActiveRun} />;
+      case 'Reports': return <RunsWorkspace onResults={() => setPage('Results')} />;
       case 'Settings': return <SettingsPage />;
       default: return <OverviewPage onNavigate={setPage} />;
     }
-  }, [page, activeSegment, activeBearing, activeRun, enabledAnalyses]);
+  }, [page, activeSegment, activeBearing, enabledAnalyses]);
 
   return (
     <div className="app-shell">
@@ -515,17 +505,6 @@ function ResultsPage() {
   return <ResultsWorkspace />;
 }
 
-function RunsPage({ selected, onSelect }: { selected: number; onSelect: (index: number) => void }) {
-  return (
-    <div className="runs-layout">
-      <div className="runs-heading"><div><h1><Play/> Runs & Reports</h1><p>Manage analysis runs, view results, and generate reports.</p></div><div><Button primary icon={Plus}>New Run</Button><Button icon={RefreshCcw}>Refresh</Button><div className="search-box large"><Search size={16}/><input placeholder="Search runs, notes, or hash..."/></div></div></div>
-      <Card title="Run History" icon={FileText} className="run-history"><DataTable headers={['Run ID','Started','Analyses','Solver','Status','Elapsed','Input Hash','Notes']} rows={runs} selected={selected} onSelect={onSelect} statusColumn={4}/></Card>
-      <Card title={'Run ' + runs[selected][0]} icon={FileText} className="run-detail" actions={<><Badge tone={runs[selected][4] === 'Failed' ? 'danger' : 'success'}>{runs[selected][4]}</Badge><Badge tone="info">Qualified</Badge></>}><div className="detail-heading"><div><strong>{runs[selected][2]}</strong><span>{runs[selected][7]}</span></div><div><span>Started<strong>{runs[selected][1]}</strong></span><span>Elapsed Time<strong>{runs[selected][5]}</strong></span></div></div><div className="tabs"><button className="active"><FileText size={15}/>Artifacts</button><button><BarChart3 size={15}/>Analysis Summary</button><button><Activity size={15}/>Key Results</button><button><FileCode2 size={15}/>Log Preview</button></div><div className="artifact-grid"><Artifact icon={FileText} title="Input File" file="run007_input.rdin" meta="1.2 MB"/><Artifact icon={Database} title="Output File" file="run007_output.h5" meta="8.4 MB"/><Artifact icon={FileBarChart2} title="Plots (12)" file="Natural frequencies, modes, response" meta="12 files"/><Artifact icon={FileText} title="Solver Log" file="run007_solver.log" meta="156 KB"/><Artifact icon={FileCode2} title="Run Manifest" file="run007_manifest.json" meta="18 KB"/><Artifact icon={FileDown} title="Report" file="run007_report.pdf" meta="2.1 MB"/></div><div className="run-actions"><Button primary icon={FolderOpen}>Open Artifacts</Button><Button icon={FileText}>Generate Report</Button><Button icon={FileDown}>Export PDF</Button><Button icon={BarChart3}>Compare Runs</Button><Button icon={Play}>Re-run</Button></div></Card>
-      <Card title="Run Traceability" icon={ShieldCheck} className="trace-card"><KeyValue rows={[["Solver Executable","RD-Solver.exe (v2026.1)"],["Solver Hash","5e7c3d9a2b1f6c8e4…"],["Project Hash","a3f9c7e18d4b2e1f0…"],["Exit Code","0"],["Warning Count","0"],["Run Status","Success"],["Qualification","Qualified"],["Environment","Windows 11"],["User","engineer"],["Host","RD-WS-01"]]} /></Card>
-    </div>
-  );
-}
-
 function SettingsPage() {
   return (
     <div className="settings-layout">
@@ -557,10 +536,6 @@ function SourceTile({ icon: Icon, title, subtitle, active }: { icon: LucideIcon;
 function MatrixEditor({ title, values, editable = [false, false, false, false], onChange }: { title: string; values: string[]; editable?: boolean[]; onChange?: (index: number, value: string) => void }) {
   const input = (index: number) => <input value={values[index]} readOnly={!editable[index]} onChange={(event) => onChange?.(index, event.target.value)}/>;
   return <div className="matrix-editor"><div className="matrix-title"><strong>{title}</strong><Badge tone="info">Symmetric</Badge></div><div className="matrix-labels"><span></span><span>X</span><span>Z</span><span>X</span>{input(0)}{input(1)}<span>Z</span>{input(2)}{input(3)}</div></div>;
-}
-
-function Artifact({ icon: Icon, title, file, meta }: { icon: LucideIcon; title: string; file: string; meta: string }) {
-  return <div className="artifact"><Icon size={28}/><div><strong>{title}</strong><span>{file}</span><small>{meta}</small></div><Download size={17}/></div>;
 }
 
 export default App;
