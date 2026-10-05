@@ -109,9 +109,9 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       const result = await window.rotorDinDesktop.openProject();
       if (result.cancelled || !result.project) return false;
       setProject(result.project);
-      setProjectFilePath(result.filePath);
-      setSaved(true);
-      setEditIssues([]);
+      setProjectFilePath(result.sourceFormat === 'native-json' ? result.filePath : undefined);
+      setSaved(result.sourceFormat === 'native-json');
+      setEditIssues(result.issues ?? []);
       return true;
     } catch (error) {
       desktopIssue('PROJECT-OPEN-001', error);
