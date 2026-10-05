@@ -1,4 +1,6 @@
 import { useMemo, useState, type ReactNode } from 'react';
+import { demoProject, legacySegmentTableRows, massTableRows } from './data/demoProject';
+import { matrixViewForBearing, validateProject } from './domain';
 import {
   Activity,
   BarChart3,
@@ -82,42 +84,36 @@ const navItems: Array<{ page: Page; icon: LucideIcon }> = [
 ];
 
 
+const projectValidation = validateProject(demoProject);
+
 const project = {
-  ref: '0V',
-  component: '53546318/20-CER',
-  line: 'MGF',
-  frame: '630',
-  poles: '16',
-  frequency: '50 Hz',
-  nominalSpeed: '375 rpm',
+  ref: demoProject.reference,
+  component: demoProject.component ?? demoProject.description,
+  line: demoProject.line ?? '—',
+  frame: demoProject.frame ?? '—',
+  poles: String(demoProject.poles ?? '—'),
+  frequency: demoProject.frequencyHz != null ? `${demoProject.frequencyHz} Hz` : '—',
+  nominalSpeed: demoProject.nominalSpeedRpm != null ? `${demoProject.nominalSpeedRpm} rpm` : '—',
 };
 
-const segments = [
-  ['1', 'Shaft', '350.0', '190.0', '0.0', '0.0', '0.0', '0.0', '0', '0.0', '0.0'],
-  ['2', 'Shaft', '303.0', '200.0', '0.0', '0.0', '0.0', '0.0', '0', '0.0', '0.0'],
-  ['3', 'Shaft', '136.0', '214.0', '0.0', '0.0', '0.0', '0.0', '0', '0.0', '0.0'],
-  ['4', 'Shoulder', '118.0', '250.0', '0.0', '2.0', '0.0', '0.0', '0', '0.0', '0.0'],
-  ['5', 'Shaft', '132.47', '260.0', '0.0', '0.0', '0.0', '0.0', '0', '0.0', '0.0'],
-  ['6', 'Ribbed', '1534.0', '260.0', '580.0', '50.0', '0.0', '0.0', '6', '0.0', '0.0'],
-  ['7', 'Shaft', '200.0', '260.0', '0.0', '0.0', '0.0', '0.0', '0', '0.0', '0.0'],
-  ['8', 'Tapered', '112.0', '260.0', '0.0', '0.0', '0.0', '0.0', '0', '0.0', '200.0'],
-  ['9', 'Shaft', '118.53', '200.0', '0.0', '0.0', '0.0', '0.0', '0', '0.0', '0.0'],
-  ['10', 'Shaft', '116.5', '180.0', '0.0', '0.0', '0.0', '0.0', '0', '0.0', '0.0'],
-  ['11', 'Shaft', '110.5', '152.0', '0.0', '0.0', '0.0', '0.0', '0', '0.0', '0.0'],
-  ['12', 'Shaft', '99.0', '112.0', '0.0', '0.0', '0.0', '0.0', '0', '0.0', '0.0'],
-];
+const segments = legacySegmentTableRows();
 
-const bearings = [
-  { id: 1, name: 'BRG 1', position: '536.47', kxx: '5.70e+07', kzz: '5.70e+07', cxx: '0.00e+00', czz: '0.00e+00', source: 'Constant', support: 'SUP 1' },
-  { id: 2, name: 'BRG 2', position: '3027.0', kxx: '2.029e+09', kzz: '2.029e+09', cxx: '0.00e+00', czz: '0.00e+00', source: 'Speed dep.', support: 'SUP 2' },
-];
+const bearings = demoProject.bearings.map((bearing, index) => {
+  const matrix = matrixViewForBearing(bearing);
+  return {
+    id: index + 1,
+    name: bearing.name,
+    position: String(bearing.positionMm),
+    kxx: matrix.stiffness.xx.toExponential(3),
+    kzz: matrix.stiffness.zz.toExponential(3),
+    cxx: matrix.damping.xx.toExponential(3),
+    czz: matrix.damping.zz.toExponential(3),
+    source: bearing.coefficients.kind === 'legacy-scalar' ? 'Legacy scalar' : bearing.coefficients.source,
+    support: bearing.supportId ?? '—',
+  };
+});
 
-const masses = [
-  ['1', '0', '350', '75', '235', '—', 'No', 'No'],
-  ['2', '827.7', '80', '125', '1120', '—', 'No', 'No'],
-  ['3', '1146', '1321', '2838', '845', '580', 'Yes', 'Yes'],
-  ['4', '3231', '80', '147', '1000', '—', 'No', 'No'],
-];
+const masses = massTableRows();
 
 const analysisCards = [
   { key: 'campbell', title: 'Campbell Diagram', subtitle: 'Natural frequencies vs. speed', icon: BarChart3, rows: [['Speed Range', '0 – 6,000 rpm'], ['Speed Divisions', '200'], ['Modes', '1 – 10'], ['Damping', 'Included']] },
@@ -142,7 +138,7 @@ const runs = [
 function App() {
   const [page, setPage] = useState<Page>('Overview');
   const [saved, setSaved] = useState(true);
-  const [valid, setValid] = useState(true);
+  const [valid, setValid] = useState(projectValidation.valid);
   const [activeSegment, setActiveSegment] = useState(6);
   const [activeBearing, setActiveBearing] = useState(0);
   const [activeRun, setActiveRun] = useState(0);
@@ -269,7 +265,7 @@ function ShaftViewer({ compact = false, selected = false }: { compact?: boolean;
         <rect x="420" y="68" width="310" height="25" fill="url(#cyan)" stroke="#057b85" /><rect x="420" y="247" width="310" height="25" fill="url(#cyan)" stroke="#057b85" /><rect x="330" y="72" width="18" height="196" fill="url(#cyan)" stroke="#057b85" /><rect x="910" y="88" width="18" height="164" fill="url(#cyan)" stroke="#057b85" />
         {selected && <rect x="725" y="122" width="92" height="96" fill="#2d8bd7" opacity="0.15" stroke="#1677c8" strokeWidth="3" strokeDasharray="7 6" />}
         <g fill="none" stroke="#1f2d38" strokeWidth="2"><path d="M200 215 L185 245 L215 245 Z" /><path d="M850 215 L835 245 L865 245 Z" /></g>
-        {!compact && <><g stroke="#e53935" fill="#fff" strokeWidth="2"><circle cx="420" cy="37" r="12"/><circle cx="730" cy="37" r="12"/><line x1="420" y1="49" x2="420" y2="68"/><line x1="730" y1="49" x2="730" y2="68"/></g><g fill="#e53935" fontSize="14" fontFamily="sans-serif"><text x="440" y="40">F1</text><text x="750" y="40">F2</text></g><g stroke="#5c6f7e" fill="none" strokeWidth="1.2"><line x1="85" y1="305" x2="330" y2="305"/><line x1="330" y1="305" x2="760" y2="305"/><line x1="760" y1="305" x2="928" y2="305"/><line x1="85" y1="295" x2="85" y2="315"/><line x1="330" y1="295" x2="330" y2="315"/><line x1="760" y1="295" x2="760" y2="315"/><line x1="928" y1="295" x2="928" y2="315"/></g><g fill="#334657" fontSize="14" fontWeight="600" fontFamily="sans-serif"><text x="190" y="329">842</text><text x="535" y="329">1,666</text><text x="830" y="329">842</text></g></>}
+        {!compact && <><g stroke="#e53935" fill="#fff" strokeWidth="2"><circle cx="420" cy="37" r="12"/><circle cx="730" cy="37" r="12"/><line x1="420" y1="49" x2="420" y2="68"/><line x1="730" y1="49" x2="730" y2="68"/></g><g fill="#e53935" fontSize="14" fontFamily="sans-serif"><text x="440" y="40">F1</text><text x="750" y="40">F2</text></g><g stroke="#5c6f7e" fill="none" strokeWidth="1.2"><line x1="85" y1="305" x2="330" y2="305"/><line x1="330" y1="305" x2="760" y2="305"/><line x1="760" y1="305" x2="928" y2="305"/><line x1="85" y1="295" x2="85" y2="315"/><line x1="330" y1="295" x2="330" y2="315"/><line x1="760" y1="295" x2="760" y2="315"/><line x1="928" y1="295" x2="928" y2="315"/></g><g fill="#334657" fontSize="14" fontWeight="600" fontFamily="sans-serif"><text x="175" y="329">536.47</text><text x="515" y="329">2,490.53</text><text x="828" y="329">303.0</text></g></>}
         <g fill="#172936" fontSize="13" fontWeight="600" fontFamily="sans-serif"><text x="165" y="265">BRG 1</text><text x="828" y="265">BRG 2</text></g>
       </svg>
     </div>
@@ -290,7 +286,7 @@ function OverviewPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
     <div className="overview-grid">
       <Card title="Rotor / Shaft Geometry" icon={Box} className="overview-viewer" actions={<><Button icon={Maximize2}>Fit</Button><Button icon={ZoomIn} /><Button icon={ZoomOut} /><Button primary>2D</Button><Button>3D</Button><Button icon={Settings} /></>}><ShaftViewer /></Card>
       <Card title="Analysis Tools" icon={BarChart3} className="analysis-tools"><div className="tool-list">{analysisTools.map(([name, sub, Icon, dest]) => <button key={name} className="tool-row" onClick={() => onNavigate(dest as Page)}><Icon size={21}/><div><strong>{name}</strong><span>{sub}</span></div><ChevronRight size={17}/></button>)}</div></Card>
-      <Card title="Model Summary" icon={ClipboardList} className="summary-card"><div className="metric-grid"><Metric icon={Ruler} label="Shaft Length" value="3,350 mm"/><Metric icon={Weight} label="Shaft Mass" value="1,705.0 kg"/><Metric icon={CircleDot} label="Bearings" value="2"/><Metric icon={Database} label="Distributed Masses" value="3"/><Metric icon={Triangle} label="Concentrated Masses" value="2"/><Metric icon={Activity} label="Forces / Excitations" value="2"/><Metric icon={Triangle} label="Supports" value="2"/><Metric icon={Layers3} label="Shaft Segments" value="16"/><Metric icon={CheckCircle2} label="Model Status" value="Valid" tone="success"/></div></Card>
+      <Card title="Model Summary" icon={ClipboardList} className="summary-card"><div className="metric-grid"><Metric icon={Ruler} label="Shaft Length" value="3,330 mm"/><Metric icon={Weight} label="Shaft Mass" value="1,705.0 kg"/><Metric icon={CircleDot} label="Bearings" value="2"/><Metric icon={Database} label="Distributed Masses" value="3"/><Metric icon={Triangle} label="Concentrated Masses" value="2"/><Metric icon={Activity} label="Forces / Excitations" value="2"/><Metric icon={Triangle} label="Supports" value="2"/><Metric icon={Layers3} label="Shaft Segments" value={String(demoProject.segments.length)}/><Metric icon={CheckCircle2} label="Model Status" value="Valid" tone="success"/></div></Card>
       <Card title="Latest Run" icon={Play} className="latest-run" actions={<Button primary icon={Play} onClick={() => onNavigate('Analysis')}>Run Analysis</Button>}><KeyValue rows={[["Run ID", "#007"],["Analysis Type","Critical Speed + Response"],["Speed Range","100 – 6,000 rpm"],["Frequency Points","50"],["Computation Time","12.4 s"],["Date","03/09/2026 13:15:33"]]} /><div className="latest-status"><span>Status</span><Badge tone="success">Completed</Badge></div><div className="split-actions"><Button icon={FolderOpen} onClick={() => onNavigate('Results')}>View Results</Button><Button icon={FileText}>Open Log</Button></div></Card>
       <Card title="Quick Actions" icon={Sparkles} className="quick-actions"><div className="quick-list"><Button icon={Box} onClick={() => onNavigate('Shaft')}>Edit Shaft Geometry</Button><Button icon={CircleDot} onClick={() => onNavigate('Bearings')}>Configure Bearings</Button><Button icon={Weight} onClick={() => onNavigate('Masses')}>Define Masses</Button><Button icon={Activity} onClick={() => onNavigate('Excitations')}>Set Excitations</Button><Button icon={Settings} onClick={() => onNavigate('Analysis')}>Analysis Settings</Button></div></Card>
     </div>
@@ -303,7 +299,7 @@ function ShaftPage({ selected, onSelect }: { selected: number; onSelect: (index:
     <div className="shaft-page-grid">
       <Card title="Shaft Modeler" icon={Box} className="shaft-main" actions={<><Button icon={Maximize2}>Fit</Button><Button icon={ZoomIn}/><Button icon={ZoomOut}/><Button icon={MousePointer2}/><Button icon={Ruler}>Measure</Button><Button icon={Eye}>Layers</Button><Button primary>2D</Button><Button>3D</Button><Button icon={Upload}>Export</Button></>}><ShaftViewer selected /></Card>
       <Card title="Segment Properties" icon={SlidersHorizontal} className="segment-inspector"><div className="inspector-nav"><Button icon={ChevronLeft}/><strong>Segment {selected + 1} of {segments.length}</strong><Button icon={ChevronRight}/></div><FormField label="Type" value={s[1]} /><FormField label="Length (L)" value={s[2]} unit="mm" /><FormField label="Outer Diameter (D)" value={s[3]} unit="mm" /><FormField label="Package Diameter (DPCT)" value={s[4]} unit="mm" /><FormField label="Inner Diameter (Dint)" value={s[9]} unit="mm" /><FormField label="End Diameter (Df)" value={s[10]} unit="mm" /><FormField label="Rib Count" value={s[8]} /><div className="inspector-note"><CheckCircle2 size={16}/><div><strong>Geometry valid</strong><span>Selected segment is physically consistent.</span></div></div></Card>
-      <div className="shaft-metrics"><Metric icon={Ruler} label="Total Length" value="3,350 mm"/><Metric icon={Weight} label="Shaft Mass" value="1,705.0 kg"/><Metric icon={Layers3} label="Number of Segments" value="12"/><Metric icon={CheckCircle2} label="Geometry Validation" value="Valid" tone="success"/></div>
+      <div className="shaft-metrics"><Metric icon={Ruler} label="Total Length" value="3,330 mm"/><Metric icon={Weight} label="Shaft Mass" value="1,705.0 kg"/><Metric icon={Layers3} label="Number of Segments" value="12"/><Metric icon={CheckCircle2} label="Geometry Validation" value="Valid" tone="success"/></div>
       <Card title="Shaft Segments" icon={ClipboardList} className="segments-card" actions={<><Button primary icon={Plus}>Add Segment</Button><Button icon={FileText}>Insert</Button><Button icon={Copy}>Duplicate</Button><Button icon={Trash2} danger>Delete</Button><Button icon={MoveUp}>Move Up</Button><Button icon={MoveDown}>Move Down</Button></>}><DataTable headers={['#','Type','L [mm]','D [mm]','DPCT','A','B','C','Ribs','Dint [mm]','Df [mm]']} rows={segments} selected={selected} onSelect={onSelect} /></Card>
       <Card title="Visual Options" icon={Eye} className="visual-options">{['Show Bearings','Show Supports','Show Masses / Rotors','Show Loads','Show Dimensions','Show Segment Numbers','Show Centerline'].map((label, i) => <label className="check-row" key={label}><input type="checkbox" defaultChecked={i !== 5}/><span>{label}</span></label>)}<FormField label="View Preset" value="Standard" /></Card>
     </div>
