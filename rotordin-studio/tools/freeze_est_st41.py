@@ -140,7 +140,7 @@ def main() -> int:
 
     writer = SolverInputWriter()
     input_text = writer.render(project)
-    (output / "input.txt").write_text(input_text, encoding="utf-8", newline="\n")
+    (output / "input.txt").write_bytes(input_text.replace("\r\n", "\n").replace("\r", "\n").encode("utf-8"))
     (output / "project.json").write_text(
         json.dumps(project.to_dict(), ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
