@@ -61,6 +61,24 @@ describe('EST-ST41 production irDin fixture', () => {
       expect(bearing.coefficients.table?.[0].speedRpm).toBe(500);
       expect(bearing.coefficients.table?.[10].speedRpm).toBe(4000);
     }
+
+    const first = imported.project.bearings[0];
+    if (first.coefficients.kind !== 'matrix') throw new Error('unexpected bearing model');
+    expect(first.coefficients.table?.[0]).toMatchObject({
+      speedRpm: 500,
+      stiffness: {
+        xx: 27.35e7,
+        xz: -16.07e7,
+        zx: -98.04e7,
+        zz: 24.86e8,
+      },
+      damping: {
+        xx: 30.66e5,
+        xz: -68.33e5,
+        zx: -68.33e5,
+        zz: 37.28e6,
+      },
+    });
   });
 
   it('imports unbalance, response points and supports', () => {
