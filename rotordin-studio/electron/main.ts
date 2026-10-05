@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { IPC_CHANNELS, type ExecuteQualifiedRunRequest, type PrepareRunRequest, type ProjectSaveRequest } from './contracts';
+import { IPC_CHANNELS, type ExecuteQualifiedRunRequest, type LoadQualifiedRunRequest, type PrepareRunRequest, type ProjectSaveRequest } from './contracts';
 import { openProjectFile, saveProjectFile } from './services/projectFiles';
 import { prepareRunWorkspace } from './services/runWorkspace';
 import { executeQualifiedRotorDinRun } from './services/qualifiedRotorDinRun';
