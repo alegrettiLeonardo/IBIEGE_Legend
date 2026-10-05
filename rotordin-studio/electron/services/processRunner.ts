@@ -59,10 +59,16 @@ export async function runQualifiedProcess(request: ProcessRunRequest): Promise<P
       child.stdin.end(request.stdinText);
     }
 
-    child.stdout.setEncoding('utf8');
-    child.stderr.setEncoding('utf8');
-    child.stdout.on('data', (chunk: string) => { stdout += chunk; });
-    child.stderr.on('data', (chunk: string) => { stderr += chunk; });
+    if (!child.stdout || !child.stderr) {
+      reject(new Error('RUN-PROCESS-001: Solver stdout/stderr pipes were not created.'));
+      return;
+    }
+    const stdoutStream = child.stdout;
+    const stderrStream = child.stderr;
+    stdoutStream.setEncoding('utf8');
+    stderrStream.setEncoding('utf8');
+    stdoutStream.on('data', (chunk: string) => { stdout += chunk; });
+    stderrStream.on('data', (chunk: string) => { stderr += chunk; });
 
     const timer = setTimeout(() => {
       timedOut = true;
