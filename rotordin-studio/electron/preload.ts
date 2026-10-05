@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import {
   IPC_CHANNELS,
+  type ExecuteQualifiedRunRequest,
   type PrepareRunRequest,
   type ProjectSaveRequest,
   type RotorDinDesktopApi,
@@ -13,6 +14,8 @@ const api: RotorDinDesktopApi = {
     ipcRenderer.invoke(IPC_CHANNELS.projectOpen),
   prepareRun: (request: PrepareRunRequest) =>
     ipcRenderer.invoke(IPC_CHANNELS.runPrepare, request),
+  executeQualifiedRun: (request: ExecuteQualifiedRunRequest) =>
+    ipcRenderer.invoke(IPC_CHANNELS.runExecuteQualified, request),
 };
 
 contextBridge.exposeInMainWorld('rotorDinDesktop', api);
