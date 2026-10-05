@@ -1,6 +1,7 @@
 import { useMemo, useState, type ReactNode } from 'react';
-import { demoProject, legacySegmentTableRows, massTableRows } from './data/demoProject';
-import { matrixViewForBearing, validateProject } from './domain';
+import { demoProject, massTableRows } from './data/demoProject';
+import { matrixViewForBearing, toLegacyShaftGrid } from './domain';
+import { useProject } from './state/ProjectContext';
 import {
   Activity,
   BarChart3,
@@ -84,8 +85,6 @@ const navItems: Array<{ page: Page; icon: LucideIcon }> = [
 ];
 
 
-const projectValidation = validateProject(demoProject);
-
 const project = {
   ref: demoProject.reference,
   component: demoProject.component ?? demoProject.description,
@@ -95,8 +94,6 @@ const project = {
   frequency: demoProject.frequencyHz != null ? `${demoProject.frequencyHz} Hz` : '—',
   nominalSpeed: demoProject.nominalSpeedRpm != null ? `${demoProject.nominalSpeedRpm} rpm` : '—',
 };
-
-const segments = legacySegmentTableRows();
 
 const bearings = demoProject.bearings.map((bearing, index) => {
   const matrix = matrixViewForBearing(bearing);
@@ -136,9 +133,8 @@ const runs = [
 ];
 
 function App() {
+  const { saved, validation, markSaved, markDirty } = useProject();
   const [page, setPage] = useState<Page>('Overview');
-  const [saved, setSaved] = useState(true);
-  const [valid, setValid] = useState(projectValidation.valid);
   const [activeSegment, setActiveSegment] = useState(6);
   const [activeBearing, setActiveBearing] = useState(0);
   const [activeRun, setActiveRun] = useState(0);
@@ -165,9 +161,9 @@ function App() {
     <div className="app-shell">
       <Sidebar page={page} onNavigate={setPage} />
       <div className="app-main">
-        <TopBar saved={saved} valid={valid} onSave={() => setSaved(true)} onValidate={() => setValid(true)} />
+        <TopBar saved={saved} valid={validation.valid} onSave={markSaved} onValidate={() => undefined} />
         <ProjectStrip />
-        <main className="page-content" onInput={() => setSaved(false)}>{pageContent}</main>
+        <main className="page-content" onInput={markDirty}>{pageContent}</main>
         <StatusBar />
       </div>
     </div>
@@ -294,13 +290,37 @@ function OverviewPage({ onNavigate }: { onNavigate: (page: Page) => void }) {
 }
 
 function ShaftPage({ selected, onSelect }: { selected: number; onSelect: (index: number) => void }) {
-  const s = segments[selected];
+  const { project: currentProject, updateSegment, addSegment, removeSegment, moveSegment, editIssues } = useProject();
+  const rows = toLegacyShaftGrid(currentProject.segments).map((row, index) => {
+    const segment = currentProject.segments[index];
+    const type = segment.sectionType === 'ribbed'
+      ? 'Ribbed'
+      : segment.sectionType === 'hollow'
+        ? 'Hollow'
+        : segment.endOuterDiameterMm
+          ? 'Tapered'
+          : 'Shaft';
+    return [
+      String(index + 1), type, String(row.L ?? 0), String(row.D ?? 0), String(row.DPCT ?? 0),
+      String(row.A ?? 0), String(row.B ?? 0), String(row.C ?? 0), String(row.NR_COST ?? 0),
+      String(row.D_INT ?? 0), String(row.D_F ?? 0),
+    ];
+  });
+  const safeSelected = Math.min(selected, Math.max(0, currentProject.segments.length - 1));
+  const segment = currentProject.segments[safeSelected];
+  const s = rows[safeSelected];
+  const totalLength = currentProject.segments.reduce((sum, item) => sum + item.lengthMm, 0);
+  const segmentIssues = editIssues.filter((issue) => !issue.entityId || issue.entityId === segment?.id);
+  const numberValue = (value: string) => {
+    const parsed = Number(value.replace(',', '.'));
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
   return (
     <div className="shaft-page-grid">
       <Card title="Shaft Modeler" icon={Box} className="shaft-main" actions={<><Button icon={Maximize2}>Fit</Button><Button icon={ZoomIn}/><Button icon={ZoomOut}/><Button icon={MousePointer2}/><Button icon={Ruler}>Measure</Button><Button icon={Eye}>Layers</Button><Button primary>2D</Button><Button>3D</Button><Button icon={Upload}>Export</Button></>}><ShaftViewer selected /></Card>
-      <Card title="Segment Properties" icon={SlidersHorizontal} className="segment-inspector"><div className="inspector-nav"><Button icon={ChevronLeft}/><strong>Segment {selected + 1} of {segments.length}</strong><Button icon={ChevronRight}/></div><FormField label="Type" value={s[1]} /><FormField label="Length (L)" value={s[2]} unit="mm" /><FormField label="Outer Diameter (D)" value={s[3]} unit="mm" /><FormField label="Package Diameter (DPCT)" value={s[4]} unit="mm" /><FormField label="Inner Diameter (Dint)" value={s[9]} unit="mm" /><FormField label="End Diameter (Df)" value={s[10]} unit="mm" /><FormField label="Rib Count" value={s[8]} /><div className="inspector-note"><CheckCircle2 size={16}/><div><strong>Geometry valid</strong><span>Selected segment is physically consistent.</span></div></div></Card>
-      <div className="shaft-metrics"><Metric icon={Ruler} label="Total Length" value="3,330 mm"/><Metric icon={Weight} label="Shaft Mass" value="1,705.0 kg"/><Metric icon={Layers3} label="Number of Segments" value="12"/><Metric icon={CheckCircle2} label="Geometry Validation" value="Valid" tone="success"/></div>
-      <Card title="Shaft Segments" icon={ClipboardList} className="segments-card" actions={<><Button primary icon={Plus}>Add Segment</Button><Button icon={FileText}>Insert</Button><Button icon={Copy}>Duplicate</Button><Button icon={Trash2} danger>Delete</Button><Button icon={MoveUp}>Move Up</Button><Button icon={MoveDown}>Move Down</Button></>}><DataTable headers={['#','Type','L [mm]','D [mm]','DPCT','A','B','C','Ribs','Dint [mm]','Df [mm]']} rows={segments} selected={selected} onSelect={onSelect} /></Card>
+      <Card title="Segment Properties" icon={SlidersHorizontal} className="segment-inspector"><div className="inspector-nav"><Button icon={ChevronLeft} onClick={() => onSelect(Math.max(0, safeSelected - 1))}/><strong>Segment {safeSelected + 1} of {rows.length}</strong><Button icon={ChevronRight} onClick={() => onSelect(Math.min(rows.length - 1, safeSelected + 1))}/></div><FormField label="Type" value={s[1]} /><FormField label="Length (L)" value={s[2]} unit="mm" onChange={(value) => updateSegment(segment.id, { lengthMm: numberValue(value) })} /><FormField label="Outer Diameter (D)" value={s[3]} unit="mm" onChange={(value) => updateSegment(segment.id, { outerDiameterMm: numberValue(value) })} /><FormField label="Package Diameter (DPCT)" value={s[4]} unit="mm" onChange={segment.sectionType === 'ribbed' ? (value) => updateSegment(segment.id, { ribbed: { packageDiameterMm: numberValue(value) } }) : undefined} /><FormField label="Inner Diameter (Dint)" value={s[9]} unit="mm" onChange={segment.sectionType === 'hollow' ? (value) => updateSegment(segment.id, { innerDiameterMm: numberValue(value) }) : undefined} /><FormField label="End Diameter (Df)" value={s[10]} unit="mm" onChange={(value) => updateSegment(segment.id, { endOuterDiameterMm: numberValue(value) || undefined })} /><FormField label="Rib Count" value={s[8]} onChange={segment.sectionType === 'ribbed' ? (value) => updateSegment(segment.id, { ribbed: { ribCount: numberValue(value) } }) : undefined} />{segmentIssues.length > 0 ? <div className="inspector-note error-note"><Triangle size={16}/><div><strong>Edit rejected</strong><span>{segmentIssues[0].message}</span></div></div> : <div className="inspector-note"><CheckCircle2 size={16}/><div><strong>Geometry valid</strong><span>Selected segment is physically consistent.</span></div></div>}</Card>
+      <div className="shaft-metrics"><Metric icon={Ruler} label="Total Length" value={`${totalLength.toLocaleString('en-US', { maximumFractionDigits: 2 })} mm`}/><Metric icon={Weight} label="Shaft Mass" value="1,705.0 kg"/><Metric icon={Layers3} label="Number of Segments" value={String(rows.length)}/><Metric icon={CheckCircle2} label="Geometry Validation" value={segmentIssues.length ? "Rejected edit" : "Valid"} tone={segmentIssues.length ? "warning" : "success"}/></div>
+      <Card title="Shaft Segments" icon={ClipboardList} className="segments-card" actions={<><Button primary icon={Plus} onClick={() => { if (addSegment(safeSelected)) onSelect(safeSelected + 1); }}>Add Segment</Button><Button icon={FileText} onClick={() => { if (addSegment(Math.max(-1, safeSelected - 1))) onSelect(safeSelected); }}>Insert</Button><Button icon={Copy} onClick={() => { if (addSegment(safeSelected)) onSelect(safeSelected + 1); }}>Duplicate</Button><Button icon={Trash2} danger onClick={() => { if (removeSegment(segment.id)) onSelect(Math.max(0, safeSelected - 1)); }}>Delete</Button><Button icon={MoveUp} onClick={() => { if (moveSegment(segment.id, -1)) onSelect(Math.max(0, safeSelected - 1)); }}>Move Up</Button><Button icon={MoveDown} onClick={() => { if (moveSegment(segment.id, 1)) onSelect(Math.min(rows.length - 1, safeSelected + 1)); }}>Move Down</Button></>}><DataTable headers={['#','Type','L [mm]','D [mm]','DPCT','A','B','C','Ribs','Dint [mm]','Df [mm]']} rows={rows} selected={safeSelected} onSelect={onSelect} /></Card>
       <Card title="Visual Options" icon={Eye} className="visual-options">{['Show Bearings','Show Supports','Show Masses / Rotors','Show Loads','Show Dimensions','Show Segment Numbers','Show Centerline'].map((label, i) => <label className="check-row" key={label}><input type="checkbox" defaultChecked={i !== 5}/><span>{label}</span></label>)}<FormField label="View Preset" value="Standard" /></Card>
     </div>
   );
@@ -382,8 +402,8 @@ function SettingsPage() {
   );
 }
 
-function FormField({ label, value, unit }: { label: string; value: string; unit?: string }) {
-  return <label className="form-field"><span>{label}</span><div><input defaultValue={value}/>{unit && <em>{unit}</em>}</div></label>;
+function FormField({ label, value, unit, onChange }: { label: string; value: string; unit?: string; onChange?: (value: string) => void }) {
+  return <label className="form-field"><span>{label}</span><div><input value={value} readOnly={!onChange} onChange={(event) => onChange?.(event.target.value)}/>{unit && <em>{unit}</em>}</div></label>;
 }
 
 function KeyValue({ rows }: { rows: readonly (readonly string[])[] | string[][] }) {
