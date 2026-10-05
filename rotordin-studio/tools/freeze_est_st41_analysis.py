@@ -5,6 +5,7 @@ import argparse
 from dataclasses import asdict
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import platform
@@ -141,6 +142,10 @@ def set_analysis(project: Any, kind: str) -> None:
 
 
 def jsonable(value: Any) -> Any:
+    if isinstance(value, float) and not math.isfinite(value):
+        if math.isnan(value):
+            return "NaN"
+        return "Infinity" if value > 0 else "-Infinity"
     if hasattr(value, "__dataclass_fields__"):
         return {key: jsonable(item) for key, item in asdict(value).items()}
     if isinstance(value, dict):
