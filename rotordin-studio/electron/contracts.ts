@@ -1,4 +1,4 @@
-import type { RotorProject } from '../src/domain';
+import type { RotorProject, ValidationIssue } from '../src/domain';
 import type { RunManifest, RunWorkspacePlan, SolverKind } from '../src/runs/model';
 
 export const IPC_CHANNELS = {
@@ -20,7 +20,9 @@ export interface ProjectSaveResponse {
 export interface ProjectOpenResponse {
   cancelled: boolean;
   filePath?: string;
+  sourceFormat?: 'native-json' | 'irdin-text';
   project?: RotorProject;
+  issues?: ValidationIssue[];
 }
 
 export interface PrepareRunRequest {
