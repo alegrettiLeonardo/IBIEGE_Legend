@@ -112,19 +112,20 @@ function parseBearingTable(raw: string | undefined, issues: ValidationIssue[], b
     const values = fields.map(numberValue);
     result.push({
       speedRpm: values[0],
-      // Mapping follows the current RotorDin UI column order shown in the
-      // supplied screenshots: Kxx,Kzz,Kxz,Kzx,Cxx,Czz,Cxz,Czx.
+      // Native TABLE order is authoritative from entrada.f90/beatab:
+      // rpm,kxx,kxz,kzx,kzz,cxx,cxz,czx,czz[,kph,kth].
+      // Note that this differs from the legacy GUI grid column order.
       stiffness: {
         xx: values[1],
-        zz: values[2],
-        xz: values[3],
-        zx: values[4],
+        xz: values[2],
+        zx: values[3],
+        zz: values[4],
       },
       damping: {
         xx: values[5],
-        zz: values[6],
-        xz: values[7],
-        zx: values[8],
+        xz: values[6],
+        zx: values[7],
+        zz: values[8],
       },
     });
   }
@@ -316,18 +317,13 @@ function importUnbalance(raw: Record<string, string> | undefined): ForceExcitati
 
 function importResponses(
   raw: Record<string, string> | undefined,
-  issues: ValidationIssue[],
+  _issues: ValidationIssue[],
 ): ResponsePoint[] {
   const rows = sortedRows(indexedSection(raw));
-  if (rows.length > 0) {
-    issues.push({
-      code: 'IRDIN-RESP-COORD-001',
-      severity: 'warning',
-      legacySource: '[Respo] column 1',
-      message: 'Current irDin source code is not present in IBIEGE_Legend. Response coordinate codes are preserved and provisionally mapped as 1→X and 2→Z from the X/Z lateral convention shown in the supplied UI.',
-    });
-  }
 
+  // RotorDin Fortran saidas.f90 documents desp=1 as horizontal and desp=2
+  // as vertical; the native lateral DOF convention is x,z.  Therefore the
+  // current contract is 1→X and 2→Z, while the original code is preserved.
   return rows.map(([rowNumber, row]) => {
     const code = numberValue(col(row, 1));
     return {
