@@ -136,7 +136,7 @@ function App() {
       case 'Bearings': return <BearingsPage selected={activeBearing} onSelect={setActiveBearing} />;
       case 'Masses':
       case 'Excitations': return <MassesPage />;
-      case 'Analysis': return <AnalysisPage enabled={enabledAnalyses} onToggle={(key) => setEnabledAnalyses((prev) => ({ ...prev, [key]: !prev[key] }))} />;
+      case 'Analysis': return <AnalysisPage enabled={enabledAnalyses} onToggle={(key) => setEnabledAnalyses((prev) => ({ ...prev, [key]: !prev[key] }))} onResults={() => setPage('Results')} />;
       case 'Results': return <ResultsPage />;
       case 'Runs':
       case 'Reports': return <RunsPage selected={activeRun} onSelect={setActiveRun} />;
@@ -422,7 +422,7 @@ function MassesPage() {
   );
 }
 
-function AnalysisPage({ enabled, onToggle }: { enabled: Record<string, boolean>; onToggle: (key: string) => void }) {
+function AnalysisPage({ enabled, onToggle, onResults }: { enabled: Record<string, boolean>; onToggle: (key: string) => void; onResults: () => void }) {
   const { project: currentProject, executeQualifiedRun, validation } = useProject();
   const settings = currentProject.settings;
   const formatRange = (a?: number, b?: number) => a != null && b != null ? `${a.toLocaleString()} – ${b.toLocaleString()} rpm` : 'Not configured';
@@ -494,6 +494,7 @@ function AnalysisPage({ enabled, onToggle }: { enabled: Record<string, boolean>;
     setPrepareStatus(result
       ? `Completed ${result.manifest.runId}: ${result.jobs.map((job) => job.analysis).join(', ')}. Artifacts are frozen in the run workspace.`
       : 'Run blocked or failed. Review the validation/qualification message.');
+    if (result) onResults();
   };
   const count = Object.values(enabled).filter(Boolean).length;
   return (
