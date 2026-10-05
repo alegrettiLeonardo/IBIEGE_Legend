@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "qualification_id": "A11-EST-ST41-ORBIT-V1",
+  "status": "REAL_SOLVER_OUTPUT_FROZEN_CANDIDATE",
+  "source_authority": {
+    "repository": "alegrettiLeonardo/frontend_rotordin",
+    "branch": "fix/solver-audit-647d600b",
+    "head": "c669978bdcc42c06507eac8fda8b6dc39e8bce97",
+    "solver_tree_sha": "542cbbea29923090bb17562c4120a8d5646ffcba"
+  },
+  "fixture": {
+    "name": "EST-ST41_1000_B3_60HZ_1675_63536.irdin.txt",
+    "sha256": "470e57799e1d75c6b0c48f4631feb3ecb0975a40e191a48af3fcf330146a7c70",
+    "reference": "EST",
+    "component": "ST41_1000_B3_60HZ_1675_63536",
+    "nominal_rpm": 1800.0
+  },
+  "analysis": {
+    "kind": "orbit",
+    "covers": [
+      "orbit"
+    ],
+    "reason": "Legacy t_rpm is absent/zero, so the audited speed contract resolves the one-speed orbit to nominal speed 1800 rpm. TIMOEP=0 retains the native all-sections sentinel.",
+    "command_flags": [
+      "-std",
+      "-t",
+      "-b"
+    ],
+    "bearing_table_common_range_rpm": [
+      500.0,
+      4000.0
+    ],
+    "orbit_speed_rpm": 1800.0,
+    "orbit_position_mm": 0.0
+  },
+  "artifacts": {
+    "solver_executable_sha256": "48d1526c740fa6e65c78893d50925953dde8e66ba5e6a3e7d01e1a6ec7121d7b",
+    "input_sha256": "c499c0b94baf79db1c76991b201a3905d2d3826c0116ecc70d33431367b866c2",
+    "stdout_sha256": "8ead98ad8ed7c5e7fafae92ec703cc776ecbe02572fe73ce1b07bd6ecf41244c",
+    "stderr_sha256": "6529263f8d9b5c781041243940b0bce80dd2a95534e20a4b6f392421198270de",
+    "sections": {
+      "MODEL_AUDIT": "ef9e4b417a9ecd8df22baa9580eb5d1f2c353e69aa9cabaf92fa4118ff79ecaf",
+      "exectime.out": "ed10bcdee5a31f38106a82c0656b14a2ebe632719968e053b0255daf4ce15ed7",
+      "output.out": "0e5d75a0f913962a4ebc7c279260786b7d9f150171e6b31a8b6febd7a98533ea",
+      "rdaudit.out": "2e66ce382bd1762ca96e6de3c155af1fd812c511600c0c091e0c4d3d3d0b7b2e",
+      "timeresp.out": "b79acbb0757f927fe3df69f10c696aeb45ed5df44381a4e0fabffb8010d90360"
+    },
+    "parsed_results_sha256": "f313b099b9cd36d0ca0afeb863499a3030b32b484bdd7a2791d18affdfce5280"
+  },
+  "environment": {
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+    "python": "3.12.14",
+    "compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+  },
+  "legacy_import_warnings": [
+    "rpm i legado (0) é menor que o primeiro ponto das tabelas de mancal (500 rpm). Ajuste rpm i antes de salvar/executar, se necessário."
+  ]
+}

@@ -1,0 +1,27 @@
+STATUS              : PASS
+DETAIL              : PASS
+STATIONS            : 30
+ELEMENTS            : 29
+LATERAL DOF         : 124
+STATE MATRIX DIM    : 248
+MASS PD SCOPE       : full physical M
+SHAFT MASS (kg)     :   4.935396E+03
+DISK MASS (kg)      :   1.068020E+04
+CONC MASS (kg)      :   0.000000E+00
+ROTOR MASS (kg)     :   1.561560E+04
+ROTOR CG (m)        :   2.307077E+00
+MIN ELEMENT (m)     :   3.195000E-02
+MAX ELEMENT (m)     :   4.564000E-01
+MEAN ELEMENT (m)    :   1.708414E-01
+MAX/MIN LENGTH      :     14.285
+MAX L/D             :      1.170
+MESH WARNING        : max/min element length > 5
+ZERO-RHO ELEMENTS   : 0
+BEARINGS            : 2
+FLEX SUPPORTS       : 2
+MESH AUDIT          : OFF
+RESPONSE POSITIONS
+   1 requested=    0.550000 actual=    0.550000 station=4
+   2 requested=    0.550000 actual=    0.550000 station=4
+   3 requested=    3.977000 actual=    3.977000 station=23
+   4 requested=    3.977000 actual=    3.977000 station=23

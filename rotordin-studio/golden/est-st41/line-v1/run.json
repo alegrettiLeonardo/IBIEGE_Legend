@@ -1,0 +1,41 @@
+{
+  "commands": [
+    [
+      "/home/runner/work/IBIEGE_Legend/IBIEGE_Legend/rotordin-studio/solver/rotordin",
+      "-std",
+      "-s",
+      "-b"
+    ]
+  ],
+  "jobs": [
+    {
+      "name": "line",
+      "command": [
+        "/home/runner/work/IBIEGE_Legend/IBIEGE_Legend/rotordin-studio/solver/rotordin",
+        "-std",
+        "-s",
+        "-b"
+      ],
+      "returncode": 0,
+      "sections": [
+        "MODEL_AUDIT",
+        "exectime.out",
+        "output.out",
+        "selaline.out"
+      ],
+      "directory": "01_line"
+    }
+  ],
+  "returncode": 0,
+  "sections": [
+    "MODEL_AUDIT",
+    "exectime.out",
+    "output.out",
+    "selaline.out"
+  ],
+  "critical_speeds": [],
+  "speed_dependent_bearings": [
+    1,
+    2
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "qualification_id": "A11-EST-ST41-CAMPBELL-V1",
+  "status": "REAL_SOLVER_OUTPUT_FROZEN_CANDIDATE",
+  "source_authority": {
+    "repository": "alegrettiLeonardo/frontend_rotordin",
+    "branch": "fix/solver-audit-647d600b",
+    "head": "c669978bdcc42c06507eac8fda8b6dc39e8bce97",
+    "solver_tree_sha": "542cbbea29923090bb17562c4120a8d5646ffcba"
+  },
+  "fixture": {
+    "name": "EST-ST41_1000_B3_60HZ_1675_63536.irdin.txt",
+    "sha256": "470e57799e1d75c6b0c48f4631feb3ecb0975a40e191a48af3fcf330146a7c70",
+    "reference": "EST",
+    "component": "ST41_1000_B3_60HZ_1675_63536",
+    "nominal_rpm": 1800.0
+  },
+  "analysis": {
+    "kind": "campbell",
+    "covers": [
+      "campbell",
+      "stability"
+    ],
+    "reason": "The source requests Campbell from 0 rpm, while both TABLE bearings start at 500 rpm. Qualification uses the proven table-domain intersection 500–3000 rpm; no bearing extrapolation below 500 rpm is permitted.",
+    "command_flags": [
+      "-std",
+      "-c",
+      "-b"
+    ],
+    "bearing_table_common_range_rpm": [
+      500.0,
+      4000.0
+    ],
+    "qualified_range_rpm": [
+      500.0,
+      3000.0
+    ]
+  },
+  "artifacts": {
+    "solver_executable_sha256": "48d1526c740fa6e65c78893d50925953dde8e66ba5e6a3e7d01e1a6ec7121d7b",
+    "input_sha256": "cd5a8f2d9c8482f54e3d95ff070298b4349708cd12b02aef98de630e094b3a05",
+    "stdout_sha256": "037c75dfd26e3755de26b83b48c9f17260ed66350cb394da85dffac8394d7c2b",
+    "stderr_sha256": "db661889493f614b46ba23de98b80222e6bc5a77a41cbdccb948d314c5e595bd",
+    "sections": {
+      "MODEL_AUDIT": "ef9e4b417a9ecd8df22baa9580eb5d1f2c353e69aa9cabaf92fa4118ff79ecaf",
+      "campbell.out": "0d71081b44e9979ee829250e4619eafdc4b884896fc062aa8e93919c0bb81174",
+      "exectime.out": "b6c0a1111437b815e9cd5d7a3011fb9686c2c47dc40cc7a3e5c5a3d324a7ce5d",
+      "output.out": "4d06351bf1f97c19b774180816948c39b652f8e90be984ee82e351ba81591ee9",
+      "rdaudit.out": "72acc3feeafe3e4a5988d02391503927dcbec835c7763ce3ee4d403492e73bf9"
+    },
+    "parsed_results_sha256": "dfecdd7211ec2afb90f096467cb8bff3506cbfff15481293252a0f67cb359741"
+  },
+  "environment": {
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+    "python": "3.12.14",
+    "compiler": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+  },
+  "legacy_import_warnings": [
+    "rpm i legado (0) é menor que o primeiro ponto das tabelas de mancal (500 rpm). Ajuste rpm i antes de salvar/executar, se necessário."
+  ]
+}

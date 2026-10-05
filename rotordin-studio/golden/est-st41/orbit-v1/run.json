@@ -1,0 +1,43 @@
+{
+  "commands": [
+    [
+      "/home/runner/work/IBIEGE_Legend/IBIEGE_Legend/rotordin-studio/solver/rotordin",
+      "-std",
+      "-t",
+      "-b"
+    ]
+  ],
+  "jobs": [
+    {
+      "name": "orbit",
+      "command": [
+        "/home/runner/work/IBIEGE_Legend/IBIEGE_Legend/rotordin-studio/solver/rotordin",
+        "-std",
+        "-t",
+        "-b"
+      ],
+      "returncode": 0,
+      "sections": [
+        "MODEL_AUDIT",
+        "exectime.out",
+        "output.out",
+        "rdaudit.out",
+        "timeresp.out"
+      ],
+      "directory": "01_orbit"
+    }
+  ],
+  "returncode": 0,
+  "sections": [
+    "MODEL_AUDIT",
+    "exectime.out",
+    "output.out",
+    "rdaudit.out",
+    "timeresp.out"
+  ],
+  "critical_speeds": [],
+  "speed_dependent_bearings": [
+    1,
+    2
+  ]
+}

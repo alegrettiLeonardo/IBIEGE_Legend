@@ -1,0 +1,159 @@
+{
+  "commands": [
+    [
+      "/home/runner/work/IBIEGE_Legend/IBIEGE_Legend/rotordin-studio/solver/rotordin",
+      "-std",
+      "-c",
+      "-b"
+    ]
+  ],
+  "jobs": [
+    {
+      "name": "campbell",
+      "command": [
+        "/home/runner/work/IBIEGE_Legend/IBIEGE_Legend/rotordin-studio/solver/rotordin",
+        "-std",
+        "-c",
+        "-b"
+      ],
+      "returncode": 0,
+      "sections": [
+        "MODEL_AUDIT",
+        "campbell.out",
+        "exectime.out",
+        "output.out",
+        "rdaudit.out"
+      ],
+      "directory": "01_campbell"
+    }
+  ],
+  "returncode": 0,
+  "sections": [
+    "MODEL_AUDIT",
+    "campbell.out",
+    "exectime.out",
+    "output.out",
+    "rdaudit.out"
+  ],
+  "critical_speeds": [
+    {
+      "rpm": 508.7976491,
+      "hz": 16.95992162,
+      "harmonic": "2.0x"
+    },
+    {
+      "rpm": 519.7098036,
+      "hz": 17.32366011,
+      "harmonic": "2.0x"
+    },
+    {
+      "rpm": 556.444226,
+      "hz": 9.274070348,
+      "harmonic": "1.0x"
+    },
+    {
+      "rpm": 564.8398034,
+      "hz": 18.82799344,
+      "harmonic": "2.0x"
+    },
+    {
+      "rpm": 565.2713488,
+      "hz": 4.71059457,
+      "harmonic": "0.5x"
+    },
+    {
+      "rpm": 739.0735433,
+      "hz": 24.63578481,
+      "harmonic": "2.0x"
+    },
+    {
+      "rpm": 740.1241122,
+      "hz": 12.33540178,
+      "harmonic": "1.0x"
+    },
+    {
+      "rpm": 740.378684,
+      "hz": 6.16982241,
+      "harmonic": "0.5x"
+    },
+    {
+      "rpm": 751.5754399,
+      "hz": 6.263128645,
+      "harmonic": "0.5x"
+    },
+    {
+      "rpm": 751.6529017,
+      "hz": 12.52754847,
+      "harmonic": "1.0x"
+    },
+    {
+      "rpm": 751.9636838,
+      "hz": 25.06545609,
+      "harmonic": "2.0x"
+    },
+    {
+      "rpm": 761.9856069,
+      "hz": 6.349880021,
+      "harmonic": "0.5x"
+    },
+    {
+      "rpm": 762.0803783,
+      "hz": 12.70133963,
+      "harmonic": "1.0x"
+    },
+    {
+      "rpm": 762.4607102,
+      "hz": 25.41535696,
+      "harmonic": "2.0x"
+    },
+    {
+      "rpm": 842.5893766,
+      "hz": 28.08631254,
+      "harmonic": "2.0x"
+    },
+    {
+      "rpm": 1093.827316,
+      "hz": 36.46091054,
+      "harmonic": "2.0x"
+    },
+    {
+      "rpm": 1103.348364,
+      "hz": 36.7782788,
+      "harmonic": "2.0x"
+    },
+    {
+      "rpm": 1258.389255,
+      "hz": 20.97315425,
+      "harmonic": "1.0x"
+    },
+    {
+      "rpm": 2069.2475,
+      "hz": 68.97491665,
+      "harmonic": "2.0x"
+    },
+    {
+      "rpm": 2138.877281,
+      "hz": 35.6479547,
+      "harmonic": "1.0x"
+    },
+    {
+      "rpm": 2160.846047,
+      "hz": 72.02820156,
+      "harmonic": "2.0x"
+    },
+    {
+      "rpm": 2440.968704,
+      "hz": 40.68281174,
+      "harmonic": "1.0x"
+    },
+    {
+      "rpm": 2654.727738,
+      "hz": 22.12273115,
+      "harmonic": "0.5x"
+    }
+  ],
+  "speed_dependent_bearings": [
+    1,
+    2
+  ]
+}

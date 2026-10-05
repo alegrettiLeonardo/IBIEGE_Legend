@@ -1,0 +1,43 @@
+{
+  "commands": [
+    [
+      "/home/runner/work/IBIEGE_Legend/IBIEGE_Legend/rotordin-studio/solver/rotordin",
+      "-std",
+      "-k",
+      "-b"
+    ]
+  ],
+  "jobs": [
+    {
+      "name": "map",
+      "command": [
+        "/home/runner/work/IBIEGE_Legend/IBIEGE_Legend/rotordin-studio/solver/rotordin",
+        "-std",
+        "-k",
+        "-b"
+      ],
+      "returncode": 0,
+      "sections": [
+        "MODEL_AUDIT",
+        "exectime.out",
+        "output.out",
+        "rdaudit.out",
+        "ucspdmap.out"
+      ],
+      "directory": "01_map"
+    }
+  ],
+  "returncode": 0,
+  "sections": [
+    "MODEL_AUDIT",
+    "exectime.out",
+    "output.out",
+    "rdaudit.out",
+    "ucspdmap.out"
+  ],
+  "critical_speeds": [],
+  "speed_dependent_bearings": [
+    1,
+    2
+  ]
+}

@@ -1,0 +1,1321 @@
+{
+  "campbell": null,
+  "angular_map": null,
+  "critical_map": {
+    "title": "Mapa de velocidade crítica",
+    "stiffness_n_m": [
+      10000000.0,
+      20000000.0,
+      30000000.0,
+      40000000.0,
+      50000000.0,
+      60000000.0,
+      70000000.0,
+      80000000.0,
+      90000000.0,
+      100000000.0,
+      200000000.0,
+      300000000.0,
+      400000000.0,
+      500000000.0,
+      600000000.0,
+      700000000.0,
+      800000000.0,
+      900000000.0,
+      1000000000.0,
+      2000000000.0,
+      3000000000.0,
+      4000000000.0,
+      5000000000.0,
+      6000000000.0,
+      7000000000.0,
+      8000000000.0,
+      9000000000.0,
+      10000000000.0,
+      20000000000.0,
+      30000000000.0,
+      40000000000.0,
+      50000000000.0,
+      60000000000.0,
+      70000000000.0,
+      80000000000.0,
+      90000000000.0,
+      100000000000.0
+    ],
+    "modes_rpm": [
+      {
+        "name": "Modo 1",
+        "x": [
+          10000000.0,
+          20000000.0,
+          30000000.0,
+          40000000.0,
+          50000000.0,
+          60000000.0,
+          70000000.0,
+          80000000.0,
+          90000000.0,
+          100000000.0,
+          200000000.0,
+          300000000.0,
+          400000000.0,
+          500000000.0,
+          600000000.0,
+          700000000.0,
+          800000000.0,
+          900000000.0,
+          1000000000.0,
+          2000000000.0,
+          3000000000.0,
+          4000000000.0,
+          5000000000.0,
+          6000000000.0,
+          7000000000.0,
+          8000000000.0,
+          9000000000.0,
+          10000000000.0,
+          20000000000.0,
+          30000000000.0,
+          40000000000.0,
+          50000000000.0,
+          60000000000.0,
+          70000000000.0,
+          80000000000.0,
+          90000000000.0,
+          100000000000.0
+        ],
+        "y": [
+          338.8708227,
+          475.6034063,
+          578.0577072,
+          662.4157128,
+          735.0061065,
+          799.1065902,
+          856.6839152,
+          909.0327563,
+          957.0618551,
+          1001.439911,
+          1319.754455,
+          1514.725825,
+          1648.053423,
+          1744.899791,
+          1818.225134,
+          1875.512801,
+          1921.403221,
+          1958.924827,
+          1990.134093,
+          2144.079278,
+          2200.225069,
+          2229.134134,
+          2246.729759,
+          2258.559418,
+          2267.056024,
+          2273.453377,
+          2278.44352,
+          2282.444554,
+          2300.543971,
+          2306.610249,
+          2309.649352,
+          2311.47469,
+          2312.692356,
+          2313.562494,
+          2314.215302,
+          2314.723163,
+          2315.129528
+        ]
+      },
+      {
+        "name": "Modo 2",
+        "x": [
+          10000000.0,
+          20000000.0,
+          30000000.0,
+          40000000.0,
+          50000000.0,
+          60000000.0,
+          70000000.0,
+          80000000.0,
+          90000000.0,
+          100000000.0,
+          200000000.0,
+          300000000.0,
+          400000000.0,
+          500000000.0,
+          600000000.0,
+          700000000.0,
+          800000000.0,
+          900000000.0,
+          1000000000.0,
+          2000000000.0,
+          3000000000.0,
+          4000000000.0,
+          5000000000.0,
+          6000000000.0,
+          7000000000.0,
+          8000000000.0,
+          9000000000.0,
+          10000000000.0,
+          20000000000.0,
+          30000000000.0,
+          40000000000.0,
+          50000000000.0,
+          60000000000.0,
+          70000000000.0,
+          80000000000.0,
+          90000000000.0,
+          100000000000.0
+        ],
+        "y": [
+          339.0104085,
+          475.7697844,
+          578.2874187,
+          662.7380196,
+          735.4475267,
+          799.6916146,
+          857.4352471,
+          909.9714395,
+          958.2073662,
+          1002.810238,
+          1324.083699,
+          1522.64819,
+          1659.624378,
+          1759.907391,
+          1836.3577,
+          1896.440527,
+          1944.814131,
+          1984.538175,
+          2017.703218,
+          2183.082652,
+          2244.191613,
+          2275.829478,
+          2295.144256,
+          2308.154561,
+          2317.511494,
+          2324.563416,
+          2330.068198,
+          2334.484429,
+          2354.490535,
+          2361.206276,
+          2364.57271,
+          2366.595276,
+          2367.944773,
+          2368.909245,
+          2369.632897,
+          2370.195912,
+          2370.646436
+        ]
+      },
+      {
+        "name": "Modo 3",
+        "x": [
+          10000000.0,
+          20000000.0,
+          30000000.0,
+          40000000.0,
+          50000000.0,
+          60000000.0,
+          70000000.0,
+          80000000.0,
+          90000000.0,
+          100000000.0,
+          200000000.0,
+          300000000.0,
+          400000000.0,
+          500000000.0,
+          600000000.0,
+          700000000.0,
+          800000000.0,
+          900000000.0,
+          1000000000.0,
+          2000000000.0,
+          3000000000.0,
+          4000000000.0,
+          5000000000.0,
+          6000000000.0,
+          7000000000.0,
+          8000000000.0,
+          9000000000.0,
+          10000000000.0,
+          20000000000.0,
+          30000000000.0,
+          40000000000.0,
+          50000000000.0,
+          60000000000.0,
+          70000000000.0,
+          80000000000.0,
+          90000000000.0,
+          100000000000.0
+        ],
+        "y": [
+          492.7767942,
+          744.4106021,
+          937.1045839,
+          1098.307118,
+          1238.94264,
+          1364.692028,
+          1478.96062,
+          1583.981944,
+          1681.315615,
+          1772.102303,
+          2446.452409,
+          2870.946018,
+          3155.357955,
+          3354.235877,
+          3499.827491,
+          3611.11424,
+          3699.297988,
+          3771.193881,
+          3831.132998,
+          4136.698644,
+          4255.915482,
+          4319.623994,
+          4359.257781,
+          4386.285792,
+          4405.892926,
+          4420.76467,
+          4432.430765,
+          4441.826367,
+          4484.800019,
+          4499.377557,
+          4506.713824,
+          4511.130781,
+          4514.081749,
+          4516.192683,
+          4517.777579,
+          4519.01128,
+          4519.998873
+        ]
+      },
+      {
+        "name": "Modo 4",
+        "x": [
+          10000000.0,
+          20000000.0,
+          30000000.0,
+          40000000.0,
+          50000000.0,
+          60000000.0,
+          70000000.0,
+          80000000.0,
+          90000000.0,
+          100000000.0,
+          200000000.0,
+          300000000.0,
+          400000000.0,
+          500000000.0,
+          600000000.0,
+          700000000.0,
+          800000000.0,
+          900000000.0,
+          1000000000.0,
+          2000000000.0,
+          3000000000.0,
+          4000000000.0,
+          5000000000.0,
+          6000000000.0,
+          7000000000.0,
+          8000000000.0,
+          9000000000.0,
+          10000000000.0,
+          20000000000.0,
+          30000000000.0,
+          40000000000.0,
+          50000000000.0,
+          60000000000.0,
+          70000000000.0,
+          80000000000.0,
+          90000000000.0,
+          100000000000.0
+        ],
+        "y": [
+          792.6873214,
+          1040.912816,
+          1230.078722,
+          1387.643012,
+          1524.536146,
+          1646.445296,
+          1756.782845,
+          1857.790225,
+          1951.035822,
+          2037.66991,
+          2669.477745,
+          3057.600551,
+          3318.124851,
+          3504.391525,
+          3644.787254,
+          3755.126418,
+          3844.656276,
+          3919.088652,
+          3982.144298,
+          4317.485362,
+          4454.342315,
+          4528.793464,
+          4575.560323,
+          4607.646895,
+          4631.02086,
+          4648.80357,
+          4662.785402,
+          4674.066497,
+          4725.893308,
+          4743.558106,
+          4752.463901,
+          4757.830903,
+          4761.418714,
+          4763.986242,
+          4765.914516,
+          4767.415844,
+          4768.617888
+        ]
+      },
+      {
+        "name": "Modo 5",
+        "x": [
+          10000000.0,
+          20000000.0,
+          30000000.0,
+          40000000.0,
+          50000000.0,
+          60000000.0,
+          70000000.0,
+          80000000.0,
+          90000000.0,
+          100000000.0,
+          200000000.0,
+          300000000.0,
+          400000000.0,
+          500000000.0,
+          600000000.0,
+          700000000.0,
+          800000000.0,
+          900000000.0,
+          1000000000.0,
+          2000000000.0,
+          3000000000.0,
+          4000000000.0,
+          5000000000.0,
+          6000000000.0,
+          7000000000.0,
+          8000000000.0,
+          9000000000.0,
+          10000000000.0,
+          20000000000.0,
+          30000000000.0,
+          40000000000.0,
+          50000000000.0,
+          60000000000.0,
+          70000000000.0,
+          80000000000.0,
+          90000000000.0,
+          100000000000.0
+        ],
+        "y": [
+          3751.852564,
+          3772.825649,
+          3794.047254,
+          3815.521295,
+          3837.251687,
+          3859.242267,
+          3881.496709,
+          3904.018438,
+          3926.810533,
+          3949.875634,
+          4195.621889,
+          4465.3176,
+          4747.064646,
+          5026.341762,
+          5292.815092,
+          5541.44249,
+          5770.716361,
+          5980.964957,
+          6173.336046,
+          7409.677621,
+          7995.334758,
+          8320.379206,
+          8522.99754,
+          8660.138629,
+          8758.671048,
+          8832.697996,
+          8890.263128,
+          8936.264277,
+          9141.840321,
+          9209.514635,
+          9243.132628,
+          9263.225808,
+          9276.587212,
+          9286.113862,
+          9293.249236,
+          9298.793185,
+          9303.224656
+        ]
+      },
+      {
+        "name": "Modo 6",
+        "x": [
+          10000000.0,
+          20000000.0,
+          30000000.0,
+          40000000.0,
+          50000000.0,
+          60000000.0,
+          70000000.0,
+          80000000.0,
+          90000000.0,
+          100000000.0,
+          200000000.0,
+          300000000.0,
+          400000000.0,
+          500000000.0,
+          600000000.0,
+          700000000.0,
+          800000000.0,
+          900000000.0,
+          1000000000.0,
+          2000000000.0,
+          3000000000.0,
+          4000000000.0,
+          5000000000.0,
+          6000000000.0,
+          7000000000.0,
+          8000000000.0,
+          9000000000.0,
+          10000000000.0,
+          20000000000.0,
+          30000000000.0,
+          40000000000.0,
+          50000000000.0,
+          60000000000.0,
+          70000000000.0,
+          80000000000.0,
+          90000000000.0,
+          100000000000.0
+        ],
+        "y": [
+          4033.846906,
+          4059.642592,
+          4085.799882,
+          4112.318986,
+          4139.199176,
+          4166.438685,
+          4194.034617,
+          4221.982863,
+          4250.278043,
+          4278.91345,
+          4581.556511,
+          4902.279376,
+          5222.69614,
+          5529.240235,
+          5815.197951,
+          6078.501442,
+          6319.461101,
+          6539.423279,
+          6740.103211,
+          8020.828279,
+          8620.449696,
+          8950.602349,
+          9155.534191,
+          9293.949565,
+          9393.297838,
+          9467.905409,
+          9525.914358,
+          9572.271478,
+          9779.583755,
+          9847.935418,
+          9881.919753,
+          9902.242754,
+          9915.76181,
+          9925.403324,
+          9932.62611,
+          9938.238809,
+          9942.725768
+        ]
+      },
+      {
+        "name": "Modo 7",
+        "x": [
+          10000000.0,
+          20000000.0,
+          30000000.0,
+          40000000.0,
+          50000000.0,
+          60000000.0,
+          70000000.0,
+          80000000.0,
+          90000000.0,
+          100000000.0,
+          200000000.0,
+          300000000.0,
+          400000000.0,
+          500000000.0,
+          600000000.0,
+          700000000.0,
+          800000000.0,
+          900000000.0,
+          1000000000.0,
+          2000000000.0,
+          3000000000.0,
+          4000000000.0,
+          5000000000.0,
+          6000000000.0,
+          7000000000.0,
+          8000000000.0,
+          9000000000.0,
+          10000000000.0,
+          20000000000.0,
+          30000000000.0,
+          40000000000.0,
+          50000000000.0,
+          60000000000.0,
+          70000000000.0,
+          80000000000.0,
+          90000000000.0,
+          100000000000.0
+        ],
+        "y": [
+          7600.359672,
+          7628.347264,
+          7656.336223,
+          7684.322346,
+          7712.301549,
+          7740.269866,
+          7768.223455,
+          7796.158592,
+          7824.071672,
+          7851.959209,
+          8128.745151,
+          8399.965079,
+          8663.812956,
+          8919.219258,
+          9165.638456,
+          9402.879095,
+          9630.978897,
+          9850.117604,
+          10060.55829,
+          11756.49846,
+          12899.12138,
+          13679.85909,
+          14222.19082,
+          14606.98002,
+          14886.1855,
+          15092.88735,
+          15248.46543,
+          15367.18279,
+          15780.91906,
+          15865.35747,
+          15899.33213,
+          15917.53671,
+          15928.8646,
+          15936.58922,
+          15942.19269,
+          15946.44281,
+          15949.77687
+        ]
+      },
+      {
+        "name": "Modo 8",
+        "x": [
+          10000000.0,
+          20000000.0,
+          30000000.0,
+          40000000.0,
+          50000000.0,
+          60000000.0,
+          70000000.0,
+          80000000.0,
+          90000000.0,
+          100000000.0,
+          200000000.0,
+          300000000.0,
+          400000000.0,
+          500000000.0,
+          600000000.0,
+          700000000.0,
+          800000000.0,
+          900000000.0,
+          1000000000.0,
+          2000000000.0,
+          3000000000.0,
+          4000000000.0,
+          5000000000.0,
+          6000000000.0,
+          7000000000.0,
+          8000000000.0,
+          9000000000.0,
+          10000000000.0,
+          20000000000.0,
+          30000000000.0,
+          40000000000.0,
+          50000000000.0,
+          60000000000.0,
+          70000000000.0,
+          80000000000.0,
+          90000000000.0,
+          100000000000.0
+        ],
+        "y": [
+          8211.871421,
+          8237.958142,
+          8264.009095,
+          8290.021578,
+          8315.992986,
+          8341.920811,
+          8367.802642,
+          8393.636156,
+          8419.41913,
+          8445.149423,
+          8699.146426,
+          8946.12998,
+          9185.170065,
+          9415.83319,
+          9638.022785,
+          9851.855936,
+          10057.57465,
+          10255.48548,
+          10445.92068,
+          12004.9314,
+          13090.20285,
+          13856.18501,
+          14406.91095,
+          14811.80553,
+          15116.4872,
+          15350.96005,
+          15535.18844,
+          15682.68639,
+          16320.85256,
+          16512.54469,
+          16602.34029,
+          16654.06017,
+          16687.59934,
+          16711.084,
+          16728.4357,
+          16741.77488,
+          16752.34693
+        ]
+      },
+      {
+        "name": "Modo 9",
+        "x": [
+          10000000.0,
+          20000000.0,
+          30000000.0,
+          40000000.0,
+          50000000.0,
+          60000000.0,
+          70000000.0,
+          80000000.0,
+          90000000.0,
+          100000000.0,
+          200000000.0,
+          300000000.0,
+          400000000.0,
+          500000000.0,
+          600000000.0,
+          700000000.0,
+          800000000.0,
+          900000000.0,
+          1000000000.0,
+          2000000000.0,
+          3000000000.0,
+          4000000000.0,
+          5000000000.0,
+          6000000000.0,
+          7000000000.0,
+          8000000000.0,
+          9000000000.0,
+          10000000000.0,
+          20000000000.0,
+          30000000000.0,
+          40000000000.0,
+          50000000000.0,
+          60000000000.0,
+          70000000000.0,
+          80000000000.0,
+          90000000000.0,
+          100000000000.0
+        ],
+        "y": [
+          12183.02148,
+          12192.89153,
+          12202.7791,
+          12212.68388,
+          12222.60553,
+          12232.54374,
+          12242.49818,
+          12252.4685,
+          12262.4544,
+          12272.45552,
+          12373.22987,
+          12475.15025,
+          12577.86674,
+          12681.02961,
+          12784.29677,
+          12887.34038,
+          12989.85226,
+          13091.548,
+          13192.16974,
+          14101.92237,
+          14792.4037,
+          15271.42613,
+          15580.12549,
+          15774.55337,
+          15903.47653,
+          15996.95441,
+          16070.82685,
+          16133.10216,
+          16507.7239,
+          16677.55233,
+          16769.22906,
+          16825.94255,
+          16864.36185,
+          16892.07319,
+          16912.9929,
+          16929.33988,
+          16942.46323
+        ]
+      }
+    ],
+    "rated_speed_rpm": 1800.0
+  },
+  "unbalance": null,
+  "modes": null,
+  "elastic_line": null,
+  "orbit": null,
+  "static_lateral": null,
+  "numerical_audit": {
+    "records": [
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "MAP_TRACK_REFINE_STIFFNESS",
+        "values": {
+          "text": "1.0000000000000000E+010 2.0000000000000000E+010 1.4142135623730951E+010 1.8849555921538757E+002 1"
+        },
+        "raw": "RD_AUDIT_V1 MAP_TRACK_REFINE_STIFFNESS  1.0000000000000000E+010  2.0000000000000000E+010  1.4142135623730951E+010  1.8849555921538757E+002 1"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      },
+      {
+        "kind": "EIGENSOLVER",
+        "values": {
+          "text": "DGGEVX_REAL 240"
+        },
+        "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240"
+      }
+    ],
+    "parse_errors": [],
+    "raw": "RD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 MAP_TRACK_REFINE_STIFFNESS  1.0000000000000000E+010  2.0000000000000000E+010  1.4142135623730951E+010  1.8849555921538757E+002 1\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\nRD_AUDIT_V1 EIGENSOLVER DGGEVX_REAL 240\n"
+  }
+}

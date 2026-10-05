@@ -1,0 +1,509 @@
+{
+  "identification": {
+    "reference": "EST",
+    "component": "ST41_1000_B3_60HZ_1675_63536",
+    "description": "",
+    "line": "",
+    "poles": 2,
+    "frame": "",
+    "frequency_hz": 60.0,
+    "user": "ANGELO",
+    "date_iso": "18/09/2026 13:30:05",
+    "rpm_nominal": 1800.0,
+    "rpm_initial": 0.0,
+    "rpm_final": 3000.0
+  },
+  "analyses": {
+    "campbell": false,
+    "dynamic_response": false,
+    "modes": false,
+    "line": true,
+    "map": false,
+    "orbit": false,
+    "log_decrement": false
+  },
+  "configuration": {
+    "min_divisions": 1,
+    "max_divisions": 3,
+    "load_distribution": 0.0,
+    "horizontal_angle_deg": 0.0,
+    "gravity_m_s2": 9.81,
+    "horizontal_angle_unit": "D",
+    "section_filter_forward": 1,
+    "section_filter_backward": 1,
+    "young_pa": 207000000000.0,
+    "poisson": 0.3,
+    "density_kg_m3": 7850.0,
+    "yield_strength_pa": 0.0,
+    "disk_density_kg_m3": 7850.0,
+    "package_divisions": 6,
+    "bearing_scale": 1.0,
+    "static_bearing_stiffness_ratio": 0.0,
+    "fixed_static_stiffness_n_m": 5e+20,
+    "campbell_step_rpm": 25.0,
+    "critical_speed_count": 9,
+    "interpolation_points": 50,
+    "map_stiffness_initial": 10000000.0,
+    "map_number_curves": 4,
+    "map_speed_rpm": 0.0,
+    "mode_tracking": true,
+    "response_initial_rpm": 500.0,
+    "response_final_rpm": 3000.0,
+    "response_step_rpm": 6.234413965087282,
+    "response_modes": 10,
+    "minimum_amplification": 0.0,
+    "modal_rpm": 0.0,
+    "excitation_angle_unit": "D",
+    "output_modes": 10,
+    "orbit_position_mm": 0.0,
+    "orbit_speed_rpm": 1800.0,
+    "orbit_angle_deg": 0.0,
+    "response_angle_unit": "D",
+    "time_angle_unit": "D",
+    "conical_subdivisions": 12,
+    "solver_executable": "",
+    "timeout_s": 300.0
+  },
+  "segments": [
+    {
+      "length_mm": 70.0,
+      "diameter_mm": 570.0,
+      "package_diameter_mm": 0.0,
+      "a_mm": 0.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 0,
+      "inner_diameter_mm": 0.0,
+      "final_diameter_mm": 0.0,
+      "section": "Circular",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 372.5,
+      "diameter_mm": 300.0,
+      "package_diameter_mm": 0.0,
+      "a_mm": 0.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 0,
+      "inner_diameter_mm": 0.0,
+      "final_diameter_mm": 0.0,
+      "section": "Circular",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 215.0,
+      "diameter_mm": 300.0,
+      "package_diameter_mm": 0.0,
+      "a_mm": 0.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 0,
+      "inner_diameter_mm": 0.0,
+      "final_diameter_mm": 0.0,
+      "section": "Circular",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 95.5,
+      "diameter_mm": 300.0,
+      "package_diameter_mm": 0.0,
+      "a_mm": 0.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 0,
+      "inner_diameter_mm": 0.0,
+      "final_diameter_mm": 0.0,
+      "section": "Circular",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 70.5,
+      "diameter_mm": 315.0,
+      "package_diameter_mm": 0.0,
+      "a_mm": 0.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 0,
+      "inner_diameter_mm": 0.0,
+      "final_diameter_mm": 0.0,
+      "section": "Circular",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 91.0,
+      "diameter_mm": 390.0,
+      "package_diameter_mm": 0.0,
+      "a_mm": 0.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 0,
+      "inner_diameter_mm": 0.0,
+      "final_diameter_mm": 0.0,
+      "section": "Circular",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 456.4,
+      "diameter_mm": 390.0,
+      "package_diameter_mm": 620.0,
+      "a_mm": 127.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 4,
+      "inner_diameter_mm": 0.0,
+      "final_diameter_mm": 0.0,
+      "section": "Costelada",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 1675.0,
+      "diameter_mm": 390.0,
+      "package_diameter_mm": 620.0,
+      "a_mm": 127.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 4,
+      "inner_diameter_mm": 0.0,
+      "final_diameter_mm": 0.0,
+      "section": "Costelada",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 566.5,
+      "diameter_mm": 390.0,
+      "package_diameter_mm": 620.0,
+      "a_mm": 127.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 4,
+      "inner_diameter_mm": 60.0,
+      "final_diameter_mm": 0.0,
+      "section": "Costelada",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 90.0,
+      "diameter_mm": 390.0,
+      "package_diameter_mm": 0.0,
+      "a_mm": 0.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 0,
+      "inner_diameter_mm": 60.0,
+      "final_diameter_mm": 0.0,
+      "section": "Circular",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 70.5,
+      "diameter_mm": 315.0,
+      "package_diameter_mm": 0.0,
+      "a_mm": 0.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 0,
+      "inner_diameter_mm": 60.0,
+      "final_diameter_mm": 0.0,
+      "section": "Circular",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 93.0,
+      "diameter_mm": 300.0,
+      "package_diameter_mm": 0.0,
+      "a_mm": 0.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 0,
+      "inner_diameter_mm": 60.0,
+      "final_diameter_mm": 0.0,
+      "section": "Circular",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 220.0,
+      "diameter_mm": 300.0,
+      "package_diameter_mm": 0.0,
+      "a_mm": 0.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 0,
+      "inner_diameter_mm": 60.0,
+      "final_diameter_mm": 0.0,
+      "section": "Circular",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 195.3,
+      "diameter_mm": 300.0,
+      "package_diameter_mm": 0.0,
+      "a_mm": 0.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 0,
+      "inner_diameter_mm": 60.0,
+      "final_diameter_mm": 0.0,
+      "section": "Circular",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 166.0,
+      "diameter_mm": 225.0,
+      "package_diameter_mm": 0.0,
+      "a_mm": 0.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 0,
+      "inner_diameter_mm": 60.0,
+      "final_diameter_mm": 0.0,
+      "section": "Circular",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 199.3,
+      "diameter_mm": 192.0,
+      "package_diameter_mm": 0.0,
+      "a_mm": 0.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 0,
+      "inner_diameter_mm": 60.0,
+      "final_diameter_mm": 0.0,
+      "section": "Circular",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    },
+    {
+      "length_mm": 307.9,
+      "diameter_mm": 172.0,
+      "package_diameter_mm": 0.0,
+      "a_mm": 0.0,
+      "b_mm": 0.0,
+      "c_mm": 0.0,
+      "rib_count": 0,
+      "inner_diameter_mm": 60.0,
+      "final_diameter_mm": 0.0,
+      "section": "Circular",
+      "final_inner_diameter_mm": 0.0,
+      "element_type": "Auto"
+    }
+  ],
+  "bearings": [
+    {
+      "position_mm": 550.0,
+      "kxx": 0.0,
+      "kzz": 0.0,
+      "kxz": 0.0,
+      "kzx": 0.0,
+      "cxx": 0.0,
+      "czz": 0.0,
+      "cxz": 0.0,
+      "czx": 0.0,
+      "type": "_zollern_zmzyb 22-300_vg46",
+      "file": "/home/runner/work/IBIEGE_Legend/IBIEGE_Legend/rotordin-studio/artifacts/est-st41-line/bearing-assets/bearing_1.tbl",
+      "support_enabled": true,
+      "mass_kg": 0.0,
+      "kphi": 0.0,
+      "ktheta": 0.0
+    },
+    {
+      "position_mm": 3977.0,
+      "kxx": 0.0,
+      "kzz": 0.0,
+      "kxz": 0.0,
+      "kzx": 0.0,
+      "cxx": 0.0,
+      "czz": 0.0,
+      "cxz": 0.0,
+      "czx": 0.0,
+      "type": "_zollern_zmzyq 22-300_vg46",
+      "file": "/home/runner/work/IBIEGE_Legend/IBIEGE_Legend/rotordin-studio/artifacts/est-st41-line/bearing-assets/bearing_2.tbl",
+      "support_enabled": true,
+      "mass_kg": 0.0,
+      "kphi": 0.0,
+      "ktheta": 0.0
+    }
+  ],
+  "masses": [
+    {
+      "xi_mm": 1370.9,
+      "length_mm": 1675.0,
+      "kg": 10090.0,
+      "outer_diameter_mm": 1140.0,
+      "inner_diameter_mm": 0.0,
+      "package": true,
+      "ump": false,
+      "ump_value": 0.0,
+      "offset_mm": 0.0
+    },
+    {
+      "xi_mm": 4449.0,
+      "length_mm": 60.3,
+      "kg": 70.0,
+      "outer_diameter_mm": 520.0,
+      "inner_diameter_mm": 0.0,
+      "package": false,
+      "ump": false,
+      "ump_value": 0.0,
+      "offset_mm": 0.0
+    },
+    {
+      "xi_mm": 4646.5,
+      "length_mm": 306.0,
+      "kg": 520.0,
+      "outer_diameter_mm": 520.0,
+      "inner_diameter_mm": 0.0,
+      "package": false,
+      "ump": false,
+      "ump_value": 0.0,
+      "offset_mm": 0.0
+    }
+  ],
+  "forces": [
+    {
+      "position_mm": 1370.9,
+      "phase_deg": 0.0,
+      "value": 110175.3,
+      "kind": 0,
+      "extra": 0.0
+    },
+    {
+      "position_mm": 3045.9,
+      "phase_deg": 0.0,
+      "value": 110175.3,
+      "kind": 0,
+      "extra": 0.0
+    }
+  ],
+  "probes": [
+    {
+      "position_mm": 550.0,
+      "coordinate": 1,
+      "orientation_deg": 0.0
+    },
+    {
+      "position_mm": 550.0,
+      "coordinate": 2,
+      "orientation_deg": 0.0
+    },
+    {
+      "position_mm": 3977.0,
+      "coordinate": 1,
+      "orientation_deg": 0.0
+    },
+    {
+      "position_mm": 3977.0,
+      "coordinate": 2,
+      "orientation_deg": 0.0
+    }
+  ],
+  "concentrated_masses": [],
+  "supports": [
+    {
+      "bearing_index": 0,
+      "kxx": 2730000000.0,
+      "kzz": 3410000000.0,
+      "kxz": 0.0,
+      "kzx": 0.0,
+      "cxx": 0.0,
+      "czz": 0.0,
+      "cxz": 0.0,
+      "czx": 0.0,
+      "kg": 415.0,
+      "type": ""
+    },
+    {
+      "bearing_index": 1,
+      "kxx": 2730000000.0,
+      "kzz": 3410000000.0,
+      "kxz": 0.0,
+      "kzx": 0.0,
+      "cxx": 0.0,
+      "czz": 0.0,
+      "cxz": 0.0,
+      "czx": 0.0,
+      "kg": 415.0,
+      "type": ""
+    }
+  ],
+  "settings": {
+    "legacy_import": {
+      "format": "irDin/VB6 INI",
+      "source_name": "EST-ST41_1000_B3_60HZ_1675_63536.irdin.txt",
+      "source_path": "/home/runner/work/IBIEGE_Legend/IBIEGE_Legend/rotordin-studio/tests/fixtures/EST-ST41_1000_B3_60HZ_1675_63536.irdin.txt",
+      "raw_speed_fields": {
+        "d_rpmi": "300",
+        "d_rpmf": "3000",
+        "d_div": "400"
+      },
+      "unmapped_dados": {
+        "nini": "0",
+        "nfin": "2160",
+        "gr_esc": "2.77",
+        "gr_x0": "100",
+        "gr_rcp": "7",
+        "gr_mod": "5",
+        "s_relld": "0.7",
+        "le_inc": "0",
+        "gr_map": "4",
+        "gr_log": "2"
+      },
+      "warnings": [
+        "rpm i legado (0) é menor que o primeiro ponto das tabelas de mancal (500 rpm). Ajuste rpm i antes de salvar/executar, se necessário."
+      ]
+    },
+    "analysis_speed_contract": {
+      "version": 1,
+      "campbell_initial_rpm": 0.0,
+      "campbell_final_rpm": 3000.0,
+      "orbit_speed_mode": "single",
+      "orbit_section_mode": "all_sections"
+    },
+    "machine_operating_speed": {
+      "version": 1,
+      "initial_rpm": 0.0,
+      "final_rpm": 2160.0
+    },
+    "legacy_response_grid": {
+      "version": 2,
+      "raw_d_rpmi": 300.0,
+      "raw_d_rpmf": 3000.0,
+      "raw_d_div": 400.0,
+      "effective_initial_rpm": 500.0,
+      "effective_final_rpm": 3000.0,
+      "converted_step_rpm": 6.234413965087282,
+      "number_of_points": 402,
+      "source_semantics": "legacy_unbfd_division_parameter",
+      "bearing_table_clipped": true
+    },
+    "legacy_calculation_settings": {
+      "version": 1,
+      "elastic_line_inclination_deg": 0.0,
+      "graphics": {
+        "marker": false,
+        "scale": 2.77,
+        "x0": 100.0,
+        "response_component": 7,
+        "modes": 5,
+        "map_count": 4,
+        "log_count": 2
+      }
+    }
+  }
+}
