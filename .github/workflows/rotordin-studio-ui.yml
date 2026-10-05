@@ -1,0 +1,40 @@
+name: RotorDin Studio UI
+
+on:
+  push:
+    branches:
+      - feature/react-typescript-rotordin-studio-ui
+    paths:
+      - 'rotordin-studio/**'
+      - '.github/workflows/rotordin-studio-ui.yml'
+  pull_request:
+    paths:
+      - 'rotordin-studio/**'
+      - '.github/workflows/rotordin-studio-ui.yml'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rotordin-studio
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: rotordin-studio/package-lock.json
+
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+
+      - name: Unit tests
+        run: npm test
