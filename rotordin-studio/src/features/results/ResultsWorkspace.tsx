@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
   Activity,
   BarChart3,
@@ -209,7 +209,7 @@ function OrbitPlot({ shape }: { shape: OrbitShape }) {
   );
 }
 
-function ResultCard({ title, children }: { title: string; children: React.ReactNode }) {
+function ResultCard({ title, children }: { title: string; children: ReactNode }) {
   return <section className="result-card"><header><h3>{title}</h3></header><div className="result-card-body">{children}</div></section>;
 }
 
