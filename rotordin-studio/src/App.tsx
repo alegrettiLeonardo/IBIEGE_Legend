@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { matrixViewForBearing, toLegacyShaftGrid } from './domain';
+import { matrixViewForBearing, toLegacyShaftGrid, type AnalysisKind } from './domain';
+import { qualificationFor } from './runs/qualification';
 import { useProject } from './state/ProjectContext';
 import {
   Activity,
@@ -421,7 +422,7 @@ function MassesPage() {
 }
 
 function AnalysisPage({ enabled, onToggle }: { enabled: Record<string, boolean>; onToggle: (key: string) => void }) {
-  const { project: currentProject, prepareRun, validation } = useProject();
+  const { project: currentProject, executeQualifiedRun, validation } = useProject();
   const settings = currentProject.settings;
   const formatRange = (a?: number, b?: number) => a != null && b != null ? `${a.toLocaleString()} – ${b.toLocaleString()} rpm` : 'Not configured';
   const displayRows = (key: string, fallback: string[][]): string[][] => {
@@ -466,29 +467,46 @@ function AnalysisPage({ enabled, onToggle }: { enabled: Record<string, boolean>;
     }
   };
   const [prepareStatus, setPrepareStatus] = useState<string>();
-  const prepareSelectedRun = async () => {
+  const keyToAnalysis: Record<string, AnalysisKind> = {
+    campbell: 'campbell',
+    modes: 'modes',
+    response: 'unbalance-response',
+    line: 'elastic-line',
+    map: 'critical-speed-map',
+    orbit: 'orbit',
+    stability: 'stability',
+  };
+  const runSelected = async () => {
     if (!validation.valid) {
-      setPrepareStatus('Model validation must pass before a run can be prepared.');
+      setPrepareStatus('Model validation must pass before solver execution.');
       return;
     }
-    const result = await prepareRun('rotordin');
+    const selected = analysisCards
+      .filter((item) => enabled[item.key])
+      .map((item) => keyToAnalysis[item.key]);
+    if (!selected.length) {
+      setPrepareStatus('Select at least one analysis.');
+      return;
+    }
+    setPrepareStatus('Running qualified RotorDin analyses…');
+    const result = await executeQualifiedRun(selected);
     setPrepareStatus(result
-      ? `Prepared ${result.manifest.runId}. Solver execution remains qualification-gated.`
-      : 'Run workspace was not prepared.');
+      ? `Completed ${result.manifest.runId}: ${result.jobs.map((job) => job.analysis).join(', ')}. Artifacts are frozen in the run workspace.`
+      : 'Run blocked or failed. Review the validation/qualification message.');
   };
   const count = Object.values(enabled).filter(Boolean).length;
   return (
     <div className="analysis-layout">
-      <div className="analysis-top"><div><h1><BarChart3/> Analysis Plan</h1><p>Select and configure analyses to run. Each analysis uses the current model and shared settings.</p></div><div className="analysis-top-metrics"><div><CheckCircle2/> <span>Analysis Package<strong>Ready</strong></span></div><div><BarChart3/> <span>Enabled Analyses<strong>{count} / 7</strong></span></div><div><Triangle/> <span>Warnings<strong>0</strong></span></div><Button primary icon={Play} onClick={() => { void prepareSelectedRun(); }}>Run Selected</Button></div></div>{prepareStatus && <div className="run-preparation-note">{prepareStatus}</div>}
-      <div className="analysis-cards">{analysisCards.map((item) => <AnalysisCard key={item.key} item={{ ...item, rows: displayRows(item.key, item.rows) }} enabled={enabled[item.key]} onToggle={() => onToggle(item.key)} />)}<div className="more-analysis"><Plus size={30}/><strong>More Analyses</strong><span>Additional specialized analyses coming soon.</span></div></div>
+      <div className="analysis-top"><div><h1><BarChart3/> Analysis Plan</h1><p>Select and configure analyses to run. Each analysis uses the current model and shared settings.</p></div><div className="analysis-top-metrics"><div><CheckCircle2/> <span>Analysis Package<strong>Ready</strong></span></div><div><BarChart3/> <span>Enabled Analyses<strong>{count} / 7</strong></span></div><div><Triangle/> <span>Warnings<strong>0</strong></span></div><Button primary icon={Play} onClick={() => { void runSelected(); }}>Run Selected</Button></div></div>{prepareStatus && <div className="run-preparation-note">{prepareStatus}</div>}
+      <div className="analysis-cards">{analysisCards.map((item) => <AnalysisCard key={item.key} item={{ ...item, rows: displayRows(item.key, item.rows) }} enabled={enabled[item.key]} qualification={qualificationFor(keyToAnalysis[item.key])} onToggle={() => onToggle(item.key)} />)}<div className="more-analysis"><Plus size={30}/><strong>More Analyses</strong><span>Additional specialized analyses coming soon.</span></div></div>
       <Card title="Shared Analysis Settings" icon={Settings} className="shared-settings"><h3 className="minor-title">Material Properties</h3><FormField label="Young's Modulus (E)" value="2.10e+11" unit="Pa"/><FormField label="Density (ρ)" value="7,800" unit="kg/m³"/><FormField label="Poisson's Ratio (ν)" value="0.30"/><h3 className="minor-title">Analysis Controls</h3><FormField label="Speed Range" value="0 – 6,000" unit="rpm"/><FormField label="Speed Divisions" value="200"/><FormField label="Frequency Points" value="50"/><FormField label="Modes (Default)" value="1 – 20"/><h3 className="minor-title">Plot & Display</h3>{['Show Grid','Show Critical Speeds','Show Bearings'].map((label) => <label className="check-row" key={label}><input type="checkbox" defaultChecked/><span>{label}</span></label>)}<Button icon={RefreshCcw}>Reset to Defaults</Button></Card>
     </div>
   );
 }
 
-function AnalysisCard({ item, enabled, onToggle }: { item: typeof analysisCards[number]; enabled: boolean; onToggle: () => void }) {
+function AnalysisCard({ item, enabled, qualification, onToggle }: { item: typeof analysisCards[number]; enabled: boolean; qualification: ReturnType<typeof qualificationFor>; onToggle: () => void }) {
   const Icon = item.icon;
-  return <div className={'analysis-card ' + (enabled ? '' : 'disabled-card')}><div className="analysis-card-title"><Icon size={30}/><div><strong>{item.title}</strong><span>{item.subtitle}</span></div><button className={'toggle ' + (enabled ? 'on' : '')} onClick={onToggle}><span/></button></div><KeyValue rows={item.rows} /><div className="analysis-card-footer"><Badge tone={enabled ? 'success' : 'neutral'}>{enabled ? 'Valid' : 'Disabled'}</Badge><span>Last Run<br/><strong>03/09/2026 13:15</strong></span></div></div>;
+  return <div className={'analysis-card ' + (enabled ? '' : 'disabled-card')}><div className="analysis-card-title"><Icon size={30}/><div><strong>{item.title}</strong><span>{item.subtitle}</span></div><button className={'toggle ' + (enabled ? 'on' : '')} onClick={onToggle}><span/></button></div><KeyValue rows={item.rows} /><div className="analysis-card-footer"><div className="analysis-card-badges"><Badge tone={enabled ? 'success' : 'neutral'}>{enabled ? 'Valid' : 'Disabled'}</Badge><Badge tone={qualification.status === 'qualified' ? 'info' : 'warning'}>{qualification.status === 'qualified' ? 'Qualified' : 'Qualification pending'}</Badge></div><span>{qualification.qualificationId}</span></div></div>;
 }
 
 function ResultsPage() {
