@@ -51,6 +51,8 @@ export type BearingCoefficientModel =
       source: 'constant' | 'file' | 'speed-dependent' | 'support';
       sourceFile?: string;
       table?: BearingCoefficientSample[];
+      /** Exact imported TABLE§... payload for byte-stable native serialization. */
+      rawTableContent?: string;
     };
 
 export interface Bearing {
