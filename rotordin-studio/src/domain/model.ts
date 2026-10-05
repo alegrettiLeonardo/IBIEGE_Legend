@@ -32,6 +32,12 @@ export interface Matrix2x2 {
   zz: number;
 }
 
+export interface BearingCoefficientSample {
+  speedRpm: number;
+  stiffness: Matrix2x2;
+  damping: Matrix2x2;
+}
+
 export type BearingCoefficientModel =
   | {
       kind: 'legacy-scalar';
@@ -44,6 +50,7 @@ export type BearingCoefficientModel =
       damping: Matrix2x2;
       source: 'constant' | 'file' | 'speed-dependent' | 'support';
       sourceFile?: string;
+      table?: BearingCoefficientSample[];
     };
 
 export interface Bearing {
@@ -98,6 +105,7 @@ export interface ResponsePoint {
   coordinate: 'X' | 'Y' | 'Z';
   orientationDeg: number;
   note?: string;
+  sourceCoordinateCode?: number;
 }
 
 export interface Support {
