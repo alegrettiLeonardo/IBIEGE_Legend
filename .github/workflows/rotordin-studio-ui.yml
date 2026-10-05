@@ -118,3 +118,174 @@ jobs:
           git add "$GOLDEN"
           git commit -m "a10: freeze EST-ST41 Modes real solver golden [skip ci]"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+
+
+  analysis-contract-linux:
+    runs-on: ubuntu-latest
+    env:
+      ROTORDIN_LIBS: "-lopenblas"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+    defaults:
+      run:
+        working-directory: rotordin-studio
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install GNU Fortran and OpenBLAS
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gfortran liblapack-dev libblas-dev libopenblas-dev
+
+      - name: Verify and build audited solver
+        run: |
+          python solver/build_solver.py --verify-source
+          python solver/build_solver.py --clean
+
+      - name: Freeze and verify qualified EST-ST41 analyses on Linux
+        shell: bash
+        run: |
+          set -euo pipefail
+          for analysis in campbell response line map orbit; do
+            candidate="artifacts/est-st41-${analysis}"
+            golden="golden/est-st41/${analysis}-v1"
+            python tools/freeze_est_st41_analysis.py "${analysis}" --output "${candidate}"
+            if [ -f "${golden}/qualification.json" ]; then
+              python tools/verify_est_st41_analysis_golden.py \
+                --candidate "${candidate}" \
+                --golden "${golden}"
+            else
+              echo "Initial ${analysis} golden does not exist yet; candidate will be cross-platform checked before persistence."
+            fi
+          done
+
+      - name: Upload Linux A11 candidates
+        uses: actions/upload-artifact@v4
+        with:
+          name: est-st41-a11-linux
+          path: rotordin-studio/artifacts/est-st41-*
+          if-no-files-found: error
+          retention-days: 30
+
+  analysis-contract-windows:
+    needs: analysis-contract-linux
+    runs-on: windows-2025
+    defaults:
+      run:
+        working-directory: rotordin-studio
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-gcc-fortran
+            mingw-w64-ucrt-x86_64-openblas
+
+      - name: Resolve UCRT64 compiler
+        shell: msys2 {0}
+        run: |
+          echo "FC=$(cygpath -w "$(command -v gfortran)")" >> "$GITHUB_ENV"
+          echo "MSYS2_UCRT_BIN=$(cygpath -w /ucrt64/bin)" >> "$GITHUB_ENV"
+
+      - name: Verify and build audited solver
+        shell: pwsh
+        run: |
+          $env:PATH = "$env:MSYS2_UCRT_BIN;$env:PATH"
+          python solver/build_solver.py --verify-source
+          python solver/build_solver.py --clean
+
+      - name: Download Linux candidates
+        uses: actions/download-artifact@v4
+        with:
+          name: est-st41-a11-linux
+          path: rotordin-studio/linux-candidates
+
+      - name: Freeze and cross-platform verify EST-ST41 analyses on Windows
+        shell: pwsh
+        run: |
+          $env:PATH = "$env:MSYS2_UCRT_BIN;$env:PATH"
+          $analyses = @("campbell", "response", "line", "map", "orbit")
+          foreach ($analysis in $analyses) {
+            $candidate = "artifacts/windows-est-st41-$analysis"
+            $golden = "golden/est-st41/$analysis-v1"
+            python tools/freeze_est_st41_analysis.py $analysis --output $candidate
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+            if (Test-Path "$golden/qualification.json") {
+              python tools/verify_est_st41_analysis_golden.py --candidate $candidate --golden $golden --rtol 5e-5 --atol 1e-8
+            } else {
+              $linux = "linux-candidates/est-st41-$analysis"
+              python tools/verify_est_st41_analysis_golden.py --candidate $candidate --golden $linux --rtol 5e-5 --atol 1e-8
+            }
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
+      - name: Upload Windows A11 candidates
+        uses: actions/upload-artifact@v4
+        with:
+          name: est-st41-a11-windows
+          path: rotordin-studio/artifacts/windows-est-st41-*
+          if-no-files-found: error
+          retention-days: 30
+
+  persist-analysis-goldens:
+    needs:
+      - analysis-contract-linux
+      - analysis-contract-windows
+    if: github.event_name == 'push' && github.ref == 'refs/heads/feature/react-typescript-rotordin-studio-ui'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download qualified Linux candidates
+        uses: actions/download-artifact@v4
+        with:
+          name: est-st41-a11-linux
+          path: rotordin-studio/linux-candidates
+
+      - name: Persist missing per-analysis goldens
+        shell: bash
+        working-directory: rotordin-studio
+        run: |
+          set -euo pipefail
+          changed=0
+          for analysis in campbell response line map orbit; do
+            source="linux-candidates/est-st41-${analysis}"
+            target="golden/est-st41/${analysis}-v1"
+            if [ -f "${target}/qualification.json" ]; then
+              echo "${analysis}: frozen golden already exists"
+              continue
+            fi
+            mkdir -p "${target}"
+            rsync -a --exclude runtime/ "${source}/" "${target}/"
+            changed=1
+          done
+
+          if [ "${changed}" -eq 0 ]; then
+            echo "No new goldens to persist."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add golden/est-st41
+          git commit -m "a11: freeze EST-ST41 qualified analysis goldens"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
