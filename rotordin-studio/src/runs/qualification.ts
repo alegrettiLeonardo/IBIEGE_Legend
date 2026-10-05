@@ -43,7 +43,7 @@ export const ANALYSIS_QUALIFICATIONS: Record<QualifiedAnalysis, AnalysisQualific
     analysis: 'stability',
     nativeJob: 'campbell',
     qualificationId: 'A11-EST-ST41-CAMPBELL-V1',
-    status: 'pending',
+    status: 'qualified',
     flags: ['-std', '-c', '-b'],
     goldenPath: 'golden/est-st41/campbell-v1',
     platforms: ['linux', 'windows'],
