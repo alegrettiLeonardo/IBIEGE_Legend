@@ -70,11 +70,25 @@ def main() -> int:
         print("\n".join(errors), file=sys.stderr)
         return 1
 
-    if (candidate / "input.txt").read_bytes() != (golden / "input.txt").read_bytes():
+    candidate_input = (candidate / "input.txt").read_bytes()
+    golden_input = (golden / "input.txt").read_bytes()
+    if candidate_input != golden_input:
         errors.append(
             "input.txt differs from frozen native contract: "
             f"golden={sha256(golden / 'input.txt')} candidate={sha256(candidate / 'input.txt')}"
         )
+        g_lines = golden_input.decode("utf-8", errors="replace").splitlines()
+        c_lines = candidate_input.decode("utf-8", errors="replace").splitlines()
+        for index, (g_line, c_line) in enumerate(zip(g_lines, c_lines)):
+            if g_line != c_line:
+                errors.append(
+                    f"input first differing line {index + 1}: golden={g_line!r} candidate={c_line!r}"
+                )
+                break
+        if len(g_lines) != len(c_lines):
+            errors.append(
+                f"input line count differs: golden={len(g_lines)} candidate={len(c_lines)}"
+            )
 
     cq = json.loads((candidate / "qualification.json").read_text(encoding="utf-8"))
     gq = json.loads((golden / "qualification.json").read_text(encoding="utf-8"))
