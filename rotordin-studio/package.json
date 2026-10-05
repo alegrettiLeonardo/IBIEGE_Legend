@@ -5,10 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "npm run typecheck && npm run typecheck:electron && npm run build:renderer && npm run build:electron",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "typecheck:electron": "tsc -p electron/tsconfig.json --noEmit",
+    "build:renderer": "vite build",
+    "build:electron": "tsc -p electron/tsconfig.json",
+    "desktop": "electron dist-electron/electron/main.js"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
@@ -21,6 +26,8 @@
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "^5.7.2",
     "vite": "^6.0.5",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "@types/node": "^22.10.2",
+    "electron": "^33.2.1"
   }
 }
