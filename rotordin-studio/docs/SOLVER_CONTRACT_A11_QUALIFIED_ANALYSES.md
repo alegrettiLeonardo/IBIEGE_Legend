@@ -220,3 +220,17 @@ React Analysis Plan
 `nativeJobsForQualifiedAnalyses()` is the mandatory gate. Any future analysis added with status `pending` is rejected before process creation with `RUN-QUAL-002`.
 
 A11 status: **CLOSED / QUALIFIED / DESKTOP RUNNER ENABLED FOR QUALIFIED ANALYSES ONLY**.
+
+
+## Cross-platform fixed-width input policy
+
+The solver input contract is exact at the **line-content and fixed-column level**. Linux and Windows may persist the final text artifact with different EOL/terminal-newline bytes even when every Fortran input record is identical.
+
+The A11 verifier therefore:
+
+- normalizes only line terminators to LF and exactly one final LF before comparing the input contract across platforms;
+- still requires every character within every input record to be identical;
+- still freezes the raw platform-specific file hash as provenance;
+- never normalizes numeric fields, whitespace inside records, field widths, ordering, TABLE data or solver options.
+
+This policy was added after a Windows candidate had the same `splitlines()` content as the Linux golden but a different raw SHA-256. The difference was textual record termination, not the Fortran fixed-width payload.
