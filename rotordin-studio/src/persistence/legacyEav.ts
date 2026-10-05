@@ -151,14 +151,14 @@ export function encodeLegacyEav(
     add(characteristics, calculationId, line, 'D', Number(row.D ?? 0));
 
     const segment = project.segments[index];
-    if (segment.sectionType === 'ribbed') {
+    if (segment.ribbed) {
       add(characteristics, calculationId, line, 'DPCT', Number(row.DPCT ?? 0));
       add(characteristics, calculationId, line, 'A', Number(row.A ?? 0));
       add(characteristics, calculationId, line, 'B', Number(row.B ?? 0));
       add(characteristics, calculationId, line, 'C', Number(row.C ?? 0));
       add(characteristics, calculationId, line, 'NR_COST', Number(row.NR_COST ?? 0));
     }
-    if (segment.sectionType === 'hollow') {
+    if ((segment.innerDiameterMm ?? 0) > 0) {
       add(characteristics, calculationId, line, 'D_INT', Number(row.D_INT ?? 0));
     }
     if (segment.endOuterDiameterMm != null) {
