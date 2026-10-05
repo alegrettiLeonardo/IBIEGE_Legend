@@ -1,5 +1,5 @@
 import type { Bearing, RotorProject, ValidationIssue } from '../domain';
-import { validateProject } from '../domain';
+import { legacyCompatibilityNotes, validateProject } from '../domain';
 
 export interface BiegeSerializationResult {
   text?: string;
@@ -50,7 +50,7 @@ function bearingLine(bearing: Bearing): string {
  */
 export function serializeBiege14(project: RotorProject): BiegeSerializationResult {
   const validation = validateProject(project);
-  const issues = [...validation.issues];
+  const issues = [...validation.issues, ...legacyCompatibilityNotes(project)];
 
   if (project.bearings.length > 2) {
     return { issues };
