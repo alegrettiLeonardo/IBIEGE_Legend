@@ -315,7 +315,7 @@ function rawBearingPayload(bearing: Bearing, index: number): string {
   return [
     `TABLE:LEGACY_IMPORT_${index}`,
     `${rows.length} 1.0`,
-    ...rows.map((row) => row.replace(/\\|/g, ' ')),
+    ...rows.map((row) => row.replace(/\|/g, ' ')),
     'EOF',
   ].join('\n') + '\n';
 }
