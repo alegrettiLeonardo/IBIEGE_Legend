@@ -1,12 +1,13 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from 'react';
 import { demoProject } from '../data/demoProject';
-import type { ExecuteQualifiedRunResponse, PrepareRunResponse } from '../../electron/contracts';
+import type { ExecuteQualifiedRunResponse, PrepareRunResponse, QualifiedRunSummary } from '../../electron/contracts';
 import type { SolverKind } from '../runs/model';
 import {
   addSegmentAtomic,
@@ -32,12 +33,15 @@ interface ProjectContextValue {
   editIssues: ValidationIssue[];
   projectFilePath?: string;
   selectedRun?: ExecuteQualifiedRunResponse;
+  runHistory: QualifiedRunSummary[];
   markSaved: () => void;
   markDirty: () => void;
   saveProject: () => Promise<boolean>;
   openProject: () => Promise<boolean>;
   prepareRun: (solver: SolverKind) => Promise<PrepareRunResponse | undefined>;
   executeQualifiedRun: (analyses: AnalysisKind[]) => Promise<ExecuteQualifiedRunResponse | undefined>;
+  refreshRunHistory: () => Promise<void>;
+  selectQualifiedRun: (runId: string) => Promise<boolean>;
   updateSegment: (id: string, patch: SegmentPatch) => boolean;
   addSegment: (afterIndex?: number) => boolean;
   removeSegment: (id: string) => boolean;
@@ -55,6 +59,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   const [editIssues, setEditIssues] = useState<ValidationIssue[]>([]);
   const [projectFilePath, setProjectFilePath] = useState<string>();
   const [selectedRun, setSelectedRun] = useState<ExecuteQualifiedRunResponse>();
+  const [runHistory, setRunHistory] = useState<QualifiedRunSummary[]>([]);
 
   const validation = useMemo(() => validateProject(project), [project]);
 
@@ -164,12 +169,45 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       const result = await window.rotorDinDesktop.executeQualifiedRun({ project, analyses });
       setEditIssues([]);
       setSelectedRun(result);
+      void refreshRunHistory();
       return result;
     } catch (error) {
       desktopIssue('RUN-EXEC-001', error);
       return undefined;
     }
   };
+
+  const refreshRunHistory = async (): Promise<void> => {
+    if (!window.rotorDinDesktop) {
+      setRunHistory([]);
+      return;
+    }
+    try {
+      setRunHistory(await window.rotorDinDesktop.listQualifiedRuns());
+    } catch (error) {
+      desktopIssue('RUN-HISTORY-LIST-001', error);
+    }
+  };
+
+  const selectQualifiedRun = async (runId: string): Promise<boolean> => {
+    if (!window.rotorDinDesktop) {
+      desktopIssue('RUN-HISTORY-DESKTOP', 'Run history selection requires the Electron desktop shell.');
+      return false;
+    }
+    try {
+      const run = await window.rotorDinDesktop.loadQualifiedRun({ runId });
+      setSelectedRun(run);
+      setEditIssues([]);
+      return true;
+    } catch (error) {
+      desktopIssue('RUN-HISTORY-LOAD-001', error);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    void refreshRunHistory();
+  }, []);
 
   const value: ProjectContextValue = {
     project,
@@ -178,12 +216,15 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     editIssues,
     projectFilePath,
     selectedRun,
+    runHistory,
     markSaved: () => setSaved(true),
     markDirty: () => setSaved(false),
     saveProject,
     openProject,
     prepareRun,
     executeQualifiedRun,
+    refreshRunHistory,
+    selectQualifiedRun,
     updateSegment: (id, patch) => apply(updateSegmentAtomic(project, id, patch)),
     addSegment: (afterIndex) => apply(addSegmentAtomic(project, afterIndex)),
     removeSegment: (id) => apply(removeSegmentAtomic(project, id)),
